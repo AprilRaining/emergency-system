@@ -17,24 +17,30 @@ class emergency_plan:
         print("3. Edit Emergency Plan.")
         print("4. Delete Emergency Plan.")
         self.user = input('Please enter your choice: ')
-        try:
-            if self.user == '1':
-                create = self.Create_Emergency_Plan()
-                create.add()
-            elif self.user == '2':
-                display = self.Display_Emergency_Plan()
-                display
-            elif self.user == '3':
-                edit = self.Edit_Emergency_Plan()
-                edit 
-            elif self.user == '4':
-                delete = self.Delete_Emergency_Plan()
-                delete
-
-            else:
-                raise Invalid_input(self.user)
-        except Invalid_input as e:
-            print(e)
+        loop = True 
+        while loop == True:
+            try:
+                if self.user == '1':
+                    create = self.Create_Emergency_Plan()
+                    create.add()
+                    loop = False
+                elif self.user == '2':
+                    display = self.Display_Emergency_Plan()
+                    display
+                    loop = False
+                elif self.user == '3':
+                    edit = self.Edit_Emergency_Plan()
+                    edit 
+                    loop = False
+                elif self.user == '4':
+                    delete = self.Delete_Emergency_Plan()
+                    delete
+                    loop = False
+                else:
+                    raise Invalid_input(self.user)
+            except Invalid_input as e:
+                print(e)
+                self.user = input('Please enter your choice: ')
                 
         
 
