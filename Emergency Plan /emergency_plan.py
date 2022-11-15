@@ -14,18 +14,23 @@ class emergency_plan:
     def selection(self):
         print("1. Create Emergency Plan.")
         print("2. Display Emergency Plan.")
-        print("3. Close Emergency Plan.")
+        print("3. Edit Emergency Plan.")
+        print("4. Delete Emergency Plan.")
         self.user = input('Please enter your choice: ')
         try:
-            if int(self.user) == 1:
+            if self.user == '1':
                 create = self.Create_Emergency_Plan()
                 create.add()
-            elif int(self.user) == 2:
+            elif self.user == '2':
                 display = self.Display_Emergency_Plan()
                 display
-            elif int(self.user) == 3:
+            elif self.user == '3':
+                edit = self.Edit_Emergency_Plan()
+                edit 
+            elif self.user == '4':
                 delete = self.Delete_Emergency_Plan()
                 delete
+
             else:
                 raise Invalid_input(self.user)
         except Invalid_input as e:
@@ -48,11 +53,39 @@ class emergency_plan:
                 raise Invalid_input(date_format)
             except Invalid_input as e:
                 print(e)
+            try:
+                refugee = input('Please enter the number of refugees at the camp: ')
+                if refugee.isdigit():
+                    self.refugee = refugee
+                else:
+                    raise Invalid_input(refugee)
+            except Invalid_input as e:
+                print(e)
+            try:
+                volunteer = input('Please enter the number of volunteers required at the camp: ')
+                if volunteer.isdigit():
+                    self.volunteer = volunteer
+                else:
+                    raise Invalid_input(volunteer)
+            except Invalid_input as e:
+                print(e)
+            
         
         def add(self):
-            dataframe = pd.DataFrame(data = None, columns=np.array(['Type', 'Description', 'Geographical Area', 'Start Date']))
-            print(dataframe)
-        
+            dataframe = pd.DataFrame(data = None, columns=np.array(['Type', 'Description', 'Area', 'Start Date', '# refugees', 
+            '# humanitarian volunteers']))
+            if ((dataframe['Type'] == self.type) & (dataframe['Description'] == self.desc)
+            & (dataframe['Area'] == self.area) & (dataframe['Start Date'] == self.date)
+            & (dataframe['# refugees'] == self.refugee) & (dataframe['# humanitarian volunteers'] == self.volunteer)).any():
+                print(dataframe)
+                
+            else: 
+                new_dataframe = pd.DataFrame({'Type': [self.type], 'Description': [self.desc],
+                'Area': [self.area], 'Start Date': [self.date],
+                '# refugees': [self.refugee], '# humanitarian volunteers': [self.volunteer]})
+                dataframe = pd.concat([dataframe, new_dataframe], ignore_index
+                = False)
+                print(dataframe)
         
 
     class Display_Emergency_Plan:
@@ -62,6 +95,10 @@ class emergency_plan:
     class Delete_Emergency_Plan:
          def __init__(self):
             self.type = input('Please choose which emergency plan to be deleted: ')
+
+    class Edit_Emergency_Plan:
+         def __init__(self):
+            self.type = input('Please choose which emergency plan to be edited: ')
         
 
 
