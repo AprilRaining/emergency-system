@@ -83,7 +83,7 @@ class emergency_plan:
             if ((dataframe['Type'] == self.type) & (dataframe['Description'] == self.desc)
             & (dataframe['Area'] == self.area) & (dataframe['Start Date'] == self.date)
             & (dataframe['# refugees'] == self.refugee) & (dataframe['# humanitarian volunteers'] == self.volunteer)).any():
-                dataframe = dataframe.style.set_properties(**{'border': '1.3px solid green',
+                dataframe.style.set_properties(**{'border': '1.3px solid green',
                           'color': 'magenta'})
                 print(dataframe)
                 
@@ -93,7 +93,7 @@ class emergency_plan:
                 '# refugees': [self.refugee], '# humanitarian volunteers': [self.volunteer]})
                 dataframe = pd.concat([dataframe, new_dataframe], ignore_index
                 = False)
-                dataframe = dataframe.style.set_properties(**{'border': '1.3px solid green',
+                dataframe.style.set_properties(**{'border': '1.3px solid green',
                           'color': 'magenta'})
                 print(dataframe)
         
