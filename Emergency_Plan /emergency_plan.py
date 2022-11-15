@@ -99,11 +99,12 @@ class emergency_plan:
                 dataframe.to_csv('emergency_plan_test.csv')
 
     class Display_Emergency_Plan:
-
-        def Display_One_Plan(self):
+        def __int__(self):
+            self.type = input('Please choose which emergency plan to be deleted: ')
+        def Display_One_Plan(self, choice):
             df = pd.read_csv('emergency_plan_test.csv', index_col=0)
             for i in range(len(df.columns.values)):
-                print('{}. {}:{}'.format(i, df.columns.values[i], df.loc(self.type).values[i]))
+                print('{}. {}:{}'.format(i, df.columns.values[i], df.loc(choice).values[i]))
 
         def Dispaly_All_Plans(self):
             df = pd.read_csv('emergency_plan_test.csv', index_col=0)
@@ -118,7 +119,7 @@ class emergency_plan:
             while True:
                 try:
                     self.type = int(input('Please choose which emergency plan to be edited: '))
-                    df = pd.read_csv('../info_files/emergency_plan.csv', index_col=0)
+                    df = pd.read_csv('emergency_plan_test.csv', index_col=0)
                     if self.type in range(len(df.columns)):
                         break
                     else:
@@ -131,10 +132,10 @@ class emergency_plan:
             while True:
                 try:
                     for i in range(len(df.columns.values)):
-                        print('{}. {}:{}'.format(i, df.columns.values[i], df.loc(self.type).values[i]))
+                        print('{}. {}:{}'.format(i, df.columns.values[i], df.loc[self.type].values[i]))
                     self.selection = int(input('Please choose which one you want to change: '))
                     if self.selection in range(0, 5):
-                        df.loc[self.type][self.selection] = input('Please input new value:')
+                        df.loc[self.type].values[self.selection] = input('Please input new value:')
                         df.to_csv('emergency_plan_test.csv')
                         break
                     else:
