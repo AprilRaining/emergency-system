@@ -3,38 +3,6 @@ import inspect
 from myError import *
 
 
-def menu_choice_get(size):
-    while True:
-        try:
-            choice = int(input())
-            if choice not in range(size):
-                raise OutOfRangeError(choice)
-        except ValueError:
-            print("You entered a non-numeric value.")
-            print("Please reenter a valid Number")
-        except OutOfRangeError as e:
-            print(e)
-        else:
-            return choice
-
-
-def double_check():
-    """
-    This function used for double_check.
-    Y for confirm / Any key else for cancel operation
-    :return: Bool
-    """
-    try:
-        check = input('"Y/y" to confirm your action(any other key to cancel')
-        if check == 'Y' or check == 'y':
-            return True
-        else:
-            return False
-    except Exception:
-        # TO DO: Exception Handle
-        pass
-
-
 def menu(name=''):
     """
     This function used to store data about UI and return them as a string.
@@ -65,8 +33,8 @@ def menu(name=''):
         case 'manage_emergency_plan':
             return (
                 '1. Create Emergency Plan.\n'
-                '2. Display Emergency Plan.\n'
-                '3. Edit Emergency Plan.\n'
+                '2. Edit Emergency Plan.\n'
+                '3. Display Emergency Plan.\n'
                 '4. Close Emergency Plan\n'
                 '5. Delete Emergency Plan.\n'
                 '0. Exit'
@@ -93,3 +61,35 @@ def menu(name=''):
                 '4. Delete Emergency Refugee File.\n'
                 '0. Exit'
             )
+
+
+def menu_choice_get(size):
+    while True:
+        try:
+            choice = int(input())
+            if choice not in range(size):
+                raise OutOfRangeError(choice)
+        except ValueError:
+            print("You entered a non-numeric value.")
+            print("Please reenter a valid Number")
+        except OutOfRangeError as e:
+            print(e)
+        else:
+            return choice
+
+
+def double_check():
+    """
+    This function used for double_check.
+    Y for confirm / Any key else for cancel operation
+    :return: Bool
+    """
+    try:
+        check = input('"Y/y" to confirm your action(any other key to cancel')
+        if check == 'Y' or check == 'y':
+            return True
+        else:
+            return False
+    except Exception:
+        # TO DO: Exception Handle
+        pass

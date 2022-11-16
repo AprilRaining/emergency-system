@@ -17,7 +17,7 @@ class Admin:
         # Get Menu
         self.menu = menu(self.__class__.__name__)
 
-    def sub_program(self):
+    def sub_main(self):
         while True:
             print(self.menu)
             match menu_choice_get(menu(self.__class__.__name__).count('\n') + 1):
@@ -33,29 +33,56 @@ class Admin:
             print(menu())
             match menu_choice_get(menu().count('\n') + 1):
                 case 1:
-                    pass
+                    self.create_emergency_plan()
                 case 2:
-                    pass
+                    self.edit_emergency_plan()
                 case 3:
-                    pass
+                    self.display_emergency_plan()
                 case 4:
-                    pass
+                    self.close_emergency_plan()
                 case 5:
-                    pass
+                    self.delete_emergency_plan()
                 case 0:
                     return
+
+    def create_emergency_plan(self):
+        pass
+
+    def edit_emergency_plan(self):
+        pass
+
+    def display_emergency_plan(self):
+        pass
+
+    def close_emergency_plan(self):
+        pass
+
+    def delete_emergency_plan(self):
+        pass
 
     def manage_account(self):
         while True:
             print(menu())
             match menu_choice_get(menu().count('\n') + 1):
                 case 1:
-                    pass
+                    self.reactive_volunteer_account()
                 case 2:
-                    pass
+                    self.deactive_volunteer_account()
                 case 3:
-                    pass
+                    self.creat_a_volunteer_account()
                 case 4:
-                    pass
+                    self.display_volunteer_account()
                 case 0:
                     return
+
+    def reactive_volunteer_account(self):
+        pass
+
+    def deactive_volunteer_account(self):
+        pass
+
+    def creat_a_volunteer_account(self):
+        pass
+
+    def display_volunteer_account(self):
+        pass

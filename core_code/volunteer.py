@@ -16,7 +16,7 @@ class Volunteer:
         """
         self.menu = menu(self.__class__.__name__)
 
-    def sub_program(self):
+    def sub_main(self):
         while True:
             print(self.menu)
             match menu_choice_get(menu(self.__class__.__name__).count('\n') + 1):
@@ -32,19 +32,41 @@ class Volunteer:
             print(menu())
             match menu_choice_get(menu().count('\n') + 1):
                 case 1:
-                    pass
+                    self.edit_my_information()
                 case 2:
-                    pass
+                    self.show_my_information()
                 case 0:
                     return
+
+    def edit_my_information(self):
+        pass
+
+    def show_my_information(self):
+        pass
 
     def manage_camp_file(self):
         while True:
             print(menu())
             match menu_choice_get(menu().count('\n') + 1):
                 case 1:
-                    pass
+                    self.create_emergency_refugee_file()
                 case 2:
-                    pass
+                    self.edit_emergency_refugee_file()
+                case 3:
+                    self.close_emergency_refugee_file()
+                case 4:
+                    self.delete_emergency_refugee_file()
                 case 0:
                     return
+
+    def create_emergency_refugee_file(self):
+        pass
+
+    def edit_emergency_refugee_file(self):
+        pass
+
+    def close_emergency_refugee_file(self):
+        pass
+
+    def delete_emergency_refugee_file(self):
+        pass
