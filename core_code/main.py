@@ -1,5 +1,4 @@
 import inspect
-import sys
 
 
 class OutOfRangeError(Exception):
@@ -66,8 +65,9 @@ def menu(name=''):
             )
         case 'Volunteer':
             return (
-                '1. Manage Information.\n'
-                '2. Manage Camp file\n'
+                '1. Manage Personal Information.\n'
+                '2. Manage Camp File\n'
+                '0. Exit'
             )
         case 'manage_emergency_plan':
             return (
@@ -78,6 +78,28 @@ def menu(name=''):
                 '5. Delete Emergency Plan.\n'
                 '0. Exit'
             )
+        case 'manage_account':
+            return (
+                '1. Re-active Volunteer Account.\n'
+                '2. De-active Volunteer Account.\n'
+                '3. Create A New Volunteer Account.\n'
+                '4. Display Volunteer Account.\n'
+                '0. Exit'
+            )
+        case 'manage_personal_information':
+            return (
+                '1. Edit My Information.\n'
+                '2. Show My Information.\n'
+                '0. Exit'
+            )
+        case 'manage_camp_file':
+            return (
+                '1. Create Emergency Refugee File.\n'
+                '2. Edit Emergency Refugee File.\n'
+                '3. Close Emergency Refugee File.\n'
+                '4. Delete Emergency Refugee File.\n'
+                '0. Exit'
+            )
 
 
 class Volunteer:
@@ -85,10 +107,12 @@ class Volunteer:
     This is class for volunteer to operate the system.
     """
 
-    def __int__(self):
+    def __init__(self):
         """
+        To Do:
         1. Process Login when construct a new admin
         2. Show the menu
+        3. Maybe for first login require the volunteer to edit their personal information first.
         :return:
         """
         self.menu = menu(self.__class__.__name__)
@@ -98,19 +122,38 @@ class Volunteer:
             print(self.menu)
             match menu_choice_get(menu(self.__class__.__name__).count('\n') + 1):
                 case 1:
+                    self.manage_personal_information()
+                case 2:
+                    self.manage_camp_file()
+                case 0:
+                    return
+
+    def manage_personal_information(self):
+        while True:
+            print(menu())
+            match menu_choice_get(menu().count('\n') + 1):
+                case 1:
                     pass
                 case 2:
                     pass
                 case 0:
-                    pass
+                    return
 
+    def manage_camp_file(self):
+        while True:
+            print(menu())
+            match menu_choice_get(menu().count('\n') + 1):
+                case 1:
+                    pass
+                case 2:
+                    pass
+                case 0:
+                    return
 
 class Admin:
     """
         This is the admin class for admin program.
     """
-
-    # MENU_NAME = 'admin_main'
 
     def __init__(self):
         """
@@ -130,10 +173,9 @@ class Admin:
                 case 1:
                     self.manage_emergency_plan()
                 case 2:
-                    pass
+                    self.manage_account()
                 case 0:
-                    if double_check():
-                        return
+                    return
 
     def manage_emergency_plan(self):
         while True:
@@ -150,8 +192,22 @@ class Admin:
                 case 5:
                     pass
                 case 0:
-                    if double_check():
-                        return
+                    return
+
+    def manage_account(self):
+        while True:
+            print(menu())
+            match menu_choice_get(menu().count('\n') + 1):
+                case 1:
+                    pass
+                case 2:
+                    pass
+                case 3:
+                    pass
+                case 4:
+                    pass
+                case 0:
+                    return
 
 
 class Login:
@@ -167,21 +223,13 @@ class Login:
             print(self.menu)
             match menu_choice_get(menu(self.__class__.__name__).count('\n') + 1):
                 case 1:
-                    try:
-                        admin = Admin()
-                    except Exception:
-                        sys.exit()
-                    else:
-                        admin.sub_program()
+                    admin = Admin()
+                    admin.sub_program()
                 case 2:
-                    try:
-                        volunteer = Volunteer()
-                    except Exception:
-                        sys.exit()
-                    else:
-                        volunteer.sub_program()
+                    volunteer = Volunteer()
+                    volunteer.sub_program()
                 case 0:
-                    sys.exit()
+                    return
 
 
 class StartProgram(object):
