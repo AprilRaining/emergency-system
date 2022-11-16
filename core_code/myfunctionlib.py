@@ -64,6 +64,12 @@ def menu(name=''):
 
 
 def menu_choice_get(size):
+    """
+    This function will make sure the user input would be a number between 0 to the size of the menu,
+    otherwise it will ask the user to input again until a valid number is input.
+    :param size:
+    :return: Int
+    """
     while True:
         try:
             choice = int(input())
@@ -82,6 +88,7 @@ def double_check():
     """
     This function used for double_check.
     Y for confirm / Any key else for cancel operation
+    Have this function to do the double check when exiting, but redundant this feature later.
     :return: Bool
     """
     try:
