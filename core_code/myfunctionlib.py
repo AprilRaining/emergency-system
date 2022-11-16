@@ -6,9 +6,9 @@ from myError import *
 def menu(name=''):
     """
     This function used to store data about UI and return them as a string.
+    If there is no input value for name, the name will be the function which called this function(menu).
     :return: string
     """
-    # if there is no input value for name, the name will be the function which called this function(menu).
     if len(name) == 0:
         name = inspect.stack()[1][3]
     match name:
