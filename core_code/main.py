@@ -1,44 +1,24 @@
-import pandas as pd
+import sys
 
-
-# abspath = os.path.abspath(__file__)
-# camp = pd.read_csv("../info_files/camp.csv")
-
-
-class StartProgram(object):
-
-    """
-        This is the class used to start the program and read files.
-
-    """
-
-    def __init__(self):
-        self.camp_file = pd.read_csv("../info_files/camp.csv")
-        self.plan_file = pd.read_csv("../info_files/emergency_plan.csv")
-        self.refugee_file = pd.read_csv("../info_files/refugee.csv")
-        self.volunteer_file = pd.read_csv("../info_files/volunteer.csv")
-
-    def admin_manage_plan(self):
-        pass
-
-    def admin_manage_account(self):
-        pass
-
-    def volunteer_manage_info(self):
-        pass
-
-    def volunteer_manage_profile(self):
-        pass
-
-    def login(self):
-        pass
-
-    def register(self):
-        pass
-
+from admin import Admin
+from myfunctionlib import *
+from volunteer import Volunteer
 
 if __name__ == "__main__":
-    program = StartProgram()
-    print(program.camp_file)
-
-
+    """
+    TO DO (Possible):
+    Some Initialisation staff for the WHOLE program.
+    """
+    # For Log in
+    while True:
+        print(menu('Login'))
+        match menu_choice_get(menu('Login').count('\n') + 1):
+            case 1:
+                admin = Admin()
+                admin.sub_main()
+            case 2:
+                volunteer = Volunteer()
+                volunteer.sub_main()
+            case 0:
+                # To Do: Before Quitting Do something?
+                sys.exit()
