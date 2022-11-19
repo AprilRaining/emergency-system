@@ -31,7 +31,7 @@ def menu(name=''):
                 '2. Manage Camp File\n'
                 '0. Exit'
             )
-        case 'manage_emergency_plan':
+        case 'ManageEmergencyPlan':
             return (
                 '1. Create Emergency Plan.\n'
                 '2. Edit Emergency Plan.\n'
