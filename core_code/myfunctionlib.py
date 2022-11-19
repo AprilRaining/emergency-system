@@ -1,3 +1,4 @@
+import datetime
 import inspect
 
 from myError import *
@@ -63,16 +64,17 @@ def menu(name=''):
             )
 
 
-def menu_choice_get(size):
+def menu_choice_get(size, hint=''):
     """
     This function will make sure the user input would be a number between 0 to the size of the menu,
     otherwise it will ask the user to input again until a valid number is input.
-    :param size:
+    :param hint: String
+    :param size: Int
     :return: Int
     """
     while True:
         try:
-            choice = int(input())
+            choice = int(input(hint))
             if choice not in range(size):
                 raise OutOfRangeError(choice)
         except ValueError:
@@ -82,6 +84,42 @@ def menu_choice_get(size):
             print(e)
         else:
             return choice
+
+
+def get_int(hint: str, sign=1):
+    """
+    This function only accept a positive int input.
+    With size parameter equal to 0, it will accept all int number.
+    :return: int
+    """
+    while True:
+        try:
+            n = int(input(hint))
+            if sign != 0:
+                if n <= 0:
+                    raise InvalidInput(n)
+        except ValueError:
+            print("You entered a non-numeric value.")
+            print("Please reenter a valid Number")
+        except InvalidInput as e:
+            print(e)
+        else:
+            return n
+
+
+def get_data(hint: str):
+    while True:
+        try:
+            date_format = input(hint)
+            date = date_format.split('-')
+            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31):
+                date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+            else:
+                raise InvalidInput(date_format)
+        except InvalidInput as e:
+            print(e)
+        else:
+            return date
 
 
 def double_check():
@@ -100,3 +138,14 @@ def double_check():
     except Exception:
         # TO DO: Exception Handle
         pass
+
+
+def back():
+    while True:
+        try:
+            check = input('Input "Q/q" to go back.')
+            if check == 'Q' or check == 'q':
+                return
+        except Exception:
+            # TO DO: Exception Handle
+            pass
