@@ -1,4 +1,10 @@
 from myfunctionlib import *
+from exception.refugee_exception import *
+from refugee_validation import *
+from refugee_input_option import *
+from refugee_info_edit import *
+from refugee import Refugee
+import pandas as pd
 
 
 class Volunteer:
@@ -61,13 +67,63 @@ class Volunteer:
                     return
 
     def create_emergency_refugee_file(self):
-        pass
+        refugee_df = pd.read_csv('info_files/refugee.csv')
+        camp_df = pd.read_csv('info_files/camp.csv')
+        
+        while True:
+            # create instance of refugee
+            new_ref = Refugee("Register")
+            # register new refugee
+            new_ref.refugee_registration_form(refugee_df,camp_df)
+            cont_proc = input("Would you like to continue registering more refugees?(Yes/No): ")
+            if cont_proc == "No":
+                sys.exit()
+
 
     def edit_emergency_refugee_file(self):
-        pass
+        print("Welcome to refugee information system")
+        print("-------------------------------------------")
+        refugee_df = pd.read_csv('info_files/refugee.csv')
+        camp_df = pd.read_csv('info_files/camp.csv')
+        ref_df_by_id = refugee_validity_check_by_ID("edit",refugee_df)
+        print("-------------------------------------------")
+        print("Select a database field that you would like to edit")
+        edit_opt = refugee_input_option("Edit")
+        edit_arr = numerical_input_check(edit_opt)
+        # print("arr",edit_arr)
+        print("\n-------------------INFO EDITION-------------------")
+        for e in edit_arr:
+            edited_fields = refugee_info_edit(int(e),refugee_df,camp_df)
+            # print("field",edited_fields)
+            edited_dice = input_matching("Edit")
+            col_name_arr = edited_dice[int(e)]
+            # print("col",col_name_arr)
+            for i in range(len(col_name_arr)):
+                refugee_df.at[ref_df_by_id,col_name_arr[i]] = edited_fields[i]
+            
+        # update database
+        with open('info_files/refugee.csv', 'w') as f:
+            refugee_df.to_csv(f, index=False)
+        print("-------------------------------------------")
+        print("The refugee's information is successfully updated.")
 
     def close_emergency_refugee_file(self):
+        # set status to inactive ? 
         pass
 
     def delete_emergency_refugee_file(self):
-        pass
+        print("Welcome to refugee information system")
+        print("-------------------------------------------")
+        refugee_df = pd.read_csv('info_files/refugee.csv')
+        ref_df_by_id = refugee_validity_check_by_ID("delete",refugee_df)
+        print("-------------------------------------------")
+        # delete the refugee with specified ID
+        refugee_df.drop(refugee_df.index[(refugee_df["refugee_ID"] == ref_df_by_id)],axis=0,inplace=True)
+        # update database
+        with open('info_files/refugee.csv', 'w') as f:
+            refugee_df.to_csv(f, index=False)
+        print("-------------------------------------------")
+        print("The refugee's information is successfully deleted.")
+
+        
+        
