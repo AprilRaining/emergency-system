@@ -19,7 +19,6 @@ class Admin:
         # Process Login. If fail more than 5 times. Exit
         # Get Menu
         self.menu = menu(self.__class__.__name__)
-        self.emergency_plan_csv = '../info_files/emergency_plan.csv'
 
     def sub_main(self):
         while True:
