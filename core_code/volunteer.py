@@ -93,7 +93,7 @@ class Volunteer:
         # print("arr",edit_arr)
         print("\n-------------------INFO EDITION-------------------")
         for e in edit_arr:
-            edited_fields = refugee_info_edit(int(e),refugee_df,camp_df)
+            edited_fields = refugee_info_edit(int(e),refugee_df,camp_df,refugee_df.loc[ref_df_by_id, 'camp_ID'])
             # print("field",edited_fields)
             edited_dice = input_matching("Edit")
             col_name_arr = edited_dice[int(e)]
@@ -108,8 +108,22 @@ class Volunteer:
         print("The refugee's information is successfully updated.")
 
     def close_emergency_refugee_file(self):
-        # set status to inactive ? 
-        pass
+        print("Welcome to refugee information system")
+        print("-------------------------------------------")
+        refugee_df = pd.read_csv('info_files/refugee.csv')
+        ref_df_by_id = refugee_validity_check_by_ID("deactivate",refugee_df)
+        print("-------------------------------------------")
+        # deactivate the refugee with specified ID and add to file
+        inactive_ref = refugee_df.loc[refugee_df["refugee_ID"] == ref_df_by_id]
+        with open('info_files/inactive_refugee.csv', 'a') as f:
+            inactive_ref.to_csv(f, header=False,index=False)
+        # delete data from active refugee file
+        refugee_df.drop(refugee_df.index[(refugee_df["refugee_ID"] == ref_df_by_id)],axis=0,inplace=True)
+        # update database
+        with open('info_files/refugee.csv', 'w') as f:
+            refugee_df.to_csv(f, index=False)
+        print("The refugee's information is successfully deactivated.")
+        
 
     def delete_emergency_refugee_file(self):
         print("Welcome to refugee information system")
@@ -122,8 +136,12 @@ class Volunteer:
         # update database
         with open('info_files/refugee.csv', 'w') as f:
             refugee_df.to_csv(f, index=False)
-        print("-------------------------------------------")
         print("The refugee's information is successfully deleted.")
 
         
         
+v1 = Volunteer()
+# v1.create_emergency_refugee_file()
+v1.edit_emergency_refugee_file()
+# v1.delete_emergency_refugee_file()
+# v1.close_emergency_refugee_file()

@@ -2,7 +2,7 @@
 from refugee import Refugee
 
 
-def refugee_info_edit(choice, refugee_df, camp_df):
+def refugee_info_edit(choice, refugee_df, camp_df, camp_ID):
     ref = Refugee("Edit")
     match choice:
             case 1:
@@ -18,7 +18,7 @@ def refugee_info_edit(choice, refugee_df, camp_df):
             case 6:
                 ref.refugee_family()
             case 7:
-                ref.assign_camp_ID(camp_df)
+                ref.assign_camp_ID(camp_df,"edit",camp_ID)
             case 8:
                 ref.refugee_illnesses()
             case 9:

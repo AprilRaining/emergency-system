@@ -57,7 +57,7 @@ class Refugee:
         else:
             self.ref_row.extend(["-"])
 
-    def assign_camp_ID(self, camp_df):
+    def assign_camp_ID(self, camp_df, purpose, previous_camp=0):
         print("INSTRUCTION: Please assign the camp identification to the refugee.")
         print("The detail below shows the availability of each camp as well as its related conditions: ")
         print(camp_df)
@@ -70,6 +70,10 @@ class Refugee:
         # update number of refugees
         camp_df.at[self.assigned_camp-1,
                    'num_of_refugees'] = int(camp_df.loc[self.assigned_camp-1, 'num_of_refugees']) + 1
+        if purpose == "edit":
+            # reduce number in previous camp before edited
+            camp_df.at[previous_camp-1,'num_of_refugees'] = int(camp_df.loc[previous_camp-1, 'num_of_refugees']) - 1
+
         # write data to csv
         with open('info_files/camp.csv', 'w') as f:
             camp_df.to_csv(f, index=False)
@@ -161,16 +165,14 @@ class Refugee:
         self.ref_ID = list(refugee_df.index)
         ref_length = len(refugee_df.index)
         self.ref_ID.append(int(ref_length))
+        self.ref_row.insert(0, ref_length)
+        # add refugee status at the back 
         # print("index", self.ref_ID)
         # print("col", self.col_name)
-        self.ref_row.insert(0, ref_length)
         # print("data", self.ref_row)
-
         updated_ref_db = pd.DataFrame(
             data=[self.ref_row], columns=self.col_name)
-
-        print(updated_ref_db)
-
+        # print(updated_ref_db)
         # append new data row to refugee.csv
         with open('info_files/refugee.csv', 'a') as f:
             updated_ref_db.to_csv(f, header=False, index=False)
@@ -191,7 +193,7 @@ class Refugee:
         print("\n-------------------------------------------")
         print("ASSIGNING CAMP IDENTIFICATION")
         print("-------------------------------------------")
-        self.assign_camp_ID(camp_df)
+        self.assign_camp_ID(camp_df,"create")
 
         # medical condition
         print("\n-------------------------------------------")
