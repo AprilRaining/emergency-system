@@ -176,12 +176,11 @@ class emergency_plan:
                                             start_date = row[3]
                                             refugee = row[4]
                                             volunteer = row[5]
-                                            print(typeframe)
-                                            required_date_format = typeframe[(typeframe['Type'] == type) &
-                                                     (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
-                                                     (typeframe['Start Date'] == start_date) & (typeframe['# refugees'] == refugee)
-                                                     & (typeframe['# humanitarian volunteers'] == volunteer)].loc['Start Date']
-                                            required_date = required_date_format.split('/')
+                                            #required_date_format = typeframe[(typeframe['Type'] == type) &
+                                                    # (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
+                                                     #(typeframe['Start Date'] == start_date) & (typeframe['# refugees'] == refugee)
+                                                    # & (typeframe['# humanitarian volunteers'] == volunteer)].loc['Start Date']
+                                            #required_date = required_date_format.split('/')
                                             self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
                                             if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31):
                                             #and (datetime.date(required_date[0], required_date[1], required_date[2]) <= 
@@ -207,9 +206,9 @@ class emergency_plan:
                                                                 & (dataframe['Area'] != area) & (dataframe['Start Date'] != start_date)
                                                                 & (dataframe['# refugees'] != refugee) & (dataframe['# humanitarian volunteers'] != volunteer)
                                                                 & (dataframe['close date'] != self.close)).any(): 
-                                                                    newdataframe = pd.DataFrame({'Type': [self.type], 'Description': [self.desc], 
-                                                                    'Area': [self.area], 'Start Date': [self.date], '# refugees': [self.refugee], 
-                                                                    '# humanitarian volunteers': [self.volunteer], 'close date': [self.close]})
+                                                                    newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
+                                                                    'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
+                                                                    '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
                                                                     newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
                                                                     
                                                             index = typeframe[(typeframe['Type'] == type) &
@@ -285,9 +284,9 @@ class emergency_plan:
                                                                 & (dataframe['Area'] != area) & (dataframe['Start Date'] != start_date)
                                                                 & (dataframe['# refugees'] != refugee) & (dataframe['# humanitarian volunteers'] != volunteer)
                                                                 & (dataframe['close date'] != self.close)).any(): 
-                                                                    newdataframe = pd.DataFrame({'Type': [self.type], 'Description': [self.desc], 
-                                                                    'Area': [self.area], 'Start Date': [self.date], '# refugees': [self.refugee], 
-                                                                    '# humanitarian volunteers': [self.volunteer], 'close date': [self.close]})
+                                                                    newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
+                                                                    'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
+                                                                    '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
                                                                     newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
                                                                     
                                                             index = typeframe[(typeframe['Type'] == type) &
