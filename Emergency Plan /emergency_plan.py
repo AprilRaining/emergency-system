@@ -121,18 +121,14 @@ class emergency_plan:
  
     class Delete_Emergency_Plan:
          def __init__(self):
-            print('Whether you want to delete the emergencey plan now or later: ')
+            print('Do you want to delete the emergencey plan now: ')
             print('1. Now')
-            print('2. Later')
             self.when = input('Please enter your choice: ')
             loop = True
             while loop == True: 
                 try:
                  if self.when == '1':
                         self.delete_now()
-                        loop = False
-                 elif self.when == '2':
-                        self.delete_later()
                         loop = False
                  else: 
                         raise Invalid_input(self.when)
@@ -176,17 +172,10 @@ class emergency_plan:
                                             start_date = row[3]
                                             refugee = row[4]
                                             volunteer = row[5]
-                                            #required_date_format = typeframe[(typeframe['Type'] == type) &
-                                                    # (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
-                                                     #(typeframe['Start Date'] == start_date) & (typeframe['# refugees'] == refugee)
-                                                    # & (typeframe['# humanitarian volunteers'] == volunteer)].loc['Start Date']
-                                            #required_date = required_date_format.split('/')
                                             self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
                                             start_date_raw = start_date.split('-')
                                             start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
                                             if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.close >= start_datetime:
-                                            #and (datetime.date(required_date[0], required_date[1], required_date[2]) <= 
-                                            #self.close) 
                                                 loop2 = False
                                                 while loop3 == True: 
                                                     try:
@@ -239,14 +228,15 @@ class emergency_plan:
                  elif self.choice == '2':
                         loop = False
                         typeframe = pd.read_csv('emergency_plan_1.csv')
-                        date_start_format = input('Please enter the start date of the emergency plan you want to view and then delet in the format of yyyy-mm-dd: ')
-                        date_start = date_start_format.split('-')
+                        print(set(typeframe['Start Date']))
+                        self.date = input('Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
+                        start_date_entered = self.date.split('-')
                         loop1 = True
                         while loop1 == True:
                             try:
-                                if (2000 <= int(date_start[0])) and (1 <= int(date_start[1]) <= 12) and (1 <= int(date_start[2]) <= 31):
+                                if (2000 <= int(start_date_entered[0])) and (1 <= int(start_date_entered[1]) <= 12) and (1 <= int(start_date_entered[2]) <= 31) and self.date in set(typeframe['Start Date']):
                                     loop1 = False
-                                    finalframe = typeframe[typeframe['Type'] == self.type]
+                                    finalframe = typeframe[typeframe['Start Date'] == self.date]
                                     finalframe = finalframe.reset_index(drop = True)
                                     print(finalframe)
                                     self.row = input('Please choose which row above you want to delete: ')
@@ -284,10 +274,10 @@ class emergency_plan:
                                                                  newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
                                                             else:
                                                                 dataframe = pd.read_csv('delete.csv')
-                                                                if ((dataframe['Type'] != type) & (dataframe['Description'] != desc)
-                                                                & (dataframe['Area'] != area) & (dataframe['Start Date'] != start_date)
-                                                                & (dataframe['# refugees'] != refugee) & (dataframe['# humanitarian volunteers'] != volunteer)
-                                                                & (dataframe['close date'] != self.close)).any(): 
+                                                                if not ((dataframe['Type'] == type) & (dataframe['Description'] == desc)
+                                                                & (dataframe['Area'] == area) & (dataframe['Start Date'] == start_date)
+                                                                & (dataframe['# refugees'] == refugee) & (dataframe['# humanitarian volunteers'] == volunteer)
+                                                                & (dataframe['close date'] == self.close)).any(): 
                                                                     newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
                                                                     'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
                                                                     '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
@@ -311,10 +301,89 @@ class emergency_plan:
                                             date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                             date = date_format.split('-')
                                 else: 
-                                    raise Invalid_input(self.type)
+                                    raise Invalid_input(self.date)
                             except Invalid_input as e:
                                  print(e)
-                                 self.type = input('Please enter your choice: ')
+                                 self.date = input('Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
+                 elif self.choice == '3':
+                    loop = False
+                    typeframe = pd.read_csv('emergency_plan_1.csv')
+                    print(f'The choices of type are: {set(typeframe.Area.values)}.')
+                    self.area = input('Please enter the area of the emergency plan you want to view and then delete: ')
+                    loop1 = True
+                    while loop1 == True:
+                            try:
+                                if self.area in typeframe.Area.values:
+                                    loop1 = False
+                                    finalframe = typeframe[typeframe['Area'] == self.area]
+                                    finalframe = finalframe.reset_index(drop = True)
+                                    print(finalframe)
+                                    self.row = input('Please choose which row above you want to delete: ')
+                                    date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
+                                    date = date_format.split('-')
+                                    loop2 = True
+                                    loop3 = True
+                                    while loop2 == True:
+                                        try:
+                                            row = finalframe.iloc[int(self.row)]
+                                            type = row[0]
+                                            desc = row[1]
+                                            area = row[2]
+                                            start_date = row[3]
+                                            refugee = row[4]
+                                            volunteer = row[5]
+                                            self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+                                            start_date_raw = start_date.split('-')
+                                            start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
+                                            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.close >= start_datetime:
+                                                loop2 = False
+                                                while loop3 == True: 
+                                                    try:
+                                                        if int(self.row) in finalframe.index:
+                                                            loop3 = False
+                                                            file_exists = os.path.isfile('delete.csv')
+                                                            if not file_exists:
+                                                                 emptydataframe = pd.DataFrame(data = None, columns = np.array(['Type',
+                                                                 'Description', 'Area', 'Start Date', '# refugees', '# humanitarian volunteers',
+                                                                 'close date']))
+                                                                 emptydataframe.to_csv('delete.csv', index = False)
+                                                                 newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
+                                                                 'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
+                                                                 '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
+                                                                 newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
+                                                            else:
+                                                                dataframe = pd.read_csv('delete.csv')
+                                                                if not ((dataframe['Type'] == type) & (dataframe['Description'] == desc)
+                                                                & (dataframe['Area'] == area) & (dataframe['Start Date'] == start_date)
+                                                                & (dataframe['# refugees'] == refugee) & (dataframe['# humanitarian volunteers'] == volunteer)
+                                                                & (dataframe['close date'] == self.close)).any(): 
+                                                                    newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
+                                                                    'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
+                                                                    '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
+                                                                    newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
+                                                                    
+                                                            index = typeframe[(typeframe['Type'] == type) &
+                                                            (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
+                                                            (typeframe['Start Date'] == start_date) & (typeframe['# refugees'] == refugee)
+                                                            & (typeframe['# humanitarian volunteers'] == volunteer)].index
+                                                            typeframe = typeframe.drop(index)
+                                                            typeframe.to_csv('emergency_plan_1.csv', mode = 'w', index = False)
+                                                        else: 
+                                                             raise Invalid_input(self.row)
+                                                    except Invalid_input as e:
+                                                            print(e)
+                                                            self.row = input('Please enter your choice: ')
+                                            else: 
+                                                raise Invalid_input(date_format)
+                                        except Invalid_input as e:
+                                            print(e)
+                                            date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
+                                            date = date_format.split('-')
+                                else: 
+                                    raise Invalid_input(self.area)
+                            except Invalid_input as e:
+                                 print(e)
+                                 self.area = input('Please enter the area of the emergency plan you want to view and then delete: ')
                  else: 
                         raise Invalid_input(self.choice)
                 except Invalid_input as e:
@@ -322,8 +391,7 @@ class emergency_plan:
                     self.choice = input('Please enter your choice: ')
 
 
-         def delete_later(self):
-            pass
+         
 
 
 
