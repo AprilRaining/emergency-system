@@ -182,7 +182,9 @@ class emergency_plan:
                                                     # & (typeframe['# humanitarian volunteers'] == volunteer)].loc['Start Date']
                                             #required_date = required_date_format.split('/')
                                             self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-                                            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31):
+                                            start_date_raw = start_date.split('-')
+                                            start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
+                                            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.close >= start_datetime:
                                             #and (datetime.date(required_date[0], required_date[1], required_date[2]) <= 
                                             #self.close) 
                                                 loop2 = False
@@ -202,10 +204,10 @@ class emergency_plan:
                                                                  newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
                                                             else:
                                                                 dataframe = pd.read_csv('delete.csv')
-                                                                if ((dataframe['Type'] != type) & (dataframe['Description'] != desc)
-                                                                & (dataframe['Area'] != area) & (dataframe['Start Date'] != start_date)
-                                                                & (dataframe['# refugees'] != refugee) & (dataframe['# humanitarian volunteers'] != volunteer)
-                                                                & (dataframe['close date'] != self.close)).any(): 
+                                                                if not ((dataframe['Type'] == type) & (dataframe['Description'] == desc)
+                                                                & (dataframe['Area'] == area) & (dataframe['Start Date'] == start_date)
+                                                                & (dataframe['# refugees'] == refugee) & (dataframe['# humanitarian volunteers'] == volunteer)
+                                                                & (dataframe['close date'] == self.close)).any(): 
                                                                     newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
                                                                     'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
                                                                     '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
@@ -254,20 +256,22 @@ class emergency_plan:
                                     loop3 = True
                                     while loop2 == True:
                                         try:
-                                            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31):
-                                                self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+                                            row = finalframe.iloc[int(self.row)]
+                                            type = row[0]
+                                            desc = row[1]
+                                            area = row[2]
+                                            start_date = row[3]
+                                            refugee = row[4]
+                                            volunteer = row[5]
+                                            self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+                                            start_date_raw = start_date.split('-')
+                                            start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
+                                            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.close >= start_datetime:
                                                 loop2 = False
                                                 while loop3 == True: 
                                                     try:
                                                         if int(self.row) in finalframe.index:
                                                             loop3 = False
-                                                            row = finalframe.iloc[int(self.row)]
-                                                            type = row[0]
-                                                            desc = row[1]
-                                                            area = row[2]
-                                                            start_date = row[3]
-                                                            refugee = row[4]
-                                                            volunteer = row[5]
                                                             file_exists = os.path.isfile('delete.csv')
                                                             if not file_exists:
                                                                  emptydataframe = pd.DataFrame(data = None, columns = np.array(['Type',
