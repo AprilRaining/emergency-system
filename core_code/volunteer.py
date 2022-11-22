@@ -102,8 +102,8 @@ class Volunteer:
                 refugee_df.at[ref_df_by_id,col_name_arr[i]] = edited_fields[i]
             
         # update database
-        with open('info_files/refugee.csv', 'a') as f:
-            refugee_df.to_csv(f, header=False,index=False)
+        with open('info_files/refugee.csv', 'w') as f:
+            refugee_df.to_csv(f,index=False)
         print("-------------------------------------------")
         print("The refugee's information is successfully updated.")
 
@@ -170,7 +170,7 @@ class Volunteer:
 
         
         
-# v1 = Volunteer()
+v1 = Volunteer()
 # v1.create_emergency_refugee_file()
 # v1.edit_emergency_refugee_file()
 # v1.delete_emergency_refugee_file()
