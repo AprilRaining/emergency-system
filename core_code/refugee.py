@@ -58,26 +58,34 @@ class Refugee:
             self.ref_row.extend(["-"])
 
     def assign_camp_ID(self, camp_df, purpose, previous_camp=0):
-        print("INSTRUCTION: Please assign the camp identification to the refugee.")
-        print("The detail below shows the availability of each camp as well as its related conditions: ")
-        print(camp_df)
-        print("-------------------------------------------")
-        # camp validation + assigned
-        self.assigned_camp = camp_capacity_check(camp_df)
-        # append camp number to the row
-        self.ref_row.extend([self.assigned_camp])
+        # camp validation + assigned for creat and edit case only
+        if purpose == "create" or purpose == "edit":
+            print("INSTRUCTION: Please assign the camp identification to the refugee.")
+            print("The detail below shows the availability of each camp as well as its related conditions: ")
+            print(camp_df)
+            print("-------------------------------------------")
+            self.assigned_camp = camp_capacity_check(camp_df)
+            # append camp number to the row
+            self.ref_row.extend([self.assigned_camp])
         print("-------------------------------------------")
         # update number of refugees
-        camp_df.at[self.assigned_camp-1,
+        if purpose == "create" or purpose == "edit":
+            # increase number in the camp after created or edit
+            camp_df.at[self.assigned_camp-1,
                    'num_of_refugees'] = int(camp_df.loc[self.assigned_camp-1, 'num_of_refugees']) + 1
-        if purpose == "edit":
-            # reduce number in previous camp before edited
+        if purpose == "reopen":
+            # increase number in the camp after reopen
+            # reduce number in previous camp before edited or closed
+            camp_df.at[previous_camp-1,'num_of_refugees'] = int(camp_df.loc[previous_camp-1, 'num_of_refugees']) + 1
+        if purpose == "edit" or purpose == "close":
+            # reduce number in previous camp before edited or closed
             camp_df.at[previous_camp-1,'num_of_refugees'] = int(camp_df.loc[previous_camp-1, 'num_of_refugees']) - 1
 
         # write data to csv
         with open('info_files/camp.csv', 'w') as f:
             camp_df.to_csv(f, index=False)
-        print(
+        if purpose == "create" or purpose == "edit":
+            print(
             f"Refugee is successfully assigned to the camp number {self.assigned_camp}.")
 
     def refugee_illnesses(self):

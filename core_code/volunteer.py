@@ -102,8 +102,8 @@ class Volunteer:
                 refugee_df.at[ref_df_by_id,col_name_arr[i]] = edited_fields[i]
             
         # update database
-        with open('info_files/refugee.csv', 'w') as f:
-            refugee_df.to_csv(f, index=False)
+        with open('info_files/refugee.csv', 'a') as f:
+            refugee_df.to_csv(f, header=False,index=False)
         print("-------------------------------------------")
         print("The refugee's information is successfully updated.")
 
@@ -117,12 +117,38 @@ class Volunteer:
         inactive_ref = refugee_df.loc[refugee_df["refugee_ID"] == ref_df_by_id]
         with open('info_files/inactive_refugee.csv', 'a') as f:
             inactive_ref.to_csv(f, header=False,index=False)
+        # move refugee out of the camp
+        camp_df = pd.read_csv('info_files/camp.csv')
+        # print("check",camp_df)
+        ref_inac = Refugee("close")
+        ref_inac.assign_camp_ID(camp_df,"close",refugee_df.loc[refugee_df["refugee_ID"] == ref_df_by_id,"camp_ID"].values[0])
         # delete data from active refugee file
         refugee_df.drop(refugee_df.index[(refugee_df["refugee_ID"] == ref_df_by_id)],axis=0,inplace=True)
         # update database
         with open('info_files/refugee.csv', 'w') as f:
             refugee_df.to_csv(f, index=False)
         print("The refugee's information is successfully deactivated.")
+
+    def reopen_emergency_refugee_file(self):
+        print("Welcome to refugee information system")
+        print("-------------------------------------------")
+        inac_refugee_df = pd.read_csv('info_files/inactive_refugee.csv')
+        ref_df_by_id = refugee_validity_check_by_ID("activate",inac_refugee_df)
+        print("-------------------------------------------")
+        # activate the refugee with specified ID and add to file
+        inactive_ref = inac_refugee_df.loc[inac_refugee_df["refugee_ID"] == ref_df_by_id]
+        with open('info_files/refugee.csv', 'a') as f:
+            inactive_ref.to_csv(f, header=False,index=False)
+        # add refugee to camp file
+        camp_df = pd.read_csv('info_files/camp.csv')
+        ref_ac = Refugee("reopen")
+        ref_ac.assign_camp_ID(camp_df,"reopen",inac_refugee_df.loc[inac_refugee_df["refugee_ID"] == ref_df_by_id,"camp_ID"].values[0])
+        # delete data from inactive refugee file
+        inac_refugee_df.drop(inac_refugee_df.index[(inac_refugee_df["refugee_ID"] == ref_df_by_id)],axis=0,inplace=True)
+        # update database
+        with open('info_files/inactive_refugee.csv', 'w') as f:
+            inac_refugee_df.to_csv(f,index=False)
+        print("The refugee's information is successfully activated.")
         
 
     def delete_emergency_refugee_file(self):
@@ -131,6 +157,10 @@ class Volunteer:
         refugee_df = pd.read_csv('info_files/refugee.csv')
         ref_df_by_id = refugee_validity_check_by_ID("delete",refugee_df)
         print("-------------------------------------------")
+        # move refugee out of the camp
+        camp_df = pd.read_csv('info_files/camp.csv')
+        ref_del = Refugee("delete")
+        ref_del.assign_camp_ID(camp_df,"close",refugee_df.loc[refugee_df["refugee_ID"] == ref_df_by_id,"camp_ID"].values[0])
         # delete the refugee with specified ID
         refugee_df.drop(refugee_df.index[(refugee_df["refugee_ID"] == ref_df_by_id)],axis=0,inplace=True)
         # update database
@@ -140,8 +170,9 @@ class Volunteer:
 
         
         
-v1 = Volunteer()
+# v1 = Volunteer()
 # v1.create_emergency_refugee_file()
-v1.edit_emergency_refugee_file()
+# v1.edit_emergency_refugee_file()
 # v1.delete_emergency_refugee_file()
 # v1.close_emergency_refugee_file()
+# v1.reopen_emergency_refugee_file()

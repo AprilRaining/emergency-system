@@ -1,2 +1,1 @@
-refugee_ID,firstname,lastname,birthdate,gender,ethnic_group,email,phone,num_of_family_members,family_member_firstname,camp_ID,illnesses,surgery,smoking,alcoholic0,Jina,Sahori,04/09/1997,Female,Mixed,jina.s@gmail.com,7899344789.0,2,"Mika, Loin",2,"Allergies(Food(Nut), Medication(Pseudo Efplidine)),Others(Migraine)",None,Yes,No
-4,Linpeng,Chen,08/12/1999,Male,Asian,,,2,"Collins, Kenny",2,"Allergies(Dust mites),Headaches",Heart,No,No
+refugee_ID,firstname,lastname,birthdate,gender,ethnic_group,email,phone,num_of_family_members,family_member_firstname,camp_ID,illnesses,surgery,smoking,alcoholic

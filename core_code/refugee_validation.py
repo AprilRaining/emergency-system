@@ -87,12 +87,14 @@ def camp_capacity_check(camp_df):
             return camp
 
 def refugee_validity_check_by_ID(cond,refugee_df):
-       while True:
+        refugee_df = refugee_df.astype({'refugee_ID':'int'})
+        while True:
             try:
                 ref_id = int(input(f"Please input refugee_ID of whom you wish to {cond} the information: "))
-                if ref_id > refugee_df.shape[0]-1 or ref_id<0 :
+                print((refugee_df["refugee_ID"]).max())
+                if ref_id > (refugee_df["refugee_ID"]).max() or ref_id<0 :
                     raise refugee_id_out_of_range
-                if ref_id not in refugee_df["refugee_ID"]:
+                if ref_id not in refugee_df["refugee_ID"].values:
                     raise refugee_id_out_of_range
 
             except refugee_id_out_of_range:
