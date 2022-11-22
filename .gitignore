@@ -1,3 +1,5 @@
 core_code/__pycache__/
 .DS_Store
 .idea/
+temp/
+info_files/

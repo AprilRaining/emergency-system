@@ -15,6 +15,7 @@ class Volunteer:
         :return:
         """
         self.menu = menu(self.__class__.__name__)
+        self.volunteerID=None
 
     def sub_main(self):
         while True:

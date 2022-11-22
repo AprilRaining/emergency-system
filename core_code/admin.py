@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os.path
 
 from myfunctionlib import *
 
@@ -61,7 +62,7 @@ class Admin:
         def create_emergency_plan(self):
             type = input('Please enter the type of Emergency: ')
             desc = input('Please enter the description of the emergency plan: ')
-            area = input('Please enter the geographical area affected by the natural disater: ')
+            area = input('Please enter the geographical area affected by the natural disaster: ')
             date = get_data('Please enter the start date of the emergency plan in the format of yyyy-mm-dd: ')
             refugee = get_int('Please enter the number of refugees at the camp: ')
             volunteer = get_int('Please enter the number of volunteers required at the camp: ')
@@ -100,10 +101,14 @@ class Admin:
             back()
 
         def close_emergency_plan(self):
-            pass
+            print("This function is not finished yet.")
+            back()
 
         def delete_emergency_plan(self):
-            pass
+            print('0. Delete by viewing the type of the emergency plan.')
+            print('1. Delete by viewing the start date of the emergency plan.')
+            print('2. Delete by viewing the geographical area of the emergency plan.')
+            choice = menu_choice_get(2)
 
     def manage_account(self):
         while True:
