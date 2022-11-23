@@ -67,13 +67,12 @@ class Volunteer:
                     return
 
     def create_emergency_refugee_file(self):
-        refugee_df = pd.read_csv('info_files/refugee.csv')
-        camp_df = pd.read_csv('info_files/camp.csv')
-        
         while True:
             # create instance of refugee
             new_ref = Refugee("Register")
             # register new refugee
+            refugee_df = pd.read_csv('info_files/refugee.csv')
+            camp_df = pd.read_csv('info_files/camp.csv')
             new_ref.refugee_registration_form(refugee_df,camp_df)
             cont_proc = input("Would you like to continue registering more refugees?(Yes/No): ")
             if cont_proc == "No":
