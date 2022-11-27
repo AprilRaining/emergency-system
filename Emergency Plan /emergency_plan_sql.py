@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import datetime
-import os.path 
 import sqlite3 as db
 
 conn = db.connect('emergency_system.db')
