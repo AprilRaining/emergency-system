@@ -3,7 +3,7 @@ This repo is the coursework solution of Team K in module COMP0066 Introductory P
 
 
 
-# Sudocode
+# Steps:
 
 ## Login:
 
@@ -24,7 +24,7 @@ This repo is the coursework solution of Team K in module COMP0066 Introductory P
 1. Create a new plan
    1. Input from user:
       1. type
-      2. descirption
+      2. description
       3. area
       4. startDate(yyyy-mm-dd)
       5. campNumer(int)
@@ -66,9 +66,9 @@ This repo is the coursework solution of Team K in module COMP0066 Introductory P
       14. alcoholic
       15. status
       16. special_request
-          1. taskinfo
+          1. task_info
           2. Date(yyyy-mm-dd) (this week only)
-          3. Workingshift
+          3. Working_shift
           4. options for possible volunteer
    2. To do by program
       1. update volunteer timeSchedule
@@ -96,7 +96,7 @@ This repo is the coursework solution of Team K in module COMP0066 Introductory P
       2. view
          1. view their personal information
          2. view my timeSchedule
-            1. fetch current systime compare it with lastLoginin
-            2. updata if needed
+            1. fetch current systime compare it with lastLogin
+            2. update if needed
 
    Tips: volunteerID will be read when init the class volunteer, you can visit it by self.volunteerID

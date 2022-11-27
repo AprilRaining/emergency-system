@@ -1,8 +1,9 @@
-import numpy as np
+import sqlite3
+
 import pandas as pd
-import os.path
 
 from myfunctionlib import *
+from planInput import *
 
 
 class Admin:
@@ -24,7 +25,7 @@ class Admin:
     def sub_main(self):
         while True:
             print(self.menu)
-            match menu_choice_get(self.menu.count('\n') + 1):
+            match option_get(self.menu.count('\n') + 1):
                 case 1:
                     manage_emergency_plan = self.ManageEmergencyPlan()
                     manage_emergency_plan.sub_main()
@@ -40,12 +41,11 @@ class Admin:
             Read from file.
             """
             self.menu = menu(self.__class__.__name__)
-            self.dataframe = pd.read_csv('../info_files/emergency_plan.csv', index_col=0)
 
         def sub_main(self):
             while True:
                 print(self.menu)
-                match menu_choice_get(self.menu.count('\n') + 1):
+                match option_get(self.menu.count('\n') + 1):
                     case 1:
                         self.create_emergency_plan()
                     case 2:
@@ -60,60 +60,72 @@ class Admin:
                         return
 
         def create_emergency_plan(self):
-            type = input('Please enter the type of Emergency: ')
-            desc = input('Please enter the description of the emergency plan: ')
-            area = input('Please enter the geographical area affected by the natural disaster: ')
-            date = get_data('Please enter the start date of the emergency plan in the format of yyyy-mm-dd: ')
-            refugee = get_int('Please enter the number of refugees at the camp: ')
-            volunteer = get_int('Please enter the number of volunteers required at the camp: ')
-            dataframe = pd.DataFrame(data=None,
-                                     columns=np.array(['Type', 'Description', 'Area', 'Start Date', '# refugees',
-                                                       '# humanitarian volunteers']))
-            if ((dataframe['Type'] == type) & (dataframe['Description'] == desc)
-                & (dataframe['Area'] == area) & (dataframe['Start Date'] == date)
-                & (dataframe['# refugees'] == refugee) & (
-                        dataframe['# humanitarian volunteers'] == volunteer)).any():
-                print(dataframe)
-            else:
-                new_dataframe = pd.DataFrame({'Type': [type], 'Description': [desc],
-                                              'Area': [area], 'Start Date': [date],
-                                              '# refugees': [refugee],
-                                              '# humanitarian volunteers': [volunteer]})
-                self.dataframe = pd.concat([dataframe, new_dataframe], ignore_index=False)
-                self.dataframe.to_csv('../info_files/emergency_plan.csv', mode='a', header=False)
-
-        def edit_emergency_plan(self):
-            print(self.dataframe)
-            index_plan = menu_choice_get(self.dataframe.to_string().count('\n'),
-                                         hint='Please choice which plan you want to change: ')
-            self.display_one_emergency_plan_in_detail(index_plan)
-            index_argument = menu_choice_get(5, hint='Please choice which one you want to edit: ')
-            self.dataframe.iloc[index_plan, index_argument] = input('Please input new value:')
-            self.dataframe.to_csv('../info_files/emergency_plan.csv')
+            plan = dict()
+            plan['type'] = PlanInput.type()
+            plan['description'] = PlanInput.description()
+            plan['area'] = PlanInput.area()
+            plan['startDate'] = PlanInput.start_date()
+            plan['closeDate'] = PlanInput.close_date(plan['startDate'])
+            plan['numberOfCamps'] = PlanInput.number_of_camps()
+            plan['status'] = False if plan['startDate'] > datetime.date.today() else True
+            plan['priority'] = PlanInput.priority()
+            print(plan)
+            self.insert_one_plan(plan)
             back()
 
-        def display_one_emergency_plan_in_detail(self, index):
-            for i in range(len(self.dataframe.columns.values)):
-                print('{}. {}:{}'.format(i, self.dataframe.columns.values[i], self.dataframe.loc[index].values[i]))
+        def edit_emergency_plan(self):
+            self.display_all_emergency_plans()
+            option = Get.int('Please input the planID of the plan you want to change: ')
+            self.display_one_emergency_plan()
 
         def display_all_emergency_plans(self):
-            print(self.dataframe)
+            print(self.read_all_plans().to_string(index=False))
             back()
 
         def close_emergency_plan(self):
-            print("This function is not finished yet.")
-            back()
+            pass
 
         def delete_emergency_plan(self):
-            print('0. Delete by viewing the type of the emergency plan.')
-            print('1. Delete by viewing the start date of the emergency plan.')
-            print('2. Delete by viewing the geographical area of the emergency plan.')
-            choice = menu_choice_get(2)
+            pass
+
+        def display_one_emergency_plan(self, index):
+            print(self.read_one_plan(index))
+
+        def insert_one_plan(self, plan):
+            with sqlite3.connect('../info_files/emergency_system.db') as conn:
+                c = conn.cursor()
+                maxPlanID = c.execute('select max(planID) from plan').fetchone()[0]
+                if maxPlanID:
+                    c.execute("update sqlite_sequence set seq = {} where name = 'plan'".format(maxPlanID))
+                else:
+                    c.execute(
+                        "update sqlite_sequence set seq = 0 where name = 'plan'")
+                c.execute(
+                    '''insert into 
+                    plan (type, description, area, startDate, endDate, numberOfCamps, status, priority) 
+                    values ('{}','{}','{}','{}',{},'{}','{}','{}')'''.format(
+                        plan['type'],
+                        plan['description'],
+                        plan['area'],
+                        plan['startDate'],
+                        plan['closeDate'],
+                        plan['numberOfCamps'],
+                        plan['status'],
+                        plan['priority']
+                    ))
+
+        def read_all_plans(self):
+            with sqlite3.connect('../info_files/emergency_system.db') as conn:
+                return pd.read_sql_query('select * from plan', conn)
+
+        def read_one_plan(self, index):
+            with sqlite3.connect('../info_files/emergency_system.db') as conn:
+                return pd.read_sql_query('select * from plan where planID = {}'.format(index))
 
     def manage_account(self):
         while True:
             print(menu())
-            match menu_choice_get(menu().count('\n') + 1):
+            match option_get(menu().count('\n') + 1):
                 case 1:
                     self.reactive_volunteer_account()
                 case 2:

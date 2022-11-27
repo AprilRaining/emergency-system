@@ -1,4 +1,3 @@
-import datetime
 import inspect
 
 from myError import *
@@ -64,62 +63,26 @@ def menu(name=''):
             )
 
 
-def menu_choice_get(size, hint=''):
+def option_get(span, hint=''):
     """
     This function will make sure the user input would be a number between 0 to the size of the menu,
     otherwise it will ask the user to input again until a valid number is input.
     :param hint: String
-    :param size: Int
+    :param span: Int
     :return: Int
     """
     while True:
         try:
-            choice = int(input(hint))
-            if choice not in range(size):
-                raise OutOfRangeError(choice)
+            option = int(input(hint))
+            if option not in range(span):
+                raise InvalidChoiceError(option)
         except ValueError:
             print("You entered a non-numeric value.")
             print("Please reenter a valid Number")
-        except OutOfRangeError as e:
+        except InvalidChoiceError as e:
             print(e)
         else:
-            return choice
-
-
-def get_int(hint: str, sign=1):
-    """
-    This function only accept a positive int input.
-    With size parameter equal to 0, it will accept all int number.
-    :return: int
-    """
-    while True:
-        try:
-            n = int(input(hint))
-            if sign != 0:
-                if n <= 0:
-                    raise InvalidInput(n)
-        except ValueError:
-            print("You entered a non-numeric value.")
-            print("Please reenter a valid Number")
-        except InvalidInput as e:
-            print(e)
-        else:
-            return n
-
-
-def get_data(hint: str):
-    while True:
-        try:
-            date_format = input(hint)
-            date = date_format.split('-')
-            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31):
-                date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-            else:
-                raise InvalidInput(date_format)
-        except InvalidInput as e:
-            print(e)
-        else:
-            return date
+            return option
 
 
 def double_check():
@@ -129,23 +92,15 @@ def double_check():
     Have this function to do the double check when exiting, but redundant this feature later.
     :return: Bool
     """
-    try:
-        check = input('"Y/y" to confirm your action(any other key to cancel')
-        if check == 'Y' or check == 'y':
-            return True
-        else:
-            return False
-    except Exception:
-        # TO DO: Exception Handle
-        pass
+    key = input('"Y/y" to confirm your action(any other key to cancel')
+    if key == 'Y' or key == 'y':
+        return True
+    else:
+        return False
 
 
 def back():
     while True:
-        try:
-            check = input('Input "Q/q" to go back.')
-            if check == 'Q' or check == 'q':
-                return
-        except Exception:
-            # TO DO: Exception Handle
-            pass
+        key = input('Input "Q/q" to go back.')
+        if key == 'Q' or key == 'q':
+            return

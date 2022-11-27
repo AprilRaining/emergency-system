@@ -15,12 +15,12 @@ class Volunteer:
         :return:
         """
         self.menu = menu(self.__class__.__name__)
-        self.volunteerID=None
+        self.volunteerID = None
 
     def sub_main(self):
         while True:
             print(self.menu)
-            match menu_choice_get(self.menu.count('\n') + 1):
+            match option_get(self.menu.count('\n') + 1):
                 case 1:
                     self.manage_personal_information()
                 case 2:
@@ -31,7 +31,7 @@ class Volunteer:
     def manage_personal_information(self):
         while True:
             print(menu())
-            match menu_choice_get(menu().count('\n') + 1):
+            match option_get(menu().count('\n') + 1):
                 case 1:
                     self.edit_my_information()
                 case 2:
@@ -48,7 +48,7 @@ class Volunteer:
     def manage_camp_file(self):
         while True:
             print(menu())
-            match menu_choice_get(menu().count('\n') + 1):
+            match option_get(menu().count('\n') + 1):
                 case 1:
                     self.create_emergency_refugee_file()
                 case 2:

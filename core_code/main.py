@@ -12,7 +12,7 @@ if __name__ == "__main__":
     # For Log in
     while True:
         print(menu('Login'))
-        match menu_choice_get(menu('Login').count('\n') + 1):
+        match option_get(menu('Login').count('\n') + 1):
             case 1:
                 admin = Admin()
                 admin.sub_main()
