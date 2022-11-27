@@ -135,7 +135,7 @@ class emergency_plan:
                 try:
                  if self.choice == '1':
                         loop = False
-                        typeframe = pd.read_csv('emergency_plan_1.csv')
+                        typeframe = pd.read_sql_query('SELECT * FROM plan', conn)
                         print(f'The choices of type are: {set(typeframe.Type.values)}.')
                         self.type = input('Please enter which type of emergency plan you want to view and then delete: ')
                         loop1 = True
@@ -158,8 +158,7 @@ class emergency_plan:
                                             desc = row[1]
                                             area = row[2]
                                             start_date = row[3]
-                                            refugee = row[4]
-                                            volunteer = row[5]
+                                            camp = row[4]
                                             self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
                                             start_date_raw = start_date.split('-')
                                             start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
@@ -169,33 +168,28 @@ class emergency_plan:
                                                     try:
                                                         if int(self.row) in finalframe.index:
                                                             loop3 = False
-                                                            file_exists = os.path.isfile('delete.csv')
-                                                            if not file_exists:
-                                                                 emptydataframe = pd.DataFrame(data = None, columns = np.array(['Type',
-                                                                 'Description', 'Area', 'Start Date', '# refugees', '# humanitarian volunteers',
-                                                                 'close date']))
-                                                                 emptydataframe.to_csv('delete.csv', index = False)
+                                                            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
+                                                            if len(c.fetchall()) == 0: 
+                                                                  newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
+                                                                  'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                  'Clost Date': [self.close]})
+                                                                  newdataframe.to_sql('delete', conn, index= False)
+                                                                 
+                                                            else: 
                                                                  newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
-                                                                 'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
-                                                                 '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
-                                                                 newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
-                                                            else:
-                                                                dataframe = pd.read_csv('delete.csv')
-                                                                if not ((dataframe['Type'] == type) & (dataframe['Description'] == desc)
-                                                                & (dataframe['Area'] == area) & (dataframe['Start Date'] == start_date)
-                                                                & (dataframe['# refugees'] == refugee) & (dataframe['# humanitarian volunteers'] == volunteer)
-                                                                & (dataframe['close date'] == self.close)).any(): 
-                                                                    newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
-                                                                    'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
-                                                                    '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
-                                                                    newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
-                                                                    
+                                                                 'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                 'Clost Date': [self.close]})
+                                                                 newdataframe.to_sql('delete', conn, index= False, if_exists="append")
+                                                                 
+                                                                 
+                                                             
                                                             index = typeframe[(typeframe['Type'] == type) &
                                                             (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
-                                                            (typeframe['Start Date'] == start_date) & (typeframe['# refugees'] == refugee)
-                                                            & (typeframe['# humanitarian volunteers'] == volunteer)].index
+                                                            (typeframe['Start Date'] == start_date) & (typeframe['# camps'] == camp)].index
                                                             typeframe = typeframe.drop(index)
-                                                            typeframe.to_csv('emergency_plan_1.csv', mode = 'w', index = False)
+                                                            typeframe.to_sql('plan', conn, index= False, if_exists="replace")
+                                                            updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
+                                                            print(updatedframe)
                                                         else: 
                                                              raise Invalid_input(self.row)
                                                     except Invalid_input as e:
@@ -215,7 +209,7 @@ class emergency_plan:
                         
                  elif self.choice == '2':
                         loop = False
-                        typeframe = pd.read_csv('emergency_plan_1.csv')
+                        typeframe = pd.read_sql_query('SELECT * FROM plan', conn)
                         print(set(typeframe['Start Date']))
                         self.date = input('Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
                         start_date_entered = self.date.split('-')
@@ -239,8 +233,7 @@ class emergency_plan:
                                             desc = row[1]
                                             area = row[2]
                                             start_date = row[3]
-                                            refugee = row[4]
-                                            volunteer = row[5]
+                                            camp = row[4]
                                             self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
                                             start_date_raw = start_date.split('-')
                                             start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
@@ -250,33 +243,30 @@ class emergency_plan:
                                                     try:
                                                         if int(self.row) in finalframe.index:
                                                             loop3 = False
-                                                            file_exists = os.path.isfile('delete.csv')
-                                                            if not file_exists:
-                                                                 emptydataframe = pd.DataFrame(data = None, columns = np.array(['Type',
-                                                                 'Description', 'Area', 'Start Date', '# refugees', '# humanitarian volunteers',
-                                                                 'close date']))
-                                                                 emptydataframe.to_csv('delete.csv', index = False)
+                                                            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
+                                                            if len(c.fetchall()) == 0: 
+                                                                  newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
+                                                                  'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                  'Clost Date': [self.close]})
+                                                                  newdataframe.to_sql('delete', conn, index= False)
+                                                                 
+                                                            else: 
                                                                  newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
-                                                                 'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
-                                                                 '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
-                                                                 newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
-                                                            else:
-                                                                dataframe = pd.read_csv('delete.csv')
-                                                                if not ((dataframe['Type'] == type) & (dataframe['Description'] == desc)
-                                                                & (dataframe['Area'] == area) & (dataframe['Start Date'] == start_date)
-                                                                & (dataframe['# refugees'] == refugee) & (dataframe['# humanitarian volunteers'] == volunteer)
-                                                                & (dataframe['close date'] == self.close)).any(): 
-                                                                    newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
-                                                                    'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
-                                                                    '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
-                                                                    newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
+                                                                 'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                 'Clost Date': [self.close]})
+                                                                 newdataframe.to_sql('delete', conn, index= False, if_exists="append")
+                                                            
+                                                                 
+                                                           
                                                                     
                                                             index = typeframe[(typeframe['Type'] == type) &
                                                             (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
-                                                            (typeframe['Start Date'] == start_date) & (typeframe['# refugees'] == refugee)
-                                                            & (typeframe['# humanitarian volunteers'] == volunteer)].index
+                                                            (typeframe['Start Date'] == start_date) & (typeframe['# camps'] == camp)].index
                                                             typeframe = typeframe.drop(index)
-                                                            typeframe.to_csv('emergency_plan_1.csv', mode = 'w', index = False)
+                                                            typeframe.to_sql('plan', conn, index= False, if_exists="replace")
+                                                            updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
+                                                            print(updatedframe)
+                                                             
                                                         else: 
                                                              raise Invalid_input(self.row)
                                                     except Invalid_input as e:
@@ -295,7 +285,7 @@ class emergency_plan:
                                  self.date = input('Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
                  elif self.choice == '3':
                     loop = False
-                    typeframe = pd.read_csv('emergency_plan_1.csv')
+                    typeframe = pd.read_sql_query('SELECT * FROM plan', conn)
                     print(f'The choices of type are: {set(typeframe.Area.values)}.')
                     self.area = input('Please enter the area of the emergency plan you want to view and then delete: ')
                     loop1 = True
@@ -318,8 +308,7 @@ class emergency_plan:
                                             desc = row[1]
                                             area = row[2]
                                             start_date = row[3]
-                                            refugee = row[4]
-                                            volunteer = row[5]
+                                            camp = row[4]
                                             self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
                                             start_date_raw = start_date.split('-')
                                             start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
@@ -329,33 +318,29 @@ class emergency_plan:
                                                     try:
                                                         if int(self.row) in finalframe.index:
                                                             loop3 = False
-                                                            file_exists = os.path.isfile('delete.csv')
-                                                            if not file_exists:
-                                                                 emptydataframe = pd.DataFrame(data = None, columns = np.array(['Type',
-                                                                 'Description', 'Area', 'Start Date', '# refugees', '# humanitarian volunteers',
-                                                                 'close date']))
-                                                                 emptydataframe.to_csv('delete.csv', index = False)
+                                                            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
+                                                            if len(c.fetchall()) == 0: 
+                                                                  newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
+                                                                  'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                  'Clost Date': [self.close]})
+                                                                  newdataframe.to_sql('delete', conn, index= False)
+                                                                 
+                                                            else: 
                                                                  newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
-                                                                 'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
-                                                                 '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
-                                                                 newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
-                                                            else:
-                                                                dataframe = pd.read_csv('delete.csv')
-                                                                if not ((dataframe['Type'] == type) & (dataframe['Description'] == desc)
-                                                                & (dataframe['Area'] == area) & (dataframe['Start Date'] == start_date)
-                                                                & (dataframe['# refugees'] == refugee) & (dataframe['# humanitarian volunteers'] == volunteer)
-                                                                & (dataframe['close date'] == self.close)).any(): 
-                                                                    newdataframe = pd.DataFrame({'Type': [type], 'Description': [desc], 
-                                                                    'Area': [area], 'Start Date': [start_date], '# refugees': [refugee], 
-                                                                    '# humanitarian volunteers': [volunteer], 'close date': [self.close]})
-                                                                    newdataframe.to_csv('delete.csv', mode = 'a', header = False, index = False)
+                                                                 'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                 'Clost Date': [self.close]})
+                                                                 newdataframe.to_sql('delete', conn, index= False, if_exists="append")
+                                                                 
+                                                                 
+                                                           
                                                                     
                                                             index = typeframe[(typeframe['Type'] == type) &
                                                             (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
-                                                            (typeframe['Start Date'] == start_date) & (typeframe['# refugees'] == refugee)
-                                                            & (typeframe['# humanitarian volunteers'] == volunteer)].index
+                                                            (typeframe['Start Date'] == start_date) & (typeframe['# camps'] == camp)].index
                                                             typeframe = typeframe.drop(index)
-                                                            typeframe.to_csv('emergency_plan_1.csv', mode = 'w', index = False)
+                                                            typeframe.to_sql('plan', conn, index= False, if_exists="replace")
+                                                            updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
+                                                            print(updatedframe)
                                                         else: 
                                                              raise Invalid_input(self.row)
                                                     except Invalid_input as e:
