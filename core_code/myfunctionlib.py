@@ -1,4 +1,5 @@
 import inspect
+import sqlite3
 
 from myError import *
 
@@ -35,7 +36,7 @@ def menu(name=''):
                 '1. Create Emergency Plan.\n'
                 '2. Edit Emergency Plan.\n'
                 '3. Display Emergency Plan.\n'
-                '4. Close Emergency Plan\n'
+                '4. Close Emergency Plan.\n'
                 '5. Delete Emergency Plan.\n'
                 '0. Exit'
             )
@@ -63,7 +64,7 @@ def menu(name=''):
             )
 
 
-def option_get(span, hint=''):
+def menu_choice_get(span, hint=''):
     """
     This function will make sure the user input would be a number between 0 to the size of the menu,
     otherwise it will ask the user to input again until a valid number is input.
@@ -99,8 +100,22 @@ def double_check():
         return False
 
 
-def back():
+def back(hint=''):
+    print(hint)
     while True:
-        key = input('Input "Q/q" to go back.')
+        key = input('Input "Q/q" to go back:')
         if key == 'Q' or key == 'q':
             return
+
+
+def search(table, column, keyword):
+    result = []
+    if type(keyword) == type(''):
+        keyword = "'{}'".format(keyword)
+    with sqlite3.connect('../info_files/emergency_system.db') as conn:
+        c = conn.cursor()
+        for i in c.execute('''select {}Id from {} where {} = {}'''.format(
+                table, table, column, keyword)).fetchall():
+            result.append(i[0])
+    return result
+

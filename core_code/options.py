@@ -38,8 +38,8 @@ class Options:
                 self.limited = False
             case 'status':
                 self.values = [
-                    'Open',
-                    'Close'
+                    'Waiting to open',
+                    'Opening'
                 ]
                 self.limited = True
             case 'priority':
@@ -47,6 +47,24 @@ class Options:
                     'very high',
                     'high',
                     'normal',
+                ]
+                self.limited = True
+            case 'allowEditNotOpening':
+                self.values = [
+                    'type',
+                    'description',
+                    'area',
+                    'startDate',
+                    'endDate',
+                    'numberOfCamps',
+                    'priority'
+                ]
+                self.limited = True
+            case 'allowEditOpening':
+                self.values = [
+                    'description',
+                    'endDate',
+                    'priority'
                 ]
                 self.limited = True
         self.len = len(self.values)
@@ -65,5 +83,5 @@ class Options:
     def __str__(self):
         return self.menu
 
-    def get_option(self):
-        return Get.option_in_range(self.optionRange, 'Please choose one:')
+    def get_option(self, hint='Please choose one option: '):
+        return Get.option_in_range(self.optionRange, hint)

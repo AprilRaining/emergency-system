@@ -39,11 +39,11 @@ class Get:
                 return date
 
     @staticmethod
-    def option_in_range(span: int, hint=''):
+    def option_in_range(span: int, hint='', start=0):
         while True:
             try:
                 option = int(input(hint))
-                if option not in range(span):
+                if option not in range(start, span):
                     raise InvalidChoiceError(option)
             except ValueError:
                 print("You entered a non-numeric value.")

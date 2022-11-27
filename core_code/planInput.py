@@ -43,7 +43,9 @@ class PlanInput:
                         print('Please input a data later then today.')
 
     @staticmethod
-    def close_date(startDate):
+    def end_date(startDate):
+        if type(startDate) == type(''):
+            startDate = datetime.datetime.strptime(startDate, '%Y-%m-%d').date()
         options = Options('close_date')
         print(options)
         while True:
@@ -53,15 +55,16 @@ class PlanInput:
                         if startDate < datetime.date.today():
                             return datetime.date.today().strftime('%Y-%m-%d')
                         else:
-                            print('*close date is equal or earlier than start date please input a valid date*')
+                            print('*End date is equal or earlier than start date please input a valid date*')
                             break
                 case 2:
-                    return 'null'
+                    return None
                 case 0:
                     while True:
-                        closeDate = Get.data('Please input the close date of the emergency plan in the format of yyyy-mm-dd: ')
-                        if startDate < closeDate:
-                            return closeDate.strftime('%Y-%m-%d')
+                        endDate = Get.data(
+                            'Please input the close date of the emergency plan in the format of yyyy-mm-dd: ')
+                        if startDate < endDate:
+                            return endDate.strftime('%Y-%m-%d')
                         else:
                             print('*close date is equal or earlier than start date please input a valid date*')
 
