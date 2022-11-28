@@ -7,7 +7,17 @@ conn = db.connect('emergency_system.db')
 c = conn.cursor()
 
 # To do 
-# Fix exceptions, Add stop button 
+# Fix exceptions, Add stop button (while loop)
+# change delete functions to include planid and status of the plan
+
+
+def validate(date_text):
+    try:
+        res = bool(datetime.datetime.strptime(date_text, "%Y-%m-%d"))
+        return res 
+    except ValueError:
+        res = False
+        return res    
 
 
 
@@ -58,43 +68,67 @@ class emergency_plan:
             self.type = input('Please enter the type of Emgergency: ')
             self.desc = input('Please etner the description of the emergency plan: ')
             self.area = input('Please enter the geographical area affected by the natural diaster: ')
-            try:
-               date_format = input('Please enter the start date of the emergency plan in the format of yyyy-mm-dd: ') 
-               date = date_format.split('-')
+            loop = True 
+            while loop:
+                try:
+                    date_format = input('Please enter the start date of the emergency plan in the format of yyyy-mm-dd: ') 
+                    if validate(date_format) == True:
+                        date = date_format.split('-')
                # Only allow date after the Year of 2000  
-               # Need to consider literal (change here )
-               if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31):
-                self.date= datetime.date(int(date[0]), int(date[1]), int(date[2]))
-               else:
-                raise Invalid_input(date_format)
-            except Invalid_input as e:
-                print(e)
-            try:
-                camp = input('Please enter the number of camps required: ')
-                if camp.isdigit():
-                    self.camp = camp 
-                else:
-                    raise Invalid_input(camp)
-            except Invalid_input as e:
-                print(e)
+               # Need to consider literal (change here)
+                        try:
+                            self.date= datetime.date(int(date[0]), int(date[1]), int(date[2]))
+                            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.date >= datetime.date.today():
+                                loop = False 
+                                if self.date == datetime.date.today():
+                                    self.status = 1
+                                else:
+                                    self.status = 0
+                            else:
+                                raise Invalid_input(date_format)
+                        except Invalid_input as e:
+                            print(e)
+                    else:
+                        raise Invalid_input(date_format)
+                except Invalid_input as e:
+                    print(e)
+            loop = True 
+            while loop:
+                try:
+                    camp = input('Please enter the number of camps required: ')
+                    if camp.isdigit():
+                        self.camp = camp 
+                        loop = False 
+                    else:
+                        raise Invalid_input(camp)
+                except Invalid_input as e:
+                    print(e)
             
         
         def add(self):
                 c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='plan'")
                 if len(c.fetchall()) == 0: 
-                    newdataframe = pd.DataFrame({'Type': [self.type], 'Description': [self.desc], 
-                     'Area': [self.area], 'Start Date': [self.date], '# camps': [self.camp]})
+                    newdataframe = pd.DataFrame({'planID': [0], 'Type': [self.type], 'Description': [self.desc], 
+                     'Area': [self.area], 'Start Date': [self.date], '# camps': [self.camp], 'status': [self.status]})
                     newdataframe.to_sql('plan', conn, index= False)
                     print(newdataframe)
+                    c.execute("CREATE TABLE camp (campID INTEGER, capacity INTEGER, planID INTEGER)")
+                    for i in range(int(self.camp)):
+                        c.execute("INSERT INTO camp VALUES (?, ?, ?)", (i, 20, 0))
+                    conn.commit()
                 else: 
                     dataframe = pd.read_sql_query('SELECT * FROM plan', conn)
+                    self.planID = len(dataframe) 
                     if((self.type in dataframe['Type'].values) & (self.desc in dataframe['Description'].values) & (self.area in dataframe['Area'].values) & (str(self.date) in dataframe['Start Date'].values) & (self.camp in dataframe['# camps'].values)):
                         print(dataframe)
                     else:
-                        newdataframe = pd.DataFrame({'Type': [self.type], 'Description': [self.desc], 
-                        'Area': [self.area], 'Start Date': [self.date], '# camps': [self.camp]})
+                        newdataframe = pd.DataFrame({'planID': [self.planID], 'Type': [self.type], 'Description': [self.desc], 
+                        'Area': [self.area], 'Start Date': [self.date], '# camps': [self.camp], 'status': [self.status]})
                         newdataframe.to_sql('plan', conn, index= False, if_exists="append")
                         updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
+                        for i in range(int(self.camp)):
+                            c.execute("INSERT INTO camp VALUES (?, ?, ?)", (i, 20, self.planID))
+                        conn.commit()
                         print(updatedframe)
             
                 
