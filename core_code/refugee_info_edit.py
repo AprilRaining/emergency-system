@@ -1,12 +1,11 @@
 
 from refugee import Refugee
 
-
-def refugee_info_edit(choice, refugee_df, camp_df, camp_ID):
-    ref = Refugee("Edit")
+def refugee_info_edit(choice, refugeeID,conn):
+    ref = Refugee("Edit",conn)
     match choice:
             case 1:
-                ref.refugee_name(refugee_df)
+                ref.refugee_name()
             case 2:
                 ref.refugee_birthdate()
             case 3:
@@ -18,7 +17,7 @@ def refugee_info_edit(choice, refugee_df, camp_df, camp_ID):
             case 6:
                 ref.refugee_family()
             case 7:
-                ref.assign_camp_ID(camp_df,"edit",camp_ID)
+                ref.assign_camp_ID()
             case 8:
                 ref.refugee_illnesses()
             case 9:
@@ -27,5 +26,15 @@ def refugee_info_edit(choice, refugee_df, camp_df, camp_ID):
                 ref.refugee_smoking()
             case 11:
                 ref.refugee_alcoholic()
+            case 12:
+                # while True:
+                    purpose = input("Please specify your purpose of accessing refugee's request system? (add or edit): ")
+                    # if purpose != "add" and purpose != "edit":
+                    #     print("Please enter either 'add' or 'edit'")
+                    # else:
+                    #     print("\n------------REFUGEE'S REQUEST SYSTEM------------")
+                    ref.ref_request(purpose, refugeeID)
+                        # break
+    # return refugee information list (array) based on selected field
     return ref.ref_row
 

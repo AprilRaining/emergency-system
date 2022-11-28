@@ -1,5 +1,5 @@
 from myfunctionlib import *
-from exception.refugee_exception import *
+from refugee_exception import *
 from refugee_validation import *
 from refugee_input_option import *
 from refugee_info_edit import *
@@ -67,111 +67,136 @@ class Volunteer:
                     return
 
     def create_emergency_refugee_file(self):
+        conn = connect_db("info_files/emergency_system.db")
         while True:
             # create instance of refugee
-            new_ref = Refugee("Register")
+            new_ref = Refugee("Register",conn)
             # register new refugee
-            refugee_df = pd.read_csv('info_files/refugee.csv')
-            camp_df = pd.read_csv('info_files/camp.csv')
-            new_ref.refugee_registration_form(refugee_df,camp_df)
-            cont_proc = input("Would you like to continue registering more refugees?(Yes/No): ")
+            new_ref.refugee_registration_form()
+            cont_proc = input(
+                "Would you like to continue registering more refugees?(Yes/No): ")
             if cont_proc == "No":
                 sys.exit()
 
-
     def edit_emergency_refugee_file(self):
         print("Welcome to refugee information system")
-        print("-------------------------------------------")
-        refugee_df = pd.read_csv('info_files/refugee.csv')
-        camp_df = pd.read_csv('info_files/camp.csv')
-        ref_df_by_id = refugee_validity_check_by_ID("edit",refugee_df)
-        print("-------------------------------------------")
-        print("Select a database field that you would like to edit")
+        print("---------------------------------------------------")
+        conn = connect_db("info_files/emergency_system.db")
+        refugee_df = get_refugee_dataframe(conn)
+        ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df)
+        print("---------------------------------------------------")
+        print("Select a database field that you would like to edit: ")
         edit_opt = refugee_input_option("Edit")
         edit_arr = numerical_input_check(edit_opt)
         # print("arr",edit_arr)
         print("\n-------------------INFO EDITION-------------------")
+        edited_dict = input_matching("Edit")
         for e in edit_arr:
-            edited_fields = refugee_info_edit(int(e),refugee_df,camp_df,refugee_df.loc[ref_df_by_id, 'camp_ID'])
-            # print("field",edited_fields)
-            edited_dice = input_matching("Edit")
-            col_name_arr = edited_dice[int(e)]
-            # print("col",col_name_arr)
+            # array of ref_row
+            edited_fields = refugee_info_edit(int(e), ref_df_by_id,conn)
+            col_name_arr = edited_dict[int(e)]
+            # print("field", edited_fields,"col", col_name_arr)
             for i in range(len(col_name_arr)):
-                refugee_df.at[ref_df_by_id,col_name_arr[i]] = edited_fields[i]
-            
-        # update database
-        with open('info_files/refugee.csv', 'w') as f:
-            refugee_df.to_csv(f,index=False)
-        print("-------------------------------------------")
+                # update info in database
+                update_refdb_attr(conn, ref_df_by_id,
+                                  col_name_arr[i], edited_fields[i])
+
+        print("---------------------------------------------------")
         print("The refugee's information is successfully updated.")
 
     def close_emergency_refugee_file(self):
         print("Welcome to refugee information system")
         print("-------------------------------------------")
-        refugee_df = pd.read_csv('info_files/refugee.csv')
-        ref_df_by_id = refugee_validity_check_by_ID("deactivate",refugee_df)
-        print("-------------------------------------------")
-        # deactivate the refugee with specified ID and add to file
-        inactive_ref = refugee_df.loc[refugee_df["refugee_ID"] == ref_df_by_id]
-        with open('info_files/inactive_refugee.csv', 'a') as f:
-            inactive_ref.to_csv(f, header=False,index=False)
-        # move refugee out of the camp
-        camp_df = pd.read_csv('info_files/camp.csv')
-        # print("check",camp_df)
-        ref_inac = Refugee("close")
-        ref_inac.assign_camp_ID(camp_df,"close",refugee_df.loc[refugee_df["refugee_ID"] == ref_df_by_id,"camp_ID"].values[0])
-        # delete data from active refugee file
-        refugee_df.drop(refugee_df.index[(refugee_df["refugee_ID"] == ref_df_by_id)],axis=0,inplace=True)
-        # update database
-        with open('info_files/refugee.csv', 'w') as f:
-            refugee_df.to_csv(f, index=False)
+        conn = connect_db("info_files/emergency_system.db")
+        refugee_df = get_refugee_dataframe(conn)
+        ref_df_by_id = refugee_validity_check_by_ID("deactivate", refugee_df)
+        print("\nPlease see refugee details below.\nYou can activate this refugee account anytime.\n")
+        print(refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id])
+        # get req id
+        ref_req = str(
+            refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id, "request"].values[0])
+        if ref_req != "0":
+            # task
+            df_task = select_task_by_ref_id(conn, ref_df_by_id)
+            # in case there're many request
+            task_ID_arr = df_task["taskID"].tolist()
+            cur = conn.cursor()
+            for tid in task_ID_arr:
+                print("deactivating refugee account.................")
+                date = pd.Timestamp(
+                    str(df_task.loc[df_task["taskID"] == tid, "startDate"].values[0]))
+                dn = date.day_name()
+                vol_id = df_task.loc[df_task["taskID"]
+                                     == tid, "volunteerID"].values[0]
+                vol_upd = f'''UPDATE volunteer SET {dn} = 0 WHERE volunteerID = {vol_id}'''
+                cur.execute(vol_upd)
+                conn.commit()
+                time.sleep(6.0)
+        # update status and request: refugee table => set status to inactive + set request to 0
+        update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
+        update_refdb_attr(conn, ref_df_by_id, "request", "0")
+        print("--------------------------------------------------")
         print("The refugee's information is successfully deactivated.")
 
     def reopen_emergency_refugee_file(self):
         print("Welcome to refugee information system")
         print("-------------------------------------------")
-        inac_refugee_df = pd.read_csv('info_files/inactive_refugee.csv')
-        ref_df_by_id = refugee_validity_check_by_ID("activate",inac_refugee_df)
-        print("-------------------------------------------")
-        # activate the refugee with specified ID and add to file
-        inactive_ref = inac_refugee_df.loc[inac_refugee_df["refugee_ID"] == ref_df_by_id]
-        with open('info_files/refugee.csv', 'a') as f:
-            inactive_ref.to_csv(f, header=False,index=False)
-        # add refugee to camp file
-        camp_df = pd.read_csv('info_files/camp.csv')
-        ref_ac = Refugee("reopen")
-        ref_ac.assign_camp_ID(camp_df,"reopen",inac_refugee_df.loc[inac_refugee_df["refugee_ID"] == ref_df_by_id,"camp_ID"].values[0])
-        # delete data from inactive refugee file
-        inac_refugee_df.drop(inac_refugee_df.index[(inac_refugee_df["refugee_ID"] == ref_df_by_id)],axis=0,inplace=True)
-        # update database
-        with open('info_files/inactive_refugee.csv', 'w') as f:
-            inac_refugee_df.to_csv(f,index=False)
+        conn = connect_db("info_files/emergency_system.db")
+        refugee_df = get_refugee_dataframe(conn)
+        ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df)
+        # update datebase: refugee[status] to active
+        update_refdb_attr(conn, ref_df_by_id, "status", "active")
+        print("--------------------------------------------------")
         print("The refugee's information is successfully activated.")
-        
 
     def delete_emergency_refugee_file(self):
         print("Welcome to refugee information system")
         print("-------------------------------------------")
-        refugee_df = pd.read_csv('info_files/refugee.csv')
-        ref_df_by_id = refugee_validity_check_by_ID("delete",refugee_df)
-        print("-------------------------------------------")
-        # move refugee out of the camp
-        camp_df = pd.read_csv('info_files/camp.csv')
-        ref_del = Refugee("delete")
-        ref_del.assign_camp_ID(camp_df,"close",refugee_df.loc[refugee_df["refugee_ID"] == ref_df_by_id,"camp_ID"].values[0])
-        # delete the refugee with specified ID
-        refugee_df.drop(refugee_df.index[(refugee_df["refugee_ID"] == ref_df_by_id)],axis=0,inplace=True)
-        # update database
-        with open('info_files/refugee.csv', 'w') as f:
-            refugee_df.to_csv(f, index=False)
-        print("The refugee's information is successfully deleted.")
+        conn = connect_db("info_files/emergency_system.db")
+        refugee_df = get_refugee_dataframe(conn)
+        ref_df_by_id = refugee_validity_check_by_ID("delete", refugee_df)
+        print("\nPlease see refugee details below before deleting.\n")
+        print(refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id])
+        # get req id
+        ref_req = refugee_df.loc[refugee_df["refugeeID"]
+                                 == ref_df_by_id, "request"].values[0]
+        confirm_del = input("Are you sure you want to delete this refugee from the system?(Yes/No): ")
+        if confirm_del == "Yes":
+            if ref_req != "0":
+                # task
+                df_task = select_task_by_ref_id(conn, ref_df_by_id)
+                cur = conn.cursor()
+                # in case there're many requests
+                task_ID_arr = df_task["taskID"].tolist()
+                print("deleting refugee information................")
+                for tid in task_ID_arr:
+                    date = pd.Timestamp(
+                    str(df_task.loc[df_task["taskID"] == tid, "startDate"].values[0]))
+                    dn = date.day_name()
+                    # set volunteer schedule to 0
+                    vol_id = df_task.loc[df_task["taskID"]
+                                     == tid, "volunteerID"].values[0]
+                    vol_upd1 = f'''UPDATE volunteer SET {dn} = 0 WHERE volunteerID = {vol_id}'''
+                    cur.execute(vol_upd1)
+                    conn.commit()
+                    time.sleep(6.0)
 
-        
-        
+                # delete related task
+                del_task = f'''DELETE FROM task WHERE refugeeID = {ref_df_by_id}'''
+                cur = conn.cursor()
+                cur.execute(del_task)
+                conn.commit()
+                time.sleep(5.0)
+
+            # delete refugee
+            delete_ref_by_id(conn, ref_df_by_id)
+            print("--------------------------------------------------")
+            print("The refugee's information is successfully deleted.")
+
+
 v1 = Volunteer()
 # v1.create_emergency_refugee_file()
-# v1.edit_emergency_refugee_file()
+v1.edit_emergency_refugee_file()
 # v1.delete_emergency_refugee_file()
 # v1.close_emergency_refugee_file()
 # v1.reopen_emergency_refugee_file()

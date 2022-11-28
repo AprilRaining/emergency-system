@@ -50,6 +50,22 @@ def refugee_input_option(name):
                 '7. Others\n'
                 '8. None'
             )
+
+        case 'Task Request':
+            return (
+                '1. Medical care\n'
+                '2. Psychological consultancy\n'
+                '3. Physiotherapy\n'
+                '4. Repair\n'
+                '5. Translator\n'
+                '6. Lessons'
+            )
+        case 'Shift Time':
+            return (
+                '1. Morning\n'
+                '2. Afternoon\n'
+                '3. Night'
+            )
         case 'Edit':
             return (
                 '1. Name\n'
@@ -62,7 +78,8 @@ def refugee_input_option(name):
                 '8. Illnesses\n'
                 '9. Surgery\n'
                 '10. Smoking\n'
-                '11. Alcoholic'
+                '11. Alcoholic\n'
+                '12. Request'
             )
 
 
@@ -74,13 +91,17 @@ def input_matching(name):
             return {1: "Asian", 2: "White", 3: "Black or African", 4: "American Indian or Alaska Native",
                     5: "Arab", 6: "Mixed", 7: "Others"}
         case 'Illnesses':
-            return {1: "Allergies", 2: "Cold and flu", 3: "Diarrhea", 4: "Headaches", 5: "Stomach aches",
-                    6: "Mononucleosis", 7: "Tuberculosis", 8: "Stroke", 9: "Heart disease",
+            return {1: "Allergies", 2: "Cold and flu", 3: "Diarrhea", 4: "Headaches", 5: "Mononucleosis",
+                    6: "Stomach aches", 7: "Tuberculosis", 8: "Stroke", 9: "Heart disease",
                     10: "Cancer", 11: "Diabetes", 12: "Alzheimer's disease", 13: "Others", 14: "None"}
         case 'Allergies':
             return {1: "Grass and tree pollen", 2: "Animal dander", 3: "Dust mites", 4: "Latex", 5: "Food",
                     6: "Medication", 7: "Others", 8: "None"}
+        case 'Task Request':
+            return {1: "Medical care", 2: "Psychological consultancy", 3: "Physiotherapy", 4: "Repair", 5: "Translator", 6: "Lessons"}
+        case 'Shift Time':
+            return {1: "Morning", 2: "Afternoon", 3: "Night"}
         case 'Edit':
-            return {1: ["firstname", "lastname"], 2:["birthdate"],3:["gender"],4:["ethnic_group"],
-                    5:["email","phone"],6:["num_of_family_members","family_member_firstname"],7:["camp_ID"],
-                    8:["illnesses"],9:["surgery"],10:["smoking"],11:["alcoholic"]}
+            return {1: ["fName", "lName"], 2: ["birthdate"], 3: ["gender"], 4: ["ethnicGroup"],
+                    5: ["email", "phone"], 6: ["familyMemberName"], 7: ["campID"],
+                    8: ["illness"], 9: ["surgery"], 10: ["smoking"], 11: ["alcoholic"], 12: ["request"]}
