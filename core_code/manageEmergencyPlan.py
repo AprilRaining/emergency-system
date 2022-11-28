@@ -31,9 +31,22 @@ class ManageEmergencyPlan:
                     return
 
     def create_emergency_plan(self):
-        pass
+        plan = dict()
+        plan['type'] = PlanInput.type()
+        plan['description'] = PlanInput.description()
+        plan['area'] = PlanInput.area()
+        plan['startDate'] = PlanInput.start_date()
+        plan['endDate'] = PlanInput.end_date(plan['startDate'])
+        plan['numberOfCamps'] = PlanInput.number_of_camps()
+        plan['status'] = 0 if plan['startDate'] > datetime.date.today() else 1
+        plan['priority'] = PlanInput.priority()
+        self.insert_one_plan(plan)
+        back('Succeed!')
 
     def edit_emergency_plan(self):
+        if not self.display_all_emergency_plans():
+            back()
+            return
         planID = self.select_one_plan()
         df = self.read_plans(planID)
         self.display_emergency_plans(planID)
@@ -93,26 +106,33 @@ class ManageEmergencyPlan:
                       .format(column, newValue, planID))
 
     def display_all_emergency_plans(self):
-        print(self.read_all_plans().to_string(index=False))
+        df = self.read_all_plans().to_string(index=False)
+        if len(df) == 0:
+            print(df)
+            return True
+        else:
+            print('There is not any plan. Please create one first.')
+            return False
 
     def close_or_open_emergency_plan(self):
+        if not self.display_all_emergency_plans():
+            back()
+            return
         planID = self.select_one_plan()
         df = self.read_plans(planID)
         match df.loc[0, 'status']:
             case 0:
-                print('This plan is waiting for open\n'
-                      'Do you want to open it now?\n'
-                      'The start date will be set to today if you want to open it.')
-                if confirm():
+                if confirm('This plan is waiting for open\n'
+                           'Do you want to open it now?\n'
+                           'The start date will be set to today if you want to open it.'):
                     self.update_new_value(planID, 'status', 1)
                     self.update_new_value(planID, 'startDate', datetime.date.today())
                     back('Succeed!')
                     return
             case 1:
-                print('This plan is opened\n'
-                      'Do you want to close it now?\n'
-                      'The end date will be set to today if you want to open it.')
-                if confirm():
+                if confirm('This plan is opened\n'
+                           'Do you want to close it now?\n'
+                           'The end date will be set to today if you want to open it.'):
                     self.update_new_value(planID, 'status', 2)
                     self.update_new_value(planID, 'endDate', datetime.date.today())
                     back('Succeed!')
@@ -122,7 +142,14 @@ class ManageEmergencyPlan:
                 return
 
     def delete_emergency_plan(self):
-        pass
+        if not self.display_all_emergency_plans():
+            back()
+            return
+        planID = self.select_one_plan()
+        df = self.read_plans(planID)
+        if confirm('Once you delete this plan you can not find it anymore.'):
+            self.delete_plans(planID)
+            back('Succeed!')
 
     def search_one_plan(self):
         options = Options([
@@ -142,7 +169,6 @@ class ManageEmergencyPlan:
         return planIDs
 
     def select_one_plan(self):
-        self.display_all_emergency_plans()
         print('Can not find the Plan?\n'
               'Input 0 to use search function to help you find the PlanID')
         planID = Get.option_in_range(self.get_max_planID() + 1,
@@ -160,11 +186,8 @@ class ManageEmergencyPlan:
         with sqlite3.connect('../info_files/emergency_system.db') as conn:
             c = conn.cursor()
             maxPlanID = c.execute('select max(planID) from plan').fetchone()[0]
-            if maxPlanID:
-                c.execute("update sqlite_sequence set seq = {} where name = 'plan'".format(maxPlanID))
-            else:
-                c.execute(
-                    "update sqlite_sequence set seq = 0 where name = 'plan'")
+            seqPlan = 0 if maxPlanID is None else maxPlanID
+            c.execute("update sqlite_sequence set seq = {} where name = 'plan'".format(seqPlan))
             if plan['endDate'] is None:
                 c.execute(
                     '''insert into 
@@ -192,7 +215,12 @@ class ManageEmergencyPlan:
                         plan['status'],
                         plan['priority']
                     ))
-            return maxPlanID + 1
+            maxCampID = c.execute('select max(campID) from camp').fetchone()[0]
+            seqCamp = 0 if maxCampID is None else maxCampID
+            c.execute("update sqlite_sequence set seq = {} where name = 'camp'".format(seqCamp))
+            for i in range(plan['numberOfCamps']):
+                c.execute('insert into camp (capacity, planID) values (20, {})'.format(seqPlan + 1))
+            return seqPlan + 1
 
     def read_all_plans(self):
         with sqlite3.connect('../info_files/emergency_system.db') as conn:
@@ -200,8 +228,16 @@ class ManageEmergencyPlan:
 
     def read_plans(self, index):
         with sqlite3.connect('../info_files/emergency_system.db') as conn:
-            return pd.read_sql_query('select * from plan where planID in {}'.format(list_to_sqlite_string(index)),
-                                     conn)
+            return pd.read_sql_query('select * from plan where planID in {}'
+                                     .format(list_to_sqlite_string(index)), conn)
+
+    def delete_plans(self, index):
+        with sqlite3.connect('../info_files/emergency_system.db') as conn:
+            c = conn.cursor()
+            c.execute('delete from plan where planID in {}'
+                      .format(list_to_sqlite_string(index)))
+            c.execute('delete from camp where planID in {}'
+                      .format(list_to_sqlite_string(index)))
 
     def get_max_planID(self):
         with sqlite3.connect('../info_files/emergency_system.db') as conn:

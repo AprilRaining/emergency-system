@@ -86,14 +86,15 @@ def menu_choice_get(span, hint=''):
             return option
 
 
-def confirm(hint="'Y/y' to confirm your action(any other key to cancel): "):
+def confirm(hint=''):
     """
     This function used for confirmation.
     Y for confirm / Any key else for cancel operation
     Have this function to do the double check when exiting, but redundant this feature later.
     :return: Bool
     """
-    key = input(hint)
+    print(hint)
+    key = input("'Y/y' to confirm your action(any other key to cancel): ")
     if key == 'Y' or key == 'y':
         return True
     else:
@@ -126,4 +127,3 @@ def list_to_sqlite_string(indexList):
         return '(' + ','.join(indexList) + ')'
     elif type(indexList) == int:
         return '({})'.format(indexList)
-
