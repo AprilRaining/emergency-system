@@ -4,7 +4,15 @@ from options import *
 class PlanInput:
     @staticmethod
     def type():
-        options = Options('type')
+        options = Options([
+            'Wildfire',
+            'Earthquakes',
+            'Volcanoes',
+            'Famines & Droughts',
+            'Extreme Precipitation & Flooding',
+            'Extreme Temperature',
+            'Pandemic'
+        ])
         print(options)
         option = options.get_option()
         if option != 0:
@@ -18,7 +26,14 @@ class PlanInput:
 
     @staticmethod
     def area():
-        options = Options('area')
+        options = Options([
+            'Asia',
+            'Europe',
+            'North America',
+            'South America',
+            "Africa",
+            'Oceania'
+        ])
         print(options)
         option = options.get_option()
         if option != 0:
@@ -28,7 +43,9 @@ class PlanInput:
 
     @staticmethod
     def start_date():
-        options = Options('start_date')
+        options = Options([
+            'Today'
+        ])
         print(options)
         match options.get_option():
             case 1:
@@ -46,7 +63,10 @@ class PlanInput:
     def end_date(startDate):
         if type(startDate) == type(''):
             startDate = datetime.datetime.strptime(startDate, '%Y-%m-%d').date()
-        options = Options('close_date')
+        options = Options([
+            'Today',
+            'Input later'
+        ])
         print(options)
         while True:
             match options.get_option():
@@ -74,12 +94,19 @@ class PlanInput:
 
     @staticmethod
     def status():
-        options = Options('status')
+        options = Options([
+            'Waiting to open',
+            'Opening'
+        ], limied=True)
         print(options)
         return options.get_option()
 
     @staticmethod
     def priority():
-        options = Options('priority')
+        options = Options([
+            'very high',
+            'high',
+            'normal',
+        ], limied=True)
         print(options)
         return options.get_option()

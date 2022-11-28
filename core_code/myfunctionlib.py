@@ -36,7 +36,7 @@ def menu(name=''):
                 '1. Create Emergency Plan.\n'
                 '2. Edit Emergency Plan.\n'
                 '3. Display Emergency Plan.\n'
-                '4. Close Emergency Plan.\n'
+                '4. Close Or Open Emergency Plan.\n'
                 '5. Delete Emergency Plan.\n'
                 '0. Exit'
             )
@@ -86,14 +86,14 @@ def menu_choice_get(span, hint=''):
             return option
 
 
-def double_check():
+def confirm(hint="'Y/y' to confirm your action(any other key to cancel): "):
     """
-    This function used for double_check.
+    This function used for confirmation.
     Y for confirm / Any key else for cancel operation
     Have this function to do the double check when exiting, but redundant this feature later.
     :return: Bool
     """
-    key = input('"Y/y" to confirm your action(any other key to cancel')
+    key = input(hint)
     if key == 'Y' or key == 'y':
         return True
     else:
@@ -111,11 +111,19 @@ def back(hint=''):
 def search(table, column, keyword):
     result = []
     if type(keyword) == type(''):
-        keyword = "'{}'".format(keyword)
+        keyword = "'%{}%'".format(keyword)
     with sqlite3.connect('../info_files/emergency_system.db') as conn:
         c = conn.cursor()
-        for i in c.execute('''select {}Id from {} where {} = {}'''.format(
+        for i in c.execute('select {}Id from {} where {} like {}'.format(
                 table, table, column, keyword)).fetchall():
             result.append(i[0])
     return result
+
+
+def list_to_sqlite_string(indexList):
+    if type(indexList) == type([]):
+        indexList = map(str, indexList)
+        return '(' + ','.join(indexList) + ')'
+    elif type(indexList) == int:
+        return '({})'.format(indexList)
 
