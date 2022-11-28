@@ -107,7 +107,7 @@ class ManageEmergencyPlan:
 
     def display_all_emergency_plans(self):
         df = self.read_all_plans().to_string(index=False)
-        if len(df) == 0:
+        if len(df) != 0:
             print(df)
             return True
         else:

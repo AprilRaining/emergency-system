@@ -8,6 +8,8 @@ if __name__ == "__main__":
     """
     TO DO (Possible):
     Some Initialisation staff for the WHOLE program.
+    1. update status of plans
+    2. update time schedule of all volunteers
     """
     # For Log in
     while True:
@@ -21,4 +23,5 @@ if __name__ == "__main__":
                 volunteer.sub_main()
             case 0:
                 # To Do: Before Quitting Do something?
+                # 1. update last login
                 sys.exit()
