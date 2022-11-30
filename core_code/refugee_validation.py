@@ -159,7 +159,7 @@ def volunteer_ID_req_check(volunteer_df):
     while True:
         try:
             vol_ID = int(input(
-                        "\nPlease enter the volunteer ID of whom you want to assign this request to: "))
+                        "\nEnter the volunteer ID of whom you want to assign this request to: "))
             if vol_ID > (volunteer_df["volunteerID"]).max() or vol_ID < 1:
                 raise exp.volunteer_id_out_of_range
             if vol_ID not in volunteer_df["volunteerID"].values:

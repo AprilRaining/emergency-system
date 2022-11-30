@@ -49,6 +49,22 @@ def delete_ref_by_id(conn,refugeeID):
     conn.commit()
     cur.close()
 
+def clear_request_schedule(conn,df_task_by_ref):
+    # in case there're many request
+    task_ID_arr = df_task_by_ref["taskID"].tolist()
+    for tid in task_ID_arr:
+        date = pd.Timestamp(
+        str(df_task_by_ref.loc[df_task_by_ref["taskID"] == tid, "startDate"].values[0]))
+        dn = date.day_name()
+        # set volunteer related to refugee schedule to 0
+        vol_id = df_task_by_ref.loc[df_task_by_ref["taskID"]== tid, "volunteerID"].values[0]
+        vol_upd1 = f'''UPDATE volunteer SET {dn} = 0 WHERE volunteerID = {vol_id}'''
+        cur = conn.cursor()
+        cur.execute(vol_upd1)
+        conn.commit()
+        time.sleep(4.0)
+
+
 def get_refugee_dataframe(conn):
     # select from refugee table
     query = '''SELECT * FROM refugee'''
@@ -60,6 +76,6 @@ def get_refugee_dataframe(conn):
 def select_task_by_ref_id(conn,refugeeID):
     task_query = f'''SELECT * FROM task WHERE refugeeID = {refugeeID}'''
     pd_task = pd.read_sql_query(task_query,conn)
-    df_task = pd.DataFrame(pd_task,columns=["taskID","refugeeID","volunteerID","taskInfo","startDate","workShift"])
+    df_task_ref_id = pd.DataFrame(pd_task,columns=["taskID","refugeeID","volunteerID","taskInfo","startDate","workShift"])
     time.sleep(1.0)
-    return df_task
+    return df_task_ref_id

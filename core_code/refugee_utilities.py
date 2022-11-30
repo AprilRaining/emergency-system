@@ -28,7 +28,7 @@ def task_ref_vol_db(conn,req_list,refugeeID, refugee_df, purpose):
         task_id = []
         if purpose == "create":
             print("Adding new refugee to the system................")
-            print("Note: This usually takes around 1-2 minutes.")
+            print("Note: This usually takes around 1 minutes for multiple requests.")
         for req in req_list:
             print("Adding refugee's request................")
             # insert data to task table: multiple insertion

@@ -11,9 +11,9 @@ class Refugee:
 
     def __init__(self, purpose, conn):
         if purpose == "Register":
-            print("\nWelcome to refugee registration system")
+            print("\nWelcome to Refugee Registration System")
             print("--------------------------------------------\n")
-            print("The form comprises of 3 main sections:\n1. Camp selection\n2. General information\n3. Medical condition\n4. Make a request")
+            print("The form comprises of 4 main sections:\n1. Camp selection\n2. General information\n3. Medical condition\n4. Make a request")
         self.ref_row = []
         self.conn = conn
 
@@ -60,10 +60,12 @@ class Refugee:
 
     def assign_camp_ID(self):
         # camp validation + assigned for creat and edit case only
-        print("INSTRUCTION: Please assign the camp identification to the refugee.")
+        print("\nINSTRUCTION: Please assign the camp identification to the refugee.")
         print(
             "The detail below shows the availability of each camp as well as its related conditions: ")
         self.assigned_camp = camp_capacity_check(self.conn)
+        # request
+
         # append camp number to the row
         self.ref_row.extend([self.assigned_camp])
         print(
@@ -167,7 +169,7 @@ class Refugee:
                     # select task
                     req_opt = refugee_input_option("Task Request")
                     print(
-                        "Please select 1 special request that a refugee would like to receive from a volunteer.")
+                        "Select 1 special request that a refugee would like to receive from a volunteer.")
                     req_inpt = numerical_input_check(req_opt)
                     req_dict = input_matching("Task Request")
                     self.req_task = req_dict[int(req_inpt[0])]
@@ -175,7 +177,7 @@ class Refugee:
                     # select date
                     dates = get_date_list()
                     print(
-                        "Please select the request's start date from options below:\n")
+                        "Select the request's start date from options below:\n")
                     c = 1
                     for i in dates:
                         dn = pd.Timestamp(i).day_name()
@@ -188,7 +190,7 @@ class Refugee:
                     print("-------------------------------------------")
                     # select workshift
                     print(
-                        "Please select 1 shift time that refugee's would like to receive a service.")
+                        "Select 1 shift time that refugee's would like to receive a service.")
                     shift_opt = refugee_input_option("Shift Time")
                     shift_inpt = numerical_input_check(shift_opt)
                     shift_dict = input_matching("Shift Time")
@@ -205,7 +207,8 @@ class Refugee:
                         pd_sql, columns=['volunteerID', 'fName', 'lName', 'workShift'])
                     if vol_df.empty:
                         print(
-                            "There's no volunteer available for your selected date and work shift.\nThe request process will now restart.")
+                            "There's no volunteer available for your selected date and work shift.")
+                        print("Please try again!\n")
                     else:
                         print(
                             "Please see the list of available volunteers who match refugee's request:\n")
@@ -256,8 +259,10 @@ class Refugee:
             # print("edit_task", task_edit_arr)
             # loop through selected task ID to edit
             for t in task_edit_arr:
-                vol_id = df_task.loc[df_task["taskID"] == int(t),"volunteerID"].values[0]
-                old_start_date = df_task.loc[df_task["taskID"] == int(t),"startDate"].values[0]
+                vol_id = df_task.loc[df_task["taskID"]
+                                     == int(t), "volunteerID"].values[0]
+                old_start_date = df_task.loc[df_task["taskID"] == int(
+                    t), "startDate"].values[0]
                 old_start_day = pd.Timestamp(old_start_date).day_name()
                 print(
                     f"Note: You are allowed to change only request's date and work shift related to volunteer ID: {vol_id}.\n")

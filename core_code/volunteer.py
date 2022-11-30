@@ -70,7 +70,7 @@ class Volunteer:
         conn = connect_db("info_files/emergency_system.db")
         while True:
             # create instance of refugee
-            new_ref = Refugee("Register",conn)
+            new_ref = Refugee("Register", conn)
             # register new refugee
             new_ref.refugee_registration_form()
             cont_proc = input(
@@ -93,7 +93,8 @@ class Volunteer:
         edited_dict = input_matching("Edit")
         for e in edit_arr:
             # array of ref_row
-            edited_fields = refugee_info_edit(int(e), ref_df_by_id,conn)
+            edited_fields = refugee_info_edit(
+                int(e), ref_df_by_id, refugee_df, conn)
             col_name_arr = edited_dict[int(e)]
             # print("field", edited_fields,"col", col_name_arr)
             for i in range(len(col_name_arr)):
@@ -117,21 +118,10 @@ class Volunteer:
             refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id, "request"].values[0])
         if ref_req != "0":
             # task
-            df_task = select_task_by_ref_id(conn, ref_df_by_id)
-            # in case there're many request
-            task_ID_arr = df_task["taskID"].tolist()
-            cur = conn.cursor()
-            for tid in task_ID_arr:
-                print("deactivating refugee account.................")
-                date = pd.Timestamp(
-                    str(df_task.loc[df_task["taskID"] == tid, "startDate"].values[0]))
-                dn = date.day_name()
-                vol_id = df_task.loc[df_task["taskID"]
-                                     == tid, "volunteerID"].values[0]
-                vol_upd = f'''UPDATE volunteer SET {dn} = 0 WHERE volunteerID = {vol_id}'''
-                cur.execute(vol_upd)
-                conn.commit()
-                time.sleep(6.0)
+            df_task_ref_id = select_task_by_ref_id(conn, ref_df_by_id)
+            # clear out volunteer schedule related to this refugee req
+            print("deactivating refugee account.................")
+            clear_request_schedule(conn,df_task_ref_id)
         # update status and request: refugee table => set status to inactive + set request to 0
         update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
         update_refdb_attr(conn, ref_df_by_id, "request", "0")
@@ -143,7 +133,7 @@ class Volunteer:
         print("-------------------------------------------")
         conn = connect_db("info_files/emergency_system.db")
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df)
+        ref_df_by_id = refugee_validity_check_by_ID("activate", refugee_df)
         # update datebase: refugee[status] to active
         update_refdb_attr(conn, ref_df_by_id, "status", "active")
         print("--------------------------------------------------")
@@ -160,27 +150,15 @@ class Volunteer:
         # get req id
         ref_req = refugee_df.loc[refugee_df["refugeeID"]
                                  == ref_df_by_id, "request"].values[0]
-        confirm_del = input("Are you sure you want to delete this refugee from the system?(Yes/No): ")
+        confirm_del = input(
+            "Are you sure you want to delete this refugee from the system?(Yes/No): ")
         if confirm_del == "Yes":
             if ref_req != "0":
                 # task
-                df_task = select_task_by_ref_id(conn, ref_df_by_id)
-                cur = conn.cursor()
-                # in case there're many requests
-                task_ID_arr = df_task["taskID"].tolist()
+                df_task_ref_id = select_task_by_ref_id(conn, ref_df_by_id)
+                # clear out volunteer schedule related to this refugee req
                 print("deleting refugee information................")
-                for tid in task_ID_arr:
-                    date = pd.Timestamp(
-                    str(df_task.loc[df_task["taskID"] == tid, "startDate"].values[0]))
-                    dn = date.day_name()
-                    # set volunteer schedule to 0
-                    vol_id = df_task.loc[df_task["taskID"]
-                                     == tid, "volunteerID"].values[0]
-                    vol_upd1 = f'''UPDATE volunteer SET {dn} = 0 WHERE volunteerID = {vol_id}'''
-                    cur.execute(vol_upd1)
-                    conn.commit()
-                    time.sleep(6.0)
-
+                clear_request_schedule(conn,df_task_ref_id)
                 # delete related task
                 del_task = f'''DELETE FROM task WHERE refugeeID = {ref_df_by_id}'''
                 cur = conn.cursor()
@@ -196,7 +174,7 @@ class Volunteer:
 
 v1 = Volunteer()
 # v1.create_emergency_refugee_file()
-v1.edit_emergency_refugee_file()
+# v1.edit_emergency_refugee_file()
 # v1.delete_emergency_refugee_file()
 # v1.close_emergency_refugee_file()
-# v1.reopen_emergency_refugee_file()
+v1.reopen_emergency_refugee_file()

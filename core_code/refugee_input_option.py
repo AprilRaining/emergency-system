@@ -79,7 +79,8 @@ def refugee_input_option(name):
                 '9. Surgery\n'
                 '10. Smoking\n'
                 '11. Alcoholic\n'
-                '12. Request'
+                '12. Request\n'
+                '0. Cancel edition'
             )
 
 
@@ -102,6 +103,6 @@ def input_matching(name):
         case 'Shift Time':
             return {1: "Morning", 2: "Afternoon", 3: "Night"}
         case 'Edit':
-            return {1: ["fName", "lName"], 2: ["birthdate"], 3: ["gender"], 4: ["ethnicGroup"],
+            return { 0: ["cancel"], 1: ["fName", "lName"], 2: ["birthdate"], 3: ["gender"], 4: ["ethnicGroup"],
                     5: ["email", "phone"], 6: ["familyMemberName"], 7: ["campID"],
                     8: ["illness"], 9: ["surgery"], 10: ["smoking"], 11: ["alcoholic"], 12: ["request"]}
