@@ -108,28 +108,29 @@ class emergency_plan:
         def add(self):
                 c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='plan'")
                 if len(c.fetchall()) == 0: 
-                    newdataframe = pd.DataFrame({'planID': [0], 'Type': [self.type], 'Description': [self.desc], 
+                    newdataframe = pd.DataFrame({'planID': [1], 'Type': [self.type], 'Description': [self.desc], 
                      'Area': [self.area], 'Start Date': [self.date], '# camps': [self.camp], 'status': [self.status]})
                     newdataframe.to_sql('plan', conn, index= False)
-                    print(newdataframe)
-                    c.execute("CREATE TABLE camp (campID INTEGER, capacity INTEGER, planID INTEGER)")
+                    print(newdataframe.to_string(index=False))
+                    c.execute("CREATE TABLE camp (campID INTEGER PRIMARY KEY AUTOINCREMENT, capacity INTEGER, planID INTEGER)")
                     for i in range(int(self.camp)):
-                        c.execute("INSERT INTO camp VALUES (?, ?, ?)", (i, 20, 0))
+                        c.execute("INSERT INTO camp (capacity, planID) VALUES (?, ?)", (20, 1))
                     conn.commit()
+
                 else: 
                     dataframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                    self.planID = len(dataframe) 
+                    self.planID = len(dataframe) + 1
                     if((self.type in dataframe['Type'].values) & (self.desc in dataframe['Description'].values) & (self.area in dataframe['Area'].values) & (str(self.date) in dataframe['Start Date'].values) & (self.camp in dataframe['# camps'].values)):
-                        print(dataframe)
+                        print(newdataframe.to_string(index=False))
                     else:
                         newdataframe = pd.DataFrame({'planID': [self.planID], 'Type': [self.type], 'Description': [self.desc], 
                         'Area': [self.area], 'Start Date': [self.date], '# camps': [self.camp], 'status': [self.status]})
                         newdataframe.to_sql('plan', conn, index= False, if_exists="append")
                         updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                        for i in range(int(self.camp)):
-                            c.execute("INSERT INTO camp VALUES (?, ?, ?)", (i, 20, self.planID))
+                        for _ in range(int(self.camp)):
+                            c.execute("INSERT INTO camp (capacity, planID) VALUES (?, ?)", (20, self.planID))
                         conn.commit()
-                        print(updatedframe)
+                        print(updatedframe.to_string(index=False))
             
                 
                 
@@ -179,7 +180,7 @@ class emergency_plan:
                                     finalframe = typeframe[typeframe['Type'] == self.type]
                                     finalframe = finalframe.reset_index(drop = True)
                                     print(finalframe)
-                                    self.row = input('Please choose which row above you want to delete: ')
+                                    self.row = input('Please choose which row starting from 0 above you want to delete: ')
                                     date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                     date = date_format.split('-')
                                     loop2 = True
@@ -225,7 +226,7 @@ class emergency_plan:
                                                             typeframe = typeframe.drop(index)
                                                             typeframe.to_sql('plan', conn, index= False, if_exists="replace")
                                                             updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                                                            print(updatedframe)
+                                                            print(updatedframe.to_string(index=False))
 
                                                             campframe = pd.read_sql_query('SELECT * FROM camp', conn)
                                                             index1 = campframe[campframe['planID'] == planID].index
@@ -262,7 +263,7 @@ class emergency_plan:
                                     finalframe = typeframe[typeframe['Start Date'] == self.date]
                                     finalframe = finalframe.reset_index(drop = True)
                                     print(finalframe)
-                                    self.row = input('Please choose which row above you want to delete: ')
+                                    self.row = input('Please choose which row starting from 0 above you want to delete: ')
                                     date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                     date = date_format.split('-')
                                     loop2 = True
@@ -309,7 +310,7 @@ class emergency_plan:
                                                             typeframe = typeframe.drop(index)
                                                             typeframe.to_sql('plan', conn, index= False, if_exists="replace")
                                                             updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                                                            print(updatedframe)
+                                                            print(updatedframe.to_string(index=False))
 
                                                             campframe = pd.read_sql_query('SELECT * FROM camp', conn)
                                                             index1 = campframe[campframe['planID'] == planID].index
@@ -345,7 +346,7 @@ class emergency_plan:
                                     finalframe = typeframe[typeframe['Area'] == self.area]
                                     finalframe = finalframe.reset_index(drop = True)
                                     print(finalframe)
-                                    self.row = input('Please choose which row above you want to delete: ')
+                                    self.row = input('Please choose which row starting from 0 above you want to delete: ')
                                     date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                     date = date_format.split('-')
                                     loop2 = True
@@ -392,7 +393,7 @@ class emergency_plan:
                                                             typeframe = typeframe.drop(index)
                                                             typeframe.to_sql('plan', conn, index= False, if_exists="replace")
                                                             updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                                                            print(updatedframe)
+                                                            print(updatedframe.to_string(index=False))
 
                                                             campframe = pd.read_sql_query('SELECT * FROM camp', conn)
                                                             index1 = campframe[campframe['planID'] == planID].index
