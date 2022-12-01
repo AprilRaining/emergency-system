@@ -1,0 +1,37 @@
+2022-12-01 19:50:52,507 — ERROR : Please enter a numerical value for the refugee ID.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 116, in refugee_validity_check_by_ID
+    ref_id = int(input(f"Please input refugee ID of whom you wish to {cond} the information: "))
+ValueError: invalid literal for int() with base 10: 'abc'
+2022-12-01 19:51:27,136 — ERROR : Please enter a numerical value for the refugee ID.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 116, in refugee_validity_check_by_ID
+    ref_id = int(input(f"Please input refugee ID of whom you wish to {cond} the information: "))
+ValueError: invalid literal for int() with base 10: 'r5tr'
+2022-12-01 19:51:47,512 — ERROR : Your input refugee ID is invalid in the database
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 119, in refugee_validity_check_by_ID
+    raise exp.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-01 19:52:29,658 — ERROR : You input number is out of the range of our options. Please try again.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 148, in numerical_input_check
+    raise OutOfRangeError(selected_opts)
+myError.OutOfRangeError: 30000 is an invalid choice.
+Please reenter a number specified above.
+2022-12-01 19:54:08,592 — ERROR : You input number is out of the range of our options. Please try again.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 144, in numerical_input_check
+    raise OutOfRangeError(v)
+myError.OutOfRangeError: 20 is an invalid choice.
+Please reenter a number specified above.
+2022-12-01 19:59:38,964 — ERROR : Your input refugee ID is invalid in the database
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 119, in refugee_validity_check_by_ID
+    raise exp.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-01 20:00:18,293 — ERROR : Your input refugee ID is invalid in the database
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 119, in refugee_validity_check_by_ID
+    raise exp.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range

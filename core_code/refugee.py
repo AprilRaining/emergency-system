@@ -5,6 +5,7 @@ from refugee_exception import *
 from refugee_validation import *
 from db_connect_ref import *
 from refugee_utilities import *
+from system_log import *
 
 
 class Refugee:
@@ -206,9 +207,8 @@ class Refugee:
                     vol_df = pd.DataFrame(
                         pd_sql, columns=['volunteerID', 'fName', 'lName', 'workShift'])
                     if vol_df.empty:
-                        print(
-                            "There's no volunteer available for your selected date and work shift.")
-                        print("Please try again!\n")
+                        warn(
+                            "There's no volunteer available for your selected date and work shift.\nPlease try again!\n")
                     else:
                         print(
                             "Please see the list of available volunteers who match refugee's request:\n")
@@ -245,7 +245,7 @@ class Refugee:
             task_query = f'''SELECT * FROM task WHERE refugeeID = {req_edit_id}'''
             pd_task = pd.read_sql_query(task_query, self.conn)
             df_task = pd.DataFrame(pd_task, columns=[
-                                   "taskID", "refugeeID", "volunteerID", "taskInfo", "startDate", "workShift"])
+                                   "taskID", "refugeeID", "volunteerID", "taskInfo", "week", "startDate", "workShift"])
             print(
                 "\nPlease see details below for the existing tasks assoiated with refugee's request:\n")
             print(df_task)
@@ -294,12 +294,13 @@ class Refugee:
                     vol_df = pd.DataFrame(
                         pd_vol, columns=['volunteerID', 'fName', 'lName', 'workShift'])
                     if vol_df.empty:
-                        print(
+                        warn(
                             "The volunteer is not available on the new selected date and shift!")
                     else:
                         # volunteer is available: update data in task table and volunteer table
                         cur = self.conn.cursor()
-                        task_upd = f'''UPDATE task SET startDate = "{self.req_date}", workShift = "{self.req_shift}" WHERE taskID = {int(t)}'''
+                        week_num = get_week_number(self.req_date)
+                        task_upd = f'''UPDATE task SET week={week_num}, startDate = "{self.req_date}", workShift = "{self.req_shift}" WHERE taskID = {int(t)}'''
                         cur.execute(task_upd)
                         self.conn.commit()
                         time.sleep(2.0)

@@ -3,6 +3,7 @@ from refugee_validation import *
 from db_connect_ref import *
 import datetime
 
+
 def get_date_list():
     theday = datetime.date.today()
     # print("today", theday)
@@ -16,7 +17,16 @@ def get_date_list():
     dates = [str(d) for d in dates]
     return dates
 
-def task_ref_vol_db(conn,req_list,refugeeID, refugee_df, purpose):
+
+def get_week_number(date):
+    # split date
+    y, m, d = tuple(date.split("-"))
+    # get day of week as an integer
+    week_num = datetime.date(int(y), int(m), int(d)).isocalendar()[1]
+    return week_num
+
+
+def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
     '''
     Used for create and add request only
     1.insert new row to task table
@@ -32,9 +42,10 @@ def task_ref_vol_db(conn,req_list,refugeeID, refugee_df, purpose):
         for req in req_list:
             print("Adding refugee's request................")
             # insert data to task table: multiple insertion
-            task_insert = (refugeeID, req["volunteer"], req["task"],
-                            req["date"], req["workshift"])
-            ins_task_query = f'''INSERT INTO task(refugeeID,volunteerID,taskInfo,startDate,workShift) VALUES {task_insert}'''
+            week_num = get_week_number(req["date"])
+            task_insert = (refugeeID, req["volunteer"], req["task"], week_num,
+                           req["date"], req["workshift"])
+            ins_task_query = f'''INSERT INTO task(refugeeID,volunteerID,taskInfo,week,startDate,workShift) VALUES {task_insert}'''
             cur.execute(ins_task_query)
             conn.commit()
             time.sleep(12.0)
@@ -48,13 +59,15 @@ def task_ref_vol_db(conn,req_list,refugeeID, refugee_df, purpose):
         # update request column in refugee table: insert ex. 1,2,3
         if purpose == "add":
             # database refugee will be updated in edit feature
-            orig_req_id = str(refugee_df.loc[refugee_df["refugeeID"] == refugeeID, "request"].values[0])
-            if(orig_req_id == "0" or orig_req_id == "-1"):
+            orig_req_id = str(
+                refugee_df.loc[refugee_df["refugeeID"] == refugeeID, "request"].values[0])
+            if (orig_req_id == "0" or orig_req_id == "-1"):
                 # overwrite
                 req_id_mul = ','.join([str(i) for i in task_id])
             else:
                 # concat with existing req
-                req_id_mul = orig_req_id + "," + ','.join([str(i) for i in task_id])
+                req_id_mul = orig_req_id + "," + \
+                    ','.join([str(i) for i in task_id])
         else:
             # part of creating new refugee
             req_id_mul = ','.join([str(i) for i in task_id])

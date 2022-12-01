@@ -5,6 +5,7 @@ import sys
 from datetime import *
 import pandas as pd
 from db_connect_ref import *
+from system_log import *
 
 def refugee_existence_check(conn):
     while True:
@@ -12,10 +13,9 @@ def refugee_existence_check(conn):
             firstname = input("Enter refugee's firstname: ")
             lastname = input("Enter refugee's lastname: ")
             get_ref = f'''SELECT fName,lName FROM refugee WHERE fName = "{firstname}" AND lName = "{lastname}"'''
-            cur = conn.cursor()
-            cur.execute(get_ref)
-            rows = cur.fetchall()
-            if rows != []:
+            pd_query = pd.read_sql_query(get_ref,conn)
+            df_row = pd.DataFrame(pd_query,columns=["firstname","lastname"])
+            if df_row.empty == False:
                 raise exp.refugee_duplicated_regis
                     
         except exp.refugee_duplicated_regis:
@@ -59,15 +59,15 @@ def date_format_check(purpose,limit_start = '',limit_end = ''):
                     if(date_inpt < date_start or date_inpt > date_end):
                         raise exp.date_not_available
         except ValueError:
-            raise ValueError("Incorrect date format, should be YYYY-MM-DD")
+            print_log("Incorrect date format, should be YYYY-MM-DD")
         except exp.wrong_birthdate_format:
-            print("Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20")
+            print_log("Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20")
         except exp.day_out_of_range:
-            print("Please input the day between 1 and 31")
+            print_log("Please input the day between 1 and 31")
         except exp.month_out_of_range:
-            print("Please input the month between 1 and 12")
+            print_log("Please input the month between 1 and 12")
         except exp.date_not_available:
-            print("Please select the date from the options provided by the system.")
+            print_log("Please select the date from the options provided by the system.")
         else: 
             return input_date
 
@@ -80,7 +80,7 @@ def email_format_check():
             elif "@" not in email or "." not in email:
                 raise exp.wrong_email_format
         except exp.wrong_email_format:
-            print("Please input an email in a valid format e.g example@gmail.com")
+            print_log("Please input an email in a valid format e.g example@gmail.com")
         else:
             return email
 
@@ -102,12 +102,12 @@ def camp_capacity_check(conn):
                     if camp_df["no_of_refugees"][ind] == camp_df["capacity"][ind]:
                         raise exp.camp_capacity_full
         except exp.camp_capacity_full:
-            print("This camp cannot accept more refugees since it has no more capacity.")
+            print_log("This camp cannot accept more refugees since it has no more capacity.")
             print("Please re-assign the camp for the refugee")
         except exp.camp_id_out_of_range:
-            print("Your input camp ID is invalid in the database")
+            print_log("Your input camp ID is invalid in the database")
         except ValueError:
-            print("Please enter a numerical value for the camp ID.")
+            print_log("Please enter a numerical value for the camp ID.")
         else:
             return camp
 
@@ -125,11 +125,11 @@ def refugee_validity_check_by_ID(cond,refugee_df):
                     if status == "inactive":
                         raise exp.inactive_refugee_edit
             except exp.refugee_id_out_of_range:
-                print("Your input refugee ID is invalid in the database")
+                print_log("Your input refugee ID is invalid in the database")
             except ValueError:
-                print("Please enter a numerical value for the refugee ID.")
+                print_log("Please enter a numerical value for the refugee ID.")
             except exp.inactive_refugee_edit:
-                print("You cannot edit inactive refugee's information.")
+                print_log("You cannot edit inactive refugee's information.")
             else: 
                 return ref_id
 
@@ -147,10 +147,10 @@ def numerical_input_check(options):
                 array_opts.append(selected_opts)
                 if int(selected_opts) > options.count("\n")+1:
                     raise OutOfRangeError(selected_opts)
-        except OutOfRangeError as e:
-            print(e)
+        except OutOfRangeError:
+            print_log("Your input number is invalid in our options. Please try again.")
         except ValueError:
-            print("Please enter a numerical value for your selected options.")
+            print_log("Please enter a numerical value for your selected options.")
         else:
             # array of numerical input (no duplication)
             return array_opts
@@ -165,9 +165,9 @@ def volunteer_ID_req_check(volunteer_df):
             if vol_ID not in volunteer_df["volunteerID"].values:
                 raise exp.volunteer_id_out_of_range
         except exp.volunteer_id_out_of_range:
-            print("Your input volunteer ID is invalid regarding the available options.")
+            print_log("Your input volunteer ID is invalid regarding the available options.")
         except ValueError:
-            print("Please enter a numerical value for the volunteer ID.")
+            print_log("Please enter a numerical value for the volunteer ID.")
         else: 
             return vol_ID
 

@@ -1,9 +1,10 @@
 import sqlite3
 import time
 import pandas as pd
+from system_log import *
 
 
-def connect_db(db_file):
+def connect_db():
     """ create a database connection to the SQLite database
         specified by db_file
     :param db_file: database file
@@ -11,10 +12,9 @@ def connect_db(db_file):
     """
     conn = None
     try:
-        conn = sqlite3.connect(db_file, timeout=1000.0 )
-    except Exception as e:
-        print("Cannot connect to database")
-        print(e)
+        conn = sqlite3.connect("info_files/emergency_system.db", timeout=1000.0 )
+    except Exception:
+        print_log("Cannot connect to database")
 
     return conn
 
@@ -76,6 +76,6 @@ def get_refugee_dataframe(conn):
 def select_task_by_ref_id(conn,refugeeID):
     task_query = f'''SELECT * FROM task WHERE refugeeID = {refugeeID}'''
     pd_task = pd.read_sql_query(task_query,conn)
-    df_task_ref_id = pd.DataFrame(pd_task,columns=["taskID","refugeeID","volunteerID","taskInfo","startDate","workShift"])
+    df_task_ref_id = pd.DataFrame(pd_task,columns=["taskID","refugeeID","volunteerID","taskInfo","week","startDate","workShift"])
     time.sleep(1.0)
     return df_task_ref_id

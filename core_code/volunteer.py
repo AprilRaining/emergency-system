@@ -62,12 +62,14 @@ class Volunteer:
                 case 3:
                     self.close_emergency_refugee_file()
                 case 4:
+                    self.reopen_emergency_refugee_file()
+                case 5:
                     self.delete_emergency_refugee_file()
                 case 0:
                     return
 
     def create_emergency_refugee_file(self):
-        conn = connect_db("info_files/emergency_system.db")
+        conn = connect_db()
         while True:
             # create instance of refugee
             new_ref = Refugee("Register", conn)
@@ -81,7 +83,7 @@ class Volunteer:
     def edit_emergency_refugee_file(self):
         print("Welcome to refugee information system")
         print("---------------------------------------------------")
-        conn = connect_db("info_files/emergency_system.db")
+        conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df)
         print("---------------------------------------------------")
@@ -108,7 +110,7 @@ class Volunteer:
     def close_emergency_refugee_file(self):
         print("Welcome to refugee information system")
         print("-------------------------------------------")
-        conn = connect_db("info_files/emergency_system.db")
+        conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("deactivate", refugee_df)
         print("\nPlease see refugee details below.\nYou can activate this refugee account anytime.\n")
@@ -131,7 +133,7 @@ class Volunteer:
     def reopen_emergency_refugee_file(self):
         print("Welcome to refugee information system")
         print("-------------------------------------------")
-        conn = connect_db("info_files/emergency_system.db")
+        conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("activate", refugee_df)
         # update datebase: refugee[status] to active
@@ -142,7 +144,7 @@ class Volunteer:
     def delete_emergency_refugee_file(self):
         print("Welcome to refugee information system")
         print("-------------------------------------------")
-        conn = connect_db("info_files/emergency_system.db")
+        conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("delete", refugee_df)
         print("\nPlease see refugee details below before deleting.\n")
@@ -174,7 +176,7 @@ class Volunteer:
 
 v1 = Volunteer()
 # v1.create_emergency_refugee_file()
-# v1.edit_emergency_refugee_file()
+v1.edit_emergency_refugee_file()
 # v1.delete_emergency_refugee_file()
 # v1.close_emergency_refugee_file()
-v1.reopen_emergency_refugee_file()
+# v1.reopen_emergency_refugee_file()

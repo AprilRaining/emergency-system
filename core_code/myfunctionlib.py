@@ -2,6 +2,7 @@ import inspect
 import sqlite3
 
 from myError import *
+from system_log import *
 
 
 def menu(name=''):
@@ -59,7 +60,8 @@ def menu(name=''):
                 '1. Create Emergency Refugee File.\n'
                 '2. Edit Emergency Refugee File.\n'
                 '3. Close Emergency Refugee File.\n'
-                '4. Delete Emergency Refugee File.\n'
+                '4. Reopen Emergency Refugee File.\n'
+                '5. Delete Emergency Refugee File.\n'
                 '0. Exit'
             )
 
@@ -78,7 +80,7 @@ def menu_choice_get(span, hint=''):
             if option not in range(span):
                 raise InvalidChoiceError(option)
         except ValueError:
-            print("You entered a non-numeric value.")
+            print_log("You entered a non-numeric value.")
             print("Please reenter a valid Number")
         except InvalidChoiceError as e:
             print(e)

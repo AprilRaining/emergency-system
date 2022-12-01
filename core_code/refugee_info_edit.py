@@ -2,6 +2,7 @@
 from refugee import Refugee
 from db_connect_ref import *
 import sys
+from system_log import *
 
 def refugee_info_edit(choice, refugeeID, refugee_df, conn):
     ref = Refugee("Edit",conn)
@@ -41,14 +42,14 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
             case 12:
                 purpose = input("Specify your purpose of accessing refugee's request system? (add or edit or clear): ")
                 if purpose != "add" and purpose != "edit" and purpose != "clear":
-                    print("Please enter either 'add' or 'edit' or 'clear'")
+                    print_log("Please enter either 'add' or 'edit' or 'clear'")
 
                 else:
                     print("\n------------REFUGEE'S REQUEST SYSTEM------------")
                     if purpose!="clear":
                         if request == "0" and purpose =="edit":
-                            print("You don't have any request in your schedule.")
-                            print("We recommend changing your purpose to 'add'.")
+                            print_log("You don't have any request in your schedule.")
+                            print_log("We recommend changing your purpose to 'add'.")
                             sys.exit()
                         else:
                             # add or edit (correctly input)
@@ -57,7 +58,7 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                         # clear volunteer schedule
                         df_task_by_ref = select_task_by_ref_id(conn, refugeeID)
                         if df_task_by_ref.empty:
-                            print("The request is already empty. There is nothing to clear out.")
+                            print_log("The request is already empty. There is nothing to clear out.")
                             sys.exit()
                         else:
                             # volunteer schedule clear
