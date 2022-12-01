@@ -85,7 +85,7 @@ class Volunteer:
         print("---------------------------------------------------")
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df)
+        ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df, conn)
         print("---------------------------------------------------")
         print("Select a database field that you would like to edit: ")
         edit_opt = refugee_input_option("Edit")
@@ -112,7 +112,7 @@ class Volunteer:
         print("-------------------------------------------")
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID("deactivate", refugee_df)
+        ref_df_by_id = refugee_validity_check_by_ID("deactivate", refugee_df, conn)
         print("\nPlease see refugee details below.\nYou can activate this refugee account anytime.\n")
         print(refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id])
         # get req id
@@ -135,7 +135,7 @@ class Volunteer:
         print("-------------------------------------------")
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID("activate", refugee_df)
+        ref_df_by_id = refugee_validity_check_by_ID("activate", refugee_df, conn)
         # update datebase: refugee[status] to active
         update_refdb_attr(conn, ref_df_by_id, "status", "active")
         print("--------------------------------------------------")
@@ -146,7 +146,7 @@ class Volunteer:
         print("-------------------------------------------")
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID("delete", refugee_df)
+        ref_df_by_id = refugee_validity_check_by_ID("delete", refugee_df, conn)
         print("\nPlease see refugee details below before deleting.\n")
         print(refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id])
         # get req id

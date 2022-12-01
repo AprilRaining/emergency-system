@@ -6,6 +6,9 @@ from datetime import *
 import pandas as pd
 from db_connect_ref import *
 from system_log import *
+from myfunctionlib import *
+from refugee_utilities import *
+from options import *
 
 def refugee_existence_check(conn):
     while True:
@@ -111,11 +114,22 @@ def camp_capacity_check(conn):
         else:
             return camp
 
-def refugee_validity_check_by_ID(cond,refugee_df):
+def refugee_validity_check_by_ID(cond,refugee_df, conn):
         while True:
             try:
+                print("Search for the refugee information by")
+                col_opt = ['fName','lName','campID','familyMemberName']
+                options = Options(col_opt, limied=True)
+                print(options)
+                opt = col_opt[int(input('Please select how you want to search: '))]
+                keyword = input(f"\nPlease enter the {opt} keyword: ")
+                refugee_list = search_refugee(opt,keyword,conn)
+                if refugee_list.empty:
+                    raise exp.refugee_id_out_of_range
+                else:
+                    print("\nPlease see details below for the list of refugees that match your search:")
+                    print(refugee_list)
                 ref_id = int(input(f"Please input refugee ID of whom you wish to {cond} the information: "))
-                # print((refugee_df["refugeeID"]).max())
                 if ref_id > (refugee_df["refugeeID"]).max() or ref_id<0 :
                     raise exp.refugee_id_out_of_range
                 if ref_id not in refugee_df["refugeeID"].values:
@@ -125,9 +139,9 @@ def refugee_validity_check_by_ID(cond,refugee_df):
                     if status == "inactive":
                         raise exp.inactive_refugee_edit
             except exp.refugee_id_out_of_range:
-                print_log("Your input refugee ID is invalid in the database")
+                print_log("Your input is invalid in our database")
             except ValueError:
-                print_log("Please enter a numerical value for the refugee ID.")
+                print_log("Please enter a numerical value for your input.")
             except exp.inactive_refugee_edit:
                 print_log("You cannot edit inactive refugee's information.")
             else: 
@@ -142,12 +156,12 @@ def numerical_input_check(options):
                 array_opts.extend(list(OrderedDict.fromkeys(selected_opts.split(","))))
                 for v in array_opts:
                     if int(v) > options.count("\n")+1:
-                        raise OutOfRangeError(v)
+                        raise InvalidChoiceError(v)
             else:
                 array_opts.append(selected_opts)
                 if int(selected_opts) > options.count("\n")+1:
-                    raise OutOfRangeError(selected_opts)
-        except OutOfRangeError:
+                    raise InvalidChoiceError(selected_opts)
+        except InvalidChoiceError:
             print_log("Your input number is invalid in our options. Please try again.")
         except ValueError:
             print_log("Please enter a numerical value for your selected options.")

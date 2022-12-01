@@ -25,6 +25,16 @@ def get_week_number(date):
     week_num = datetime.date(int(y), int(m), int(d)).isocalendar()[1]
     return week_num
 
+def search_refugee(column, keyword, conn):
+    result = []
+    if type(keyword) == type(''):
+        keyword = "'%{}%'".format(keyword)
+    search_query = "SELECT * FROM refugee WHERE {} LIKE {}".format(column, keyword)
+    pd_search = pd.read_sql_query(search_query,conn)
+    df_search = pd.DataFrame(pd_search, columns=["refugeeID","campID","fName","lName","birthdate","gender","ethnicGroup","email",
+                "phone","familyMemberName","illness","surgery","smoking","alcoholic","request","status"])
+    return df_search
+
 
 def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
     '''
