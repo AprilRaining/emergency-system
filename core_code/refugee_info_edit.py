@@ -28,7 +28,7 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                     # allow only when the request schedule is empty
                     ref.assign_camp_ID()
                 else:
-                    print("Warning: The refugee is not allowed to change the camp because she/he has scheduled a request with volunteer.")
+                    warn("Warning: The refugee is not allowed to change the camp because she/he has scheduled a request with volunteer.")
                     print("We recommend clearing out all request schedules before moving to a new camp.")
                 sys.exit()
             case 8:
@@ -40,33 +40,42 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
             case 11:
                 ref.refugee_alcoholic()
             case 12:
-                purpose = input("Specify your purpose of accessing refugee's request system? (add or edit or clear): ")
-                if purpose != "add" and purpose != "edit" and purpose != "clear":
-                    print_log("Please enter either 'add' or 'edit' or 'clear'")
-
-                else:
-                    print("\n------------REFUGEE'S REQUEST SYSTEM------------")
-                    if purpose!="clear":
-                        if request == "0" and purpose =="edit":
-                            print_log("You don't have any request in your schedule.")
-                            print_log("We recommend changing your purpose to 'add'.")
-                            sys.exit()
-                        else:
-                            # add or edit (correctly input)
-                            ref.ref_request(purpose, refugeeID)
+                while True:
+                    purpose = input("Specify your purpose of accessing refugee's request system? (add or edit or clear): ")
+                    if purpose != "add" and purpose != "edit" and purpose != "clear":
+                        print_log("Please enter either 'add' or 'edit' or 'clear'")
                     else:
-                        # clear volunteer schedule
-                        df_task_by_ref = select_task_by_ref_id(conn, refugeeID)
-                        if df_task_by_ref.empty:
-                            print_log("The request is already empty. There is nothing to clear out.")
-                            sys.exit()
+                        print("\n------------REFUGEE'S REQUEST SYSTEM------------")
+                        if purpose!="clear":
+                            if request == "0" and purpose =="edit":
+                                print_log("You don't have any request in your schedule.")
+                                print_log("We recommend changing your purpose to 'add'.")
+                                cont = input("Would you like to continue with request edition? (Yes/No): ")
+                                if cont == "No":
+                                    print("Cancelling all edition. Please start again!")
+                                    sys.exit()
+                            else:
+                                # add or edit (correctly input)
+                                ref.ref_request(purpose, refugeeID)
+                                break
                         else:
-                            # volunteer schedule clear
-                            clear_request_schedule(conn, df_task_by_ref)
-                            # refugee
-                            update_refdb_attr(conn, refugeeID, "request", "0")
-                            print("The request schedule related to volunteer and refugee are successfully cleared out.")
-                            sys.exit()
+                            # clear volunteer schedule
+                            df_task_by_ref = select_task_by_ref_id(conn, refugeeID)
+                            print(df_task_by_ref)
+                            if df_task_by_ref.empty:
+                                print_log("The request is already empty. There is nothing to clear out.")
+                                cont = input("Would you like to continue with request edition? (Yes/No): ")
+                                if cont == "No":
+                                    ref.ref_row.append(0)
+                                    break
+                            else:
+                                # volunteer schedule clear
+                                clear_request_schedule(conn, df_task_by_ref)
+                                # refugee
+                                update_refdb_attr(conn, refugeeID, "request", "0")
+                                print("The request schedule related to volunteer and refugee are successfully cleared out.")
+                                ref.ref_row.append(0)
+                                break
           
     # return refugee information list (array) based on selected field
     return ref.ref_row

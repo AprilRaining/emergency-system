@@ -68,6 +68,13 @@ class Volunteer:
                 case 0:
                     return
 
+    @staticmethod
+    def system_exit_check():
+        cont_proc = input(
+                "Would you like to continue the process?(Yes/No): ")
+        if cont_proc == "No":
+            sys.exit()
+
     def create_emergency_refugee_file(self):
         conn = connect_db()
         while True:
@@ -75,10 +82,7 @@ class Volunteer:
             new_ref = Refugee("Register", conn)
             # register new refugee
             new_ref.refugee_registration_form()
-            cont_proc = input(
-                "Would you like to continue registering more refugees?(Yes/No): ")
-            if cont_proc == "No":
-                sys.exit()
+            self.system_exit_check()
 
     def edit_emergency_refugee_file(self):
         print("Welcome to refugee information system")
@@ -105,7 +109,8 @@ class Volunteer:
                                   col_name_arr[i], edited_fields[i])
 
         print("---------------------------------------------------")
-        print("The refugee's information is successfully updated.")
+        print("The refugee's information is successfully updated.\n")
+        self.system_exit_check()
 
     def close_emergency_refugee_file(self):
         print("Welcome to refugee information system")
@@ -128,7 +133,8 @@ class Volunteer:
         update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
         update_refdb_attr(conn, ref_df_by_id, "request", "0")
         print("--------------------------------------------------")
-        print("The refugee's information is successfully deactivated.")
+        print("The refugee's information is successfully deactivated.\n")
+        self.system_exit_check()
 
     def reopen_emergency_refugee_file(self):
         print("Welcome to refugee information system")
@@ -139,7 +145,8 @@ class Volunteer:
         # update datebase: refugee[status] to active
         update_refdb_attr(conn, ref_df_by_id, "status", "active")
         print("--------------------------------------------------")
-        print("The refugee's information is successfully activated.")
+        print("The refugee's information is successfully activated.\n")
+        self.system_exit_check()
 
     def delete_emergency_refugee_file(self):
         print("Welcome to refugee information system")
@@ -171,12 +178,13 @@ class Volunteer:
             # delete refugee
             delete_ref_by_id(conn, ref_df_by_id)
             print("--------------------------------------------------")
-            print("The refugee's information is successfully deleted.")
+            print("The refugee's information is successfully deleted.\n")
+        self.system_exit_check()
 
 
-v1 = Volunteer()
+# v1 = Volunteer()
 # v1.create_emergency_refugee_file()
-v1.edit_emergency_refugee_file()
+# v1.edit_emergency_refugee_file()
 # v1.delete_emergency_refugee_file()
 # v1.close_emergency_refugee_file()
 # v1.reopen_emergency_refugee_file()

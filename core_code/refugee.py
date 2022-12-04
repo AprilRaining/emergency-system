@@ -242,10 +242,10 @@ class Refugee:
                 refugee_df.loc[refugee_df["refugeeID"] == req_edit_id, "request"].values[0])
             self.ref_row.append(req_id)
             # show task table
-            task_query = f'''SELECT * FROM task WHERE refugeeID = {req_edit_id}'''
+            task_query = f'''SELECT * FROM task WHERE refugeeID = {req_edit_id} and status = "active"'''
             pd_task = pd.read_sql_query(task_query, self.conn)
             df_task = pd.DataFrame(pd_task, columns=[
-                                   "taskID", "refugeeID", "volunteerID", "taskInfo", "week", "startDate", "workShift"])
+                                   "taskID", "refugeeID", "volunteerID", "taskInfo", "week", "startDate", "workShift", "status"])
             print(
                 "\nPlease see details below for the existing tasks assoiated with refugee's request:\n")
             print(df_task)

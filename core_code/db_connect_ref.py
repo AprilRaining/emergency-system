@@ -13,8 +13,8 @@ def connect_db():
     conn = None
     try:
         conn = sqlite3.connect("info_files/emergency_system.db", timeout=1000.0 )
-    except Exception:
-        print_log("Cannot connect to database")
+    except Exception as e:
+        print_log(str(e))
 
     return conn
 
@@ -74,8 +74,8 @@ def get_refugee_dataframe(conn):
     return df_refugee
 
 def select_task_by_ref_id(conn,refugeeID):
-    task_query = f'''SELECT * FROM task WHERE refugeeID = {refugeeID}'''
+    task_query = f'''SELECT * FROM task WHERE refugeeID = {refugeeID} and status = "active"'''
     pd_task = pd.read_sql_query(task_query,conn)
-    df_task_ref_id = pd.DataFrame(pd_task,columns=["taskID","refugeeID","volunteerID","taskInfo","week","startDate","workShift"])
+    df_task_ref_id = pd.DataFrame(pd_task,columns=["taskID","refugeeID","volunteerID","taskInfo","week","startDate","workShift","status"])
     time.sleep(1.0)
     return df_task_ref_id

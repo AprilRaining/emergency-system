@@ -2,7 +2,7 @@ import refugee_exception as exp
 from collections import OrderedDict
 from myError import *
 import sys
-from datetime import *
+import datetime
 import pandas as pd
 from db_connect_ref import *
 from system_log import *
@@ -33,6 +33,8 @@ def refugee_existence_check(conn):
                 else:
                     print("The process ends")
                     sys.exit()
+        except Exception as e:
+            print_log(str(e))
         else:
             return (firstname,lastname)
 
@@ -41,26 +43,22 @@ def date_format_check(purpose,limit_start = '',limit_end = ''):
     while True: 
         try:
             input_date = input(f"Enter refugee's {purpose} (yyyy-mm-dd): ")
-            datetime.strptime(input_date, '%Y-%m-%d')
-            if ("-" not in input_date):
+            bd_val = (input_date).split("-")
+            if len(bd_val) != 3:
                 raise exp.wrong_birthdate_format
-            else:
-                bd_val = input_date.split("-")
-                if len(bd_val) != 3:
-                    raise exp.wrong_birthdate_format
-                if (bd_val[2]) not in [format(x, '02d') for x in range(1,32)]:
-                    raise exp.day_out_of_range
-                if (bd_val[1]) not in [format(x, '02d') for x in range(1,13)]:
-                    raise exp.month_out_of_range
-                if limit_end != '' and limit_end != '':
-                    di, mi, yi = [int(x) for x in input_date.split('-')]
-                    date_inpt = date(di, mi, yi)
-                    ds, ms, ys = [int(x) for x in limit_start.split('-')]
-                    date_start = date(ds, ms, ys)
-                    de, me, ye = [int(x) for x in limit_end.split('-')]
-                    date_end = date(de, me, ye)
-                    if(date_inpt < date_start or date_inpt > date_end):
-                        raise exp.date_not_available
+            if (bd_val[2]) not in [format(x, '02d') for x in range(1,32)]:
+                raise exp.day_out_of_range
+            if (bd_val[1]) not in [format(x, '02d') for x in range(1,13)]:
+                raise exp.month_out_of_range
+            if limit_end != '' and limit_end != '':
+                di, mi, yi = [int(x) for x in input_date.split('-')]
+                date_inpt = datetime.date(di, mi, yi)
+                ds, ms, ys = [int(x) for x in limit_start.split('-')]
+                date_start = datetime.date(ds, ms, ys)
+                de, me, ye = [int(x) for x in limit_end.split('-')]
+                date_end = datetime.date(de, me, ye)
+                if(date_inpt < date_start or date_inpt > date_end):
+                    raise exp.date_not_available
         except ValueError:
             print_log("Incorrect date format, should be YYYY-MM-DD")
         except exp.wrong_birthdate_format:
@@ -71,6 +69,8 @@ def date_format_check(purpose,limit_start = '',limit_end = ''):
             print_log("Please input the month between 1 and 12")
         except exp.date_not_available:
             print_log("Please select the date from the options provided by the system.")
+        except Exception as e:
+            print_log(str(e))
         else: 
             return input_date
 
@@ -84,6 +84,8 @@ def email_format_check():
                 raise exp.wrong_email_format
         except exp.wrong_email_format:
             print_log("Please input an email in a valid format e.g example@gmail.com")
+        except Exception as e:
+            print_log(str(e))
         else:
             return email
 
@@ -111,6 +113,8 @@ def camp_capacity_check(conn):
             print_log("Your input camp ID is invalid in the database")
         except ValueError:
             print_log("Please enter a numerical value for the camp ID.")
+        except Exception as e:
+            print_log(str(e))
         else:
             return camp
 
@@ -144,6 +148,8 @@ def refugee_validity_check_by_ID(cond,refugee_df, conn):
                 print_log("Please enter a numerical value for your input.")
             except exp.inactive_refugee_edit:
                 print_log("You cannot edit inactive refugee's information.")
+            except Exception as e:
+                print_log(str(e))
             else: 
                 return ref_id
 
@@ -165,6 +171,8 @@ def numerical_input_check(options):
             print_log("Your input number is invalid in our options. Please try again.")
         except ValueError:
             print_log("Please enter a numerical value for your selected options.")
+        except Exception as e:
+            print_log(str(e))
         else:
             # array of numerical input (no duplication)
             return array_opts
@@ -182,6 +190,8 @@ def volunteer_ID_req_check(volunteer_df):
             print_log("Your input volunteer ID is invalid regarding the available options.")
         except ValueError:
             print_log("Please enter a numerical value for the volunteer ID.")
+        except Exception as e:
+            print_log(str(e))
         else: 
             return vol_ID
 

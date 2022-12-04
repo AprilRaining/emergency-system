@@ -54,17 +54,17 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             # insert data to task table: multiple insertion
             week_num = get_week_number(req["date"])
             task_insert = (refugeeID, req["volunteer"], req["task"], week_num,
-                           req["date"], req["workshift"])
-            ins_task_query = f'''INSERT INTO task(refugeeID,volunteerID,taskInfo,week,startDate,workShift) VALUES {task_insert}'''
+                           req["date"], req["workshift"],"active")
+            ins_task_query = f'''INSERT INTO task(refugeeID,volunteerID,taskInfo,week,startDate,workShift,status) VALUES {task_insert}'''
             cur.execute(ins_task_query)
             conn.commit()
-            time.sleep(12.0)
+            time.sleep(9.0)
             task_id.append(cur.lastrowid)
             # update volunteer available day by task_ID
             upd_vol_query = f'''UPDATE volunteer SET "{req["day"]}" = {cur.lastrowid} WHERE volunteerID = {req["volunteer"]}'''
             cur.execute(upd_vol_query)
             conn.commit()
-            time.sleep(8.0)
+            time.sleep(7.0)
 
         # update request column in refugee table: insert ex. 1,2,3
         if purpose == "add":

@@ -80,7 +80,7 @@ def menu_choice_get(span, hint=''):
             if option not in range(span):
                 raise InvalidChoiceError(option)
         except ValueError:
-            print_log("You entered a non-numeric value.")
+            print("You entered a non-numeric value.")
             print("Please reenter a valid Number")
         except InvalidChoiceError as e:
             print(e)
