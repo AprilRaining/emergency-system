@@ -3,6 +3,7 @@ from refugee import Refugee
 from db_connect_ref import *
 import sys
 from system_log import *
+from refugee_validation import *
 
 def refugee_info_edit(choice, refugeeID, refugee_df, conn):
     ref = Refugee("Edit",conn)
@@ -41,19 +42,19 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                 ref.refugee_alcoholic()
             case 12:
                 while True:
+                    print("\n------------REFUGEE'S REQUEST SYSTEM------------")
                     purpose = input("Specify your purpose of accessing refugee's request system? (add or edit or clear): ")
                     if purpose != "add" and purpose != "edit" and purpose != "clear":
                         print_log("Please enter either 'add' or 'edit' or 'clear'")
                     else:
-                        print("\n------------REFUGEE'S REQUEST SYSTEM------------")
                         if purpose!="clear":
                             if request == "0" and purpose =="edit":
                                 print_log("You don't have any request in your schedule.")
                                 print_log("We recommend changing your purpose to 'add'.")
-                                cont = input("Would you like to continue with request edition? (Yes/No): ")
-                                if cont == "No":
-                                    print("Cancelling all edition. Please start again!")
-                                    sys.exit()
+                                cont = yn_valid("Would you like to abort your request edition? (Yes/No): ")
+                                if cont == "Yes":
+                                    ref.ref_row.append(0)
+                                    break
                             else:
                                 # add or edit (correctly input)
                                 ref.ref_request(purpose, refugeeID)
@@ -64,7 +65,7 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                             print(df_task_by_ref)
                             if df_task_by_ref.empty:
                                 print_log("The request is already empty. There is nothing to clear out.")
-                                cont = input("Would you like to continue with request edition? (Yes/No): ")
+                                cont = yn_valid("Would you like to continue with request edition? (Yes/No): ")
                                 if cont == "No":
                                     ref.ref_row.append(0)
                                     break

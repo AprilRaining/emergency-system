@@ -132,7 +132,7 @@ class Refugee:
 
     def refugee_surgery(self):
         print("---------------MEDICAL SECTION 2 : SURGERY--------------")
-        self.has_surgery = input(
+        self.has_surgery = yn_valid(
             "Does refugee has the history of surgery? (Yes/No): ")
         if (self.has_surgery == "Yes"):
             self.surgery = input("Enter refugee's surgery record: ")
@@ -142,12 +142,12 @@ class Refugee:
 
     def refugee_smoking(self):
         print("---------------MEDICAL SECTION 3 : SMOKING HABIT--------------")
-        self.smoker = input("Does refugee smoke? (Yes/No): ")
+        self.smoker = yn_valid("Does refugee smoke? (Yes/No): ")
         self.ref_row.extend([self.smoker])
 
     def refugee_alcoholic(self):
         print("---------------MEDICAL SECTION 4 : ALCOHOL CONSUMPTION--------------")
-        self.is_alcoholic = input("Is refugee an alcoholic? (Yes/No): ")
+        self.is_alcoholic = yn_valid("Is refugee an alcoholic? (Yes/No): ")
         # add medical cond to row
         self.ref_row.extend([self.is_alcoholic])
 
@@ -158,7 +158,7 @@ class Refugee:
         self.req_form_coll = []
         # case 1: create/add new req
         if purpose == "create" or purpose == "add":
-            self.has_req = "Yes" if purpose == "add" else input(
+            self.has_req = "Yes" if purpose == "add" else yn_valid(
                 f"Would the refugee like to {purpose} any special requests? (Yes/No): ")
             if (self.has_req == "No"):
                 self.ref_row.append("0")
@@ -226,7 +226,7 @@ class Refugee:
                                                    "workshift": self.req_shift, "volunteer": self.vol_ID})
                         req_counter += 1
                         # allow adding multiple request, if no more -> end loop
-                        end_req = input(
+                        end_req = yn_valid(
                             "Would refugee like to add more requests? (Yes/No): ")
                         if end_req == "No":
                             if purpose == "add":
@@ -319,6 +319,7 @@ class Refugee:
         # convert list to tuple
         self.ref_row_new = tuple(self.ref_row)
         # insert new refugee to db
+        print("Adding new refugee to the system................")
         refugee_id = insert_refdb_row(self.conn, self.ref_row_new)
         return refugee_id
 
@@ -363,5 +364,5 @@ class Refugee:
         refugeeID = self.add_refugee_to_db()
 
         # CREATE case: update refugee, task, and volunteer table: can handle multiple req.
-        task_ref_vol_db(self.conn, req_list, refugeeID, refugee_df, "create")
+        req_id = task_ref_vol_db(self.conn, req_list, refugeeID, refugee_df, "create")
         print("New refugee is registered to the system. Thank you!")

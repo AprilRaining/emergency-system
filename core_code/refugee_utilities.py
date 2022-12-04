@@ -43,12 +43,13 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
     2.update volunteer available days
     3.update refugee's request => contain added taskID
     '''
+    req_id_mul = ""
+    print("Loading................")
     if req_list != []:
         cur = conn.cursor()
         task_id = []
         if purpose == "create":
-            print("Adding new refugee to the system................")
-            print("Note: This usually takes around 1 minutes for multiple requests.")
+            print("Note: This usually takes around 30-45 seconds for multiple requests.")
         for req in req_list:
             print("Adding refugee's request................")
             # insert data to task table: multiple insertion
@@ -58,13 +59,13 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             ins_task_query = f'''INSERT INTO task(refugeeID,volunteerID,taskInfo,week,startDate,workShift,status) VALUES {task_insert}'''
             cur.execute(ins_task_query)
             conn.commit()
-            time.sleep(9.0)
+            time.sleep(8.0)
             task_id.append(cur.lastrowid)
             # update volunteer available day by task_ID
             upd_vol_query = f'''UPDATE volunteer SET "{req["day"]}" = {cur.lastrowid} WHERE volunteerID = {req["volunteer"]}'''
             cur.execute(upd_vol_query)
             conn.commit()
-            time.sleep(7.0)
+            time.sleep(6.0)
 
         # update request column in refugee table: insert ex. 1,2,3
         if purpose == "add":
@@ -83,7 +84,7 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             req_id_mul = ','.join([str(i) for i in task_id])
             upd_ref_query = f''' UPDATE refugee SET request = "{req_id_mul}" WHERE refugeeID = {refugeeID}'''
             cur.execute(upd_ref_query)
-            time.sleep(5.0)
+            time.sleep(4.0)
             conn.commit()
             cur.close()
     return req_id_mul

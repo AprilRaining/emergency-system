@@ -1,4 +1,4 @@
-import refugee_exception as exp
+import refugee_exception as exc
 from collections import OrderedDict
 from myError import *
 import sys
@@ -19,15 +19,15 @@ def refugee_existence_check(conn):
             pd_query = pd.read_sql_query(get_ref,conn)
             df_row = pd.DataFrame(pd_query,columns=["firstname","lastname"])
             if df_row.empty == False:
-                raise exp.refugee_duplicated_regis
+                raise exc.refugee_duplicated_regis
                     
-        except exp.refugee_duplicated_regis:
+        except exc.refugee_duplicated_regis:
             print("The refugee's firstname and lastname already exist in the database.\nPlease recheck if you're try to register the same person once again.")
-            confirm = input("Is this refugee the same person as whom you registered before?(Yes/No): ")
+            confirm = yn_valid("Is this refugee the same person as whom you registered before?(Yes/No): ")
             if(confirm == "No"):
                 return (firstname,lastname)
             else:
-                cont = input("Would you like to continue the registration?(Yes/No): ")
+                cont = yn_valid("Would you like to continue the registration?(Yes/No): ")
                 if(cont == "Yes"):
                     print("The process restarts!!!")
                 else:
@@ -45,11 +45,11 @@ def date_format_check(purpose,limit_start = '',limit_end = ''):
             input_date = input(f"Enter refugee's {purpose} (yyyy-mm-dd): ")
             bd_val = (input_date).split("-")
             if len(bd_val) != 3:
-                raise exp.wrong_birthdate_format
+                raise exc.wrong_birthdate_format
             if (bd_val[2]) not in [format(x, '02d') for x in range(1,32)]:
-                raise exp.day_out_of_range
+                raise exc.day_out_of_range
             if (bd_val[1]) not in [format(x, '02d') for x in range(1,13)]:
-                raise exp.month_out_of_range
+                raise exc.month_out_of_range
             if limit_end != '' and limit_end != '':
                 di, mi, yi = [int(x) for x in input_date.split('-')]
                 date_inpt = datetime.date(di, mi, yi)
@@ -58,16 +58,16 @@ def date_format_check(purpose,limit_start = '',limit_end = ''):
                 de, me, ye = [int(x) for x in limit_end.split('-')]
                 date_end = datetime.date(de, me, ye)
                 if(date_inpt < date_start or date_inpt > date_end):
-                    raise exp.date_not_available
+                    raise exc.date_not_available
         except ValueError:
             print_log("Incorrect date format, should be YYYY-MM-DD")
-        except exp.wrong_birthdate_format:
+        except exc.wrong_birthdate_format:
             print_log("Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20")
-        except exp.day_out_of_range:
+        except exc.day_out_of_range:
             print_log("Please input the day between 1 and 31")
-        except exp.month_out_of_range:
+        except exc.month_out_of_range:
             print_log("Please input the month between 1 and 12")
-        except exp.date_not_available:
+        except exc.date_not_available:
             print_log("Please select the date from the options provided by the system.")
         except Exception as e:
             print_log(str(e))
@@ -81,8 +81,8 @@ def email_format_check():
             if email=="":
                 return email
             elif "@" not in email or "." not in email:
-                raise exp.wrong_email_format
-        except exp.wrong_email_format:
+                raise exc.wrong_email_format
+        except exc.wrong_email_format:
             print_log("Please input an email in a valid format e.g example@gmail.com")
         except Exception as e:
             print_log(str(e))
@@ -101,15 +101,15 @@ def camp_capacity_check(conn):
             print("-------------------------------------------")
             camp = int(input("Assign the camp ID to the refugee: "))
             if camp > camp_df.shape[0] or camp < 0:
-                raise exp.camp_id_out_of_range
+                raise exc.camp_id_out_of_range
             for ind in camp_df.index:
                 if ind+1 == camp:
                     if camp_df["no_of_refugees"][ind] == camp_df["capacity"][ind]:
-                        raise exp.camp_capacity_full
-        except exp.camp_capacity_full:
+                        raise exc.camp_capacity_full
+        except exc.camp_capacity_full:
             print_log("This camp cannot accept more refugees since it has no more capacity.")
             print("Please re-assign the camp for the refugee")
-        except exp.camp_id_out_of_range:
+        except exc.camp_id_out_of_range:
             print_log("Your input camp ID is invalid in the database")
         except ValueError:
             print_log("Please enter a numerical value for the camp ID.")
@@ -129,24 +129,24 @@ def refugee_validity_check_by_ID(cond,refugee_df, conn):
                 keyword = input(f"\nPlease enter the {opt} keyword: ")
                 refugee_list = search_refugee(opt,keyword,conn)
                 if refugee_list.empty:
-                    raise exp.refugee_id_out_of_range
+                    raise exc.refugee_id_out_of_range
                 else:
                     print("\nPlease see details below for the list of refugees that match your search:")
                     print(refugee_list)
                 ref_id = int(input(f"Please input refugee ID of whom you wish to {cond} the information: "))
                 if ref_id > (refugee_df["refugeeID"]).max() or ref_id<0 :
-                    raise exp.refugee_id_out_of_range
+                    raise exc.refugee_id_out_of_range
                 if ref_id not in refugee_df["refugeeID"].values:
-                    raise exp.refugee_id_out_of_range
+                    raise exc.refugee_id_out_of_range
                 if cond == "edit":
                     status = refugee_df.loc[refugee_df["refugeeID"]==ref_id,"status"].values[0]
                     if status == "inactive":
-                        raise exp.inactive_refugee_edit
-            except exp.refugee_id_out_of_range:
+                        raise exc.inactive_refugee_edit
+            except exc.refugee_id_out_of_range:
                 print_log("Your input is invalid in our database")
             except ValueError:
                 print_log("Please enter a numerical value for your input.")
-            except exp.inactive_refugee_edit:
+            except exc.inactive_refugee_edit:
                 print_log("You cannot edit inactive refugee's information.")
             except Exception as e:
                 print_log(str(e))
@@ -183,10 +183,10 @@ def volunteer_ID_req_check(volunteer_df):
             vol_ID = int(input(
                         "\nEnter the volunteer ID of whom you want to assign this request to: "))
             if vol_ID > (volunteer_df["volunteerID"]).max() or vol_ID < 1:
-                raise exp.volunteer_id_out_of_range
+                raise exc.volunteer_id_out_of_range
             if vol_ID not in volunteer_df["volunteerID"].values:
-                raise exp.volunteer_id_out_of_range
-        except exp.volunteer_id_out_of_range:
+                raise exc.volunteer_id_out_of_range
+        except exc.volunteer_id_out_of_range:
             print_log("Your input volunteer ID is invalid regarding the available options.")
         except ValueError:
             print_log("Please enter a numerical value for the volunteer ID.")
@@ -194,4 +194,20 @@ def volunteer_ID_req_check(volunteer_df):
             print_log(str(e))
         else: 
             return vol_ID
+
+def yn_valid(question):
+    while True:
+        try:
+            user_input = input(f"{question}")
+            if user_input != 'Yes' and user_input != 'No':
+                raise exc.wrong_yn_input
+        except exc.wrong_yn_input:
+            print_log("Your input is invalid. Please enter either 'Yes' or 'No'")
+        except Exception as e:
+            print_log(e)
+        else:
+            return user_input
+
+
+
 

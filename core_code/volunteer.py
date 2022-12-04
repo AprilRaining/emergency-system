@@ -70,9 +70,9 @@ class Volunteer:
 
     @staticmethod
     def system_exit_check():
-        cont_proc = input(
-                "Would you like to continue the process?(Yes/No): ")
-        if cont_proc == "No":
+        cont_proc = yn_valid(
+                "Would you like to exit the system?(Yes/No): ")
+        if cont_proc == "Yes":
             sys.exit()
 
     def create_emergency_refugee_file(self):
@@ -159,7 +159,7 @@ class Volunteer:
         # get req id
         ref_req = refugee_df.loc[refugee_df["refugeeID"]
                                  == ref_df_by_id, "request"].values[0]
-        confirm_del = input(
+        confirm_del = yn_valid(
             "Are you sure you want to delete this refugee from the system?(Yes/No): ")
         if confirm_del == "Yes":
             if ref_req != "0":

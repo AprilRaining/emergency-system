@@ -30,3 +30,5 @@ class date_not_available(Exception):
     pass
 class inactive_refugee_edit(Exception):
     """Raised when volunteer tries to edit the information of inactive refugee infomation"""
+class wrong_yn_input(Exception):
+    """Raised when user input is invalid for yes-no question."""
