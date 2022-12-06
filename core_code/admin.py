@@ -1,5 +1,5 @@
 import json
-
+import pandas as pd
 from manageEmergencyPlan import *
 from accountInput import *
 import sqlite3 as db
@@ -49,10 +49,39 @@ class Admin:
                     return
 
     def reactive_volunteer_account(self):
-        pass
+        ID = input('Enter the volunteer ID:')
+        try:
+            with db.connect('emergency_system.db') as conn:
+                c = conn.cursor()
+                c.execute(f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID, ))
+                status = c.fetchall()[0][0]
+            if status == '1':
+                print("This account is already active.")
+                print("-------------------------------------")
+            else:
+                c.execute(f'''UPDATE volunteer SET accountStatus = 1 WHERE volunteerID = (?)''', (ID, ))
+                conn.commit()
+                print("Volunteer {}'s account is now reactive".format(ID))
+        except IndexError:
+            print("{} is an invalid ID".format(ID))
+
 
     def deactive_volunteer_account(self):
-        pass
+        ID = input('Enter the volunteer ID:')
+        try:
+            with db.connect('emergency_system.db') as conn:
+                c = conn.cursor()
+                c.execute(f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID,))
+                status = c.fetchall()[0][0]
+            if status == '0':
+                print("This account is already deactive.")
+                print("-------------------------------------")
+            else:
+                c.execute(f'''UPDATE volunteer SET accountStatus = 0 WHERE volunteerID = (?)''', (ID,))
+                conn.commit()
+                print("Volunteer {}'s account is now deactive".format(ID))
+        except IndexError:
+            print("{} is an invalid ID".format(ID))
 
     def creat_a_volunteer_account(self):
         new_volunteer = []
@@ -91,4 +120,52 @@ class Admin:
             c.execute(sql, new_volunteer)
 
     def display_volunteer_account(self):
-        pass
+        while True:
+            print(menu())
+            match menu_choice_get(menu().count('\n') + 1):
+                case 1:
+                    self.display_account_byID()
+                case 2:
+                    self.display_account_byCamp()
+                case 3:
+                    self.display_all_account()
+                case 0:
+                    return
+
+    def display_account_byID(self):
+        ID = input('Enter the volunteer ID:')
+        try:
+            with db.connect('emergency_system.db') as conn:
+                c = conn.cursor()
+                c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
+                volunteerID = (?)''', (ID,))
+            fd = pd.DataFrame(list(c.fetchall()), columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp iD", "Account status"])
+            print(fd)
+        except IndexError:
+            print("{} is an invalid ID".format(ID))
+    def display_account_byCamp(self):
+        ID = input('Enter the Camp ID:')
+        try:
+            with db.connect('emergency_system.db') as conn:
+                c = conn.cursor()
+                c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
+                        campID = (?)''', (ID,))
+            fd = pd.DataFrame(list(c.fetchall()),
+                              columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp iD",
+                                       "Account status"])
+            print(fd)
+        except IndexError:
+            print("{} is an invalid ID".format(ID))
+
+    def display_all_account(self):
+        try:
+            with db.connect('emergency_system.db') as conn:
+                c = conn.cursor()
+                c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
+                                1''')
+            fd = pd.DataFrame(list(c.fetchall()),
+                              columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp iD",
+                                       "Account status"])
+            print(fd)
+        except IndexError:
+            print("Wrong connection to the database")
