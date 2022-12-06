@@ -73,7 +73,7 @@ class Volunteer:
         cont_proc = yn_valid(
                 "Would you like to exit the system?(Yes/No): ")
         if cont_proc == "Yes":
-            sys.exit()
+            return
 
     def create_emergency_refugee_file(self):
         conn = connect_db()
