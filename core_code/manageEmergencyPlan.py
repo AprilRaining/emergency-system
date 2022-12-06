@@ -1,4 +1,3 @@
-from myfunctionlib import *
 from planInput import *
 from sqliteFunctions import *
 
@@ -16,16 +15,16 @@ class ManageEmergencyPlan:
                     self.create_emergency_plan()
                     back()
                 case 2:
-                    self.edit_emergency_plan(self.select_one_plan())
+                    self.edit_emergency_plan(select_sqlite('plan'))
                     back()
                 case 3:
                     display_by_IDs('plan', get_all_IDs('plan'))
                     back()
                 case 4:
-                    self.close_or_open_emergency_plan(self.select_one_plan())
+                    self.close_or_open_emergency_plan(select_sqlite('plan'))
                     back()
                 case 5:
-                    self.delete_emergency_plan(self.select_one_plan())
+                    self.delete_emergency_plan(select_sqlite('plan'))
                     back()
                 case 0:
                     return
@@ -161,23 +160,6 @@ class ManageEmergencyPlan:
                 delete_by_IDs('plan', planID)
             print('Succeed!')
 
-    def search_one_plan(self):
-        options = Options([
-            'type',
-            'description',
-            'area',
-            'startDate',
-            'endDate',
-            'numberOfCamps',
-            'status',
-        ], limited=True)
-        print(options)
-        option = options.get_option(
-            'Please choose which one you want to search by: ')
-        keyword = input('Please input the keyword:')
-        planIDs = search('plan', options.values[option], keyword)
-        return planIDs
-
     def select_one_plan(self):
         planIDs = get_all_IDs('plan')
         while True:
@@ -187,7 +169,7 @@ class ManageEmergencyPlan:
             planID = Get.option_in_list(
                 planIDs, 'Please input the planID to choose a plan: ')
             if planID == 0:
-                planIDs = self.search_one_plan()
+                planIDs = se
             else:
                 return planID
 
