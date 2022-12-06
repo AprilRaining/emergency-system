@@ -2,6 +2,7 @@ import inspect
 import sqlite3
 
 from myError import *
+from system_log import *
 
 
 def menu(name=''):
@@ -29,6 +30,7 @@ def menu(name=''):
             return (
                 '1. Manage Personal Information.\n'
                 '2. Manage Camp File\n'
+                '3. Manage Task\n'
                 '0. Exit'
             )
         case 'ManageEmergencyPlan':
@@ -67,7 +69,13 @@ def menu(name=''):
                 '1. Create Emergency Refugee File.\n'
                 '2. Edit Emergency Refugee File.\n'
                 '3. Close Emergency Refugee File.\n'
-                '4. Delete Emergency Refugee File.\n'
+                '4. Reopen Emergency Refugee File.\n'
+                '5. Delete Emergency Refugee File.\n'
+                '0. Exit'
+            )
+        case 'manage_task':
+            return (
+                '1. View this week schedule.\n'
                 '0. Exit'
             )
 
