@@ -30,6 +30,7 @@ def menu(name=''):
             return (
                 '1. Manage Personal Information.\n'
                 '2. Manage Camp File\n'
+                '3. Manage Task\n'
                 '0. Exit'
             )
         case 'ManageEmergencyPlan':
@@ -62,6 +63,11 @@ def menu(name=''):
                 '3. Close Emergency Refugee File.\n'
                 '4. Reopen Emergency Refugee File.\n'
                 '5. Delete Emergency Refugee File.\n'
+                '0. Exit'
+            )
+        case 'manage_task':
+            return (
+                '1. View this week schedule.\n'
                 '0. Exit'
             )
 
