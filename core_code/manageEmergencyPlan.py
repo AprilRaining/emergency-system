@@ -160,19 +160,6 @@ class ManageEmergencyPlan:
                 delete_by_IDs('plan', planID)
             print('Succeed!')
 
-    def select_one_plan(self):
-        planIDs = get_all_IDs('plan')
-        while True:
-            display_by_IDs('plan', planIDs)
-            print('Input 0 to search')
-            planIDs.append(0)
-            planID = Get.option_in_list(
-                planIDs, 'Please input the planID to choose a plan: ')
-            if planID == 0:
-                planIDs = se
-            else:
-                return planID
-
     def insert_one_plan(self, plan):
         with sqlite3.connect('../info_files/emergency_system.db') as conn:
             c = conn.cursor()
