@@ -43,3 +43,8 @@ Traceback (most recent call last):
   File "/home/lingpeng/emergency_plan/emergency-system/core_code/refugee_validation.py", line 132, in refugee_validity_check_by_ID
     raise exc.refugee_id_out_of_range
 refugee_exception.refugee_id_out_of_range
+2022-12-06 00:39:07,096 — ERROR : Your input is invalid in our database
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/core_code/refugee_validation.py", line 132, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
