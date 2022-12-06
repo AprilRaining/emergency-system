@@ -102,7 +102,8 @@ def confirm(hint=''):
 
 
 def back(hint=''):
-    print(hint)
+    if hint:
+        print(hint)
     while True:
         key = input('Input "Q/q" to go back:')
         if key == 'Q' or key == 'q':
@@ -115,15 +116,7 @@ def search(table, column, keyword):
         keyword = "'%{}%'".format(keyword)
     with sqlite3.connect('../info_files/emergency_system.db') as conn:
         c = conn.cursor()
-        for i in c.execute('select {}Id from {} where {} like {}'.format(
+        for i in c.execute('select {}ID from {} where {} like {}'.format(
                 table, table, column, keyword)).fetchall():
             result.append(i[0])
     return result
-
-
-def list_to_sqlite_string(indexList):
-    if type(indexList) == type([]):
-        indexList = map(str, indexList)
-        return '(' + ','.join(indexList) + ')'
-    elif type(indexList) == int:
-        return '({})'.format(indexList)
