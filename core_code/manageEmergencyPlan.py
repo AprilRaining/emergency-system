@@ -75,9 +75,11 @@ class ManageEmergencyPlan:
                 back('This plan has been closed, you can not change it.')
                 return
         print(options)
-        option = options.get_option('Please choose which one you want to edit: ')
+        option = options.get_option(
+            'Please choose which one you want to edit: ')
         newValue = self.get_new_value(planID, options.values[option])
-        self.update_new_value(planID=planID, column=options.values[option], newValue=newValue)
+        self.update_new_value(
+            planID=planID, column=options.values[option], newValue=newValue)
         back('Succeed!')
 
     def get_new_value(self, planID, column):
@@ -126,7 +128,8 @@ class ManageEmergencyPlan:
                            'Do you want to open it now?\n'
                            'The start date will be set to today if you want to open it.'):
                     self.update_new_value(planID, 'status', 1)
-                    self.update_new_value(planID, 'startDate', datetime.date.today())
+                    self.update_new_value(
+                        planID, 'startDate', datetime.date.today())
                     back('Succeed!')
                     return
             case 1:
@@ -134,7 +137,8 @@ class ManageEmergencyPlan:
                            'Do you want to close it now?\n'
                            'The end date will be set to today if you want to open it.'):
                     self.update_new_value(planID, 'status', 2)
-                    self.update_new_value(planID, 'endDate', datetime.date.today())
+                    self.update_new_value(
+                        planID, 'endDate', datetime.date.today())
                     back('Succeed!')
                     return
             case 2:
@@ -163,7 +167,8 @@ class ManageEmergencyPlan:
             'priority'
         ], limied=True)
         print(options)
-        option = options.get_option('Please choose which one you want to search by: ')
+        option = options.get_option(
+            'Please choose which one you want to search by: ')
         keyword = input('Please input the keyword:')
         planIDs = search('plan', options.values[option], keyword)
         return planIDs
@@ -176,7 +181,8 @@ class ManageEmergencyPlan:
         if planID == 0:
             planIDs = self.search_one_plan()
             self.display_emergency_plans(planIDs)
-            planID = Get.option_in_list(planIDs, 'Please input choose planID: ')
+            planID = Get.option_in_list(
+                planIDs, 'Please input choose planID: ')
         return planID
 
     def display_emergency_plans(self, index):
@@ -187,7 +193,8 @@ class ManageEmergencyPlan:
             c = conn.cursor()
             maxPlanID = c.execute('select max(planID) from plan').fetchone()[0]
             seqPlan = 0 if maxPlanID is None else maxPlanID
-            c.execute("update sqlite_sequence set seq = {} where name = 'plan'".format(seqPlan))
+            c.execute(
+                "update sqlite_sequence set seq = {} where name = 'plan'".format(seqPlan))
             if plan['endDate'] is None:
                 c.execute(
                     '''insert into 
@@ -217,9 +224,11 @@ class ManageEmergencyPlan:
                     ))
             maxCampID = c.execute('select max(campID) from camp').fetchone()[0]
             seqCamp = 0 if maxCampID is None else maxCampID
-            c.execute("update sqlite_sequence set seq = {} where name = 'camp'".format(seqCamp))
+            c.execute(
+                "update sqlite_sequence set seq = {} where name = 'camp'".format(seqCamp))
             for i in range(plan['numberOfCamps']):
-                c.execute('insert into camp (capacity, planID) values (20, {})'.format(seqPlan + 1))
+                c.execute(
+                    'insert into camp (capacity, planID) values (20, {})'.format(seqPlan + 1))
             return seqPlan + 1
 
     def read_all_plans(self):
