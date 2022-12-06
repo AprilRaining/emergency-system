@@ -2,9 +2,9 @@ from get import *
 
 
 class Options:
-    def __init__(self, optionsList, limied=False):
+    def __init__(self, optionsList, limited=False):
         self.values = optionsList
-        self.limited = limied
+        self.limited = limited
         self.len = len(self.values)
         temp = []
         if not self.limited:

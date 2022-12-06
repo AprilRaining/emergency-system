@@ -1,15 +1,11 @@
-import pandas as pd
-
 from myfunctionlib import *
 from planInput import *
+from sqliteFunctions import *
 
 
 class ManageEmergencyPlan:
 
     def __init__(self):
-        """
-        Read from file.
-        """
         self.menu = menu(self.__class__.__name__)
 
     def sub_main(self):
@@ -18,15 +14,19 @@ class ManageEmergencyPlan:
             match menu_choice_get(self.menu.count('\n') + 1):
                 case 1:
                     self.create_emergency_plan()
+                    back()
                 case 2:
-                    self.edit_emergency_plan()
+                    self.edit_emergency_plan(self.select_one_plan())
+                    back()
                 case 3:
-                    self.display_all_emergency_plans()
+                    display_by_IDs('plan', get_all_IDs('plan'))
                     back()
                 case 4:
-                    self.close_or_open_emergency_plan()
+                    self.close_or_open_emergency_plan(self.select_one_plan())
+                    back()
                 case 5:
-                    self.delete_emergency_plan()
+                    self.delete_emergency_plan(self.select_one_plan())
+                    back()
                 case 0:
                     return
 
@@ -39,17 +39,13 @@ class ManageEmergencyPlan:
         plan['endDate'] = PlanInput.end_date(plan['startDate'])
         plan['numberOfCamps'] = PlanInput.number_of_camps()
         plan['status'] = 0 if plan['startDate'] > datetime.date.today() else 1
-        plan['priority'] = PlanInput.priority()
         self.insert_one_plan(plan)
-        back('Succeed!')
+        print('Succeed!')
 
-    def edit_emergency_plan(self):
-        if not self.display_all_emergency_plans():
-            back()
-            return
-        planID = self.select_one_plan()
-        df = self.read_plans(planID)
-        self.display_emergency_plans(planID)
+    def edit_emergency_plan(self, planID):
+        df = pd_read_by_IDs('plan', planID)
+        display_by_IDs('plan', planID)
+        options = []
         match df.loc[0, 'status']:
             case 0:
                 options = Options([
@@ -59,20 +55,18 @@ class ManageEmergencyPlan:
                     'startDate',
                     'endDate',
                     'numberOfCamps',
-                    'priority'
-                ], limied=True)
+                ], limited=True)
                 print('This plan has not been opened.\n'
                       'Please choose one of properties below you want to change.')
             case 1:
                 options = Options([
                     'description',
                     'endDate',
-                    'priority'
-                ], limied=True)
+                ], limited=True)
                 print('This plan has been opened.\n'
                       'Please choose one of properties below you want to change.')
             case 2:
-                back('This plan has been closed, you can not change it.')
+                print('This plan has been closed, you can not change it.')
                 return
         print(options)
         option = options.get_option(
@@ -80,10 +74,10 @@ class ManageEmergencyPlan:
         newValue = self.get_new_value(planID, options.values[option])
         self.update_new_value(
             planID=planID, column=options.values[option], newValue=newValue)
-        back('Succeed!')
+        print('Succeed!')
 
     def get_new_value(self, planID, column):
-        df = self.read_plans(planID)
+        df = pd_read_by_IDs('plan', planID)
         print('Please input a new value.')
         match column:
             case 'type':
@@ -98,8 +92,6 @@ class ManageEmergencyPlan:
                 return PlanInput.end_date(df.loc[0, 'startDate'])
             case 'numberOfCamps':
                 return PlanInput.number_of_camps()
-            case 'priority':
-                return PlanInput.priority()
 
     def update_new_value(self, planID, column, newValue):
         with sqlite3.connect('../info_files/emergency_system.db') as conn:
@@ -107,21 +99,8 @@ class ManageEmergencyPlan:
             c.execute("update plan set {} = '{}' where planID = {}"
                       .format(column, newValue, planID))
 
-    def display_all_emergency_plans(self):
-        df = self.read_all_plans().to_string(index=False)
-        if len(df) != 0:
-            print(df)
-            return True
-        else:
-            print('There is not any plan. Please create one first.')
-            return False
-
-    def close_or_open_emergency_plan(self):
-        if not self.display_all_emergency_plans():
-            back()
-            return
-        planID = self.select_one_plan()
-        df = self.read_plans(planID)
+    def close_or_open_emergency_plan(self, planID):
+        df = pd_read_by_IDs('plan', planID)
         match df.loc[0, 'status']:
             case 0:
                 if confirm('This plan is waiting for open\n'
@@ -130,30 +109,57 @@ class ManageEmergencyPlan:
                     self.update_new_value(planID, 'status', 1)
                     self.update_new_value(
                         planID, 'startDate', datetime.date.today())
-                    back('Succeed!')
+                    print('Succeed!')
                     return
             case 1:
+                campIDs = get_linked_IDs('camp', 'plan', planID)
+                volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
+                refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+                if refugeeIDs:
+                    print('There are refugees in this plan\n'
+                          'Please make sure no refugees in the plan before close it.')
+                    return
+                else:
+                    if volunteerIDs:
+                        print(
+                            'There are volunteers in this plan, close it will move away those volunteers.')
+                        with sqlite3.connect('../info_files/emergency_system.db') as conn:
+                            c = conn.cursor()
+                            c.execute(
+                                f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
                 if confirm('This plan is opened\n'
                            'Do you want to close it now?\n'
                            'The end date will be set to today if you want to open it.'):
+                    delete_by_IDs('camp', campIDs)
                     self.update_new_value(planID, 'status', 2)
                     self.update_new_value(
                         planID, 'endDate', datetime.date.today())
-                    back('Succeed!')
+                    print('Succeed!')
                     return
             case 2:
-                back('This plan has been closed, you can not change it.')
+                print('This plan has been closed, you can not change it.')
                 return
 
-    def delete_emergency_plan(self):
-        if not self.display_all_emergency_plans():
-            back()
+    def delete_emergency_plan(self, planID):
+        campIDs = get_linked_IDs('camp', 'plan', planID)
+        volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
+        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        if refugeeIDs:
+            print('There are refugees in this plan\n'
+                  'Please make sure no refugees in the plan before remove it.')
             return
-        planID = self.select_one_plan()
-        df = self.read_plans(planID)
-        if confirm('Once you delete this plan you can not find it anymore.'):
-            self.delete_plans(planID)
-            back('Succeed!')
+        else:
+            if confirm('Once you delete this plan you can not find it anymore.'):
+                if volunteerIDs:
+                    print(
+                        'There are volunteers in this plan, close it will move away those volunteers.')
+                    with sqlite3.connect('../info_files/emergency_system.db') as conn:
+                        c = conn.cursor()
+                        c.execute(
+                            f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
+                delete_by_IDs('camp', campIDs)
+                delete_by_IDs('plan', planID)
+            print('Succeed!')
 
     def search_one_plan(self):
         options = Options([
@@ -164,8 +170,7 @@ class ManageEmergencyPlan:
             'endDate',
             'numberOfCamps',
             'status',
-            'priority'
-        ], limied=True)
+        ], limited=True)
         print(options)
         option = options.get_option(
             'Please choose which one you want to search by: ')
@@ -174,19 +179,17 @@ class ManageEmergencyPlan:
         return planIDs
 
     def select_one_plan(self):
-        print('Can not find the Plan?\n'
-              'Input 0 to use search function to help you find the PlanID')
-        planID = Get.option_in_range(self.get_max_planID() + 1,
-                                     'Please input choose planID: ')
-        if planID == 0:
-            planIDs = self.search_one_plan()
-            self.display_emergency_plans(planIDs)
+        planIDs = get_all_IDs('plan')
+        while True:
+            display_by_IDs('plan', planIDs)
+            print('Input 0 to search')
+            planIDs.append(0)
             planID = Get.option_in_list(
-                planIDs, 'Please input choose planID: ')
-        return planID
-
-    def display_emergency_plans(self, index):
-        print(self.read_plans(index).to_string(index=False))
+                planIDs, 'Please input the planID to choose a plan: ')
+            if planID == 0:
+                planIDs = self.search_one_plan()
+            else:
+                return planID
 
     def insert_one_plan(self, plan):
         with sqlite3.connect('../info_files/emergency_system.db') as conn:
@@ -197,31 +200,16 @@ class ManageEmergencyPlan:
                 "update sqlite_sequence set seq = {} where name = 'plan'".format(seqPlan))
             if plan['endDate'] is None:
                 c.execute(
-                    '''insert into 
-                    plan (type, description, area, startDate, endDate, numberOfCamps, status, priority) 
-                    values ('{}','{}','{}','{}',null,'{}','{}','{}')'''.format(
-                        plan['type'],
-                        plan['description'],
-                        plan['area'],
-                        plan['startDate'],
-                        plan['numberOfCamps'],
-                        plan['status'],
-                        plan['priority']
-                    ))
+                    f'''insert into 
+                    plan (type, description, area, startDate, endDate, numberOfCamps, status) 
+                    values ('{plan['type']}','{plan['description']}','{plan['area']}','{plan['startDate']}',null,'{plan['numberOfCamps']}','{plan['status']}')'''
+                )
             else:
                 c.execute(
-                    '''insert into 
-                    plan (type, description, area, startDate, endDate, numberOfCamps, status, priority) 
-                    values ('{}','{}','{}','{}','{}','{}','{}','{}')'''.format(
-                        plan['type'],
-                        plan['description'],
-                        plan['area'],
-                        plan['startDate'],
-                        plan['endDate'],
-                        plan['numberOfCamps'],
-                        plan['status'],
-                        plan['priority']
-                    ))
+                    f'''insert into 
+                    plan (type, description, area, startDate, endDate, numberOfCamps, status) 
+                    values ('{plan['type']}','{plan['description']}','{plan['area']}','{plan['startDate']}','{plan['endDate']}','{plan['numberOfCamps']}','{plan['status']}')'''
+                )
             maxCampID = c.execute('select max(campID) from camp').fetchone()[0]
             seqCamp = 0 if maxCampID is None else maxCampID
             c.execute(
@@ -230,25 +218,3 @@ class ManageEmergencyPlan:
                 c.execute(
                     'insert into camp (capacity, planID) values (20, {})'.format(seqPlan + 1))
             return seqPlan + 1
-
-    def read_all_plans(self):
-        with sqlite3.connect('../info_files/emergency_system.db') as conn:
-            return pd.read_sql_query('select * from plan', conn)
-
-    def read_plans(self, index):
-        with sqlite3.connect('../info_files/emergency_system.db') as conn:
-            return pd.read_sql_query('select * from plan where planID in {}'
-                                     .format(list_to_sqlite_string(index)), conn)
-
-    def delete_plans(self, index):
-        with sqlite3.connect('../info_files/emergency_system.db') as conn:
-            c = conn.cursor()
-            c.execute('delete from plan where planID in {}'
-                      .format(list_to_sqlite_string(index)))
-            c.execute('delete from camp where planID in {}'
-                      .format(list_to_sqlite_string(index)))
-
-    def get_max_planID(self):
-        with sqlite3.connect('../info_files/emergency_system.db') as conn:
-            c = conn.cursor()
-            return c.execute('select max(planID) from plan').fetchone()[0]

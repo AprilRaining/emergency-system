@@ -12,16 +12,22 @@ if __name__ == "__main__":
     2. update time schedule of all volunteers
     """
     # For Log in
-    while True:
-        print(menu('Login'))
-        match menu_choice_get(menu('Login').count('\n') + 1):
-            case 1:
-                admin = Admin()
-                admin.sub_main()
-            case 2:
-                volunteer = Volunteer()
-                volunteer.sub_main()
-            case 0:
-                # To Do: Before Quitting Do something?
-                # 1. update last login
-                sys.exit()
+    try:
+        while True:
+            print(menu('Login'))
+            match menu_choice_get(menu('Login').count('\n') + 1):
+                case 1:
+                    admin = Admin()
+                    admin.sub_main()
+                case 2:
+                    volunteer = Volunteer()
+                    volunteer.sub_main()
+                case 0:
+                    break
+    except KeyboardInterrupt:
+        print('\nForce Quit!')
+    except Exception as e:
+        print('\nExit with unknown errors')
+        print(e)
+    finally:
+        pass

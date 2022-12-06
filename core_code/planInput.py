@@ -4,6 +4,7 @@ from options import *
 class PlanInput:
     @staticmethod
     def type():
+        print('Type: ')
         options = Options([
             'Wildfire',
             'Earthquakes',
@@ -26,6 +27,7 @@ class PlanInput:
 
     @staticmethod
     def area():
+        print('Area: ')
         options = Options([
             'Asia',
             'Europe',
@@ -43,6 +45,7 @@ class PlanInput:
 
     @staticmethod
     def start_date():
+        print('Start Date:')
         options = Options([
             'Today'
         ])
@@ -61,8 +64,10 @@ class PlanInput:
 
     @staticmethod
     def end_date(startDate):
+        print('End Date:')
         if type(startDate) == type(''):
-            startDate = datetime.datetime.strptime(startDate, '%Y-%m-%d').date()
+            startDate = datetime.datetime.strptime(
+                startDate, '%Y-%m-%d').date()
         options = Options([
             'Today',
             'Input later'
@@ -75,7 +80,8 @@ class PlanInput:
                         if startDate < datetime.date.today():
                             return datetime.date.today().strftime('%Y-%m-%d')
                         else:
-                            print('*End date is equal or earlier than start date please input a valid date*')
+                            print(
+                                '*End date is equal or earlier than start date please input a valid date*')
                             break
                 case 2:
                     return None
@@ -86,7 +92,8 @@ class PlanInput:
                         if startDate < endDate:
                             return endDate.strftime('%Y-%m-%d')
                         else:
-                            print('*close date is equal or earlier than start date please input a valid date*')
+                            print(
+                                '*close date is equal or earlier than start date please input a valid date*')
 
     @staticmethod
     def number_of_camps():
@@ -94,19 +101,10 @@ class PlanInput:
 
     @staticmethod
     def status():
+        print('Status: ')
         options = Options([
             'Waiting to open',
             'Opening'
-        ], limied=True)
-        print(options)
-        return options.get_option()
-
-    @staticmethod
-    def priority():
-        options = Options([
-            'very high',
-            'high',
-            'normal',
-        ], limied=True)
+        ], limited=True)
         print(options)
         return options.get_option()

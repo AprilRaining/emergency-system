@@ -127,11 +127,3 @@ def search(table, column, keyword):
                 table, table, column, keyword)).fetchall():
             result.append(i[0])
     return result
-
-
-def list_to_sqlite_string(indexList):
-    if type(indexList) == type([]):
-        indexList = map(str, indexList)
-        return '(' + ','.join(indexList) + ')'
-    elif type(indexList) == int:
-        return '({})'.format(indexList)

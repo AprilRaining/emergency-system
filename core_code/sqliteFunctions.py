@@ -34,7 +34,8 @@ def get_all_IDs(table):
 def delete_by_IDs(table, IDs):
     with sqlite3.connect('../info_files/emergency_system.db') as conn:
         c = conn.cursor()
-        c.execute(f'delete from {table} where {table}ID in {list_to_sqlite_string(IDs)}')
+        c.execute(
+            f'delete from {table} where {table}ID in {list_to_sqlite_string(IDs)}')
 
 
 def display_by_IDs(table, IDs):
