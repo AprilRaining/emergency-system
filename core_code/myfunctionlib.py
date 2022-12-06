@@ -54,6 +54,14 @@ def menu(name=''):
                 '2. Show My Information.\n'
                 '0. Exit'
             )
+        case 'edit_my_information':
+            return (
+                '1. Edit volunteer name.\n'
+                '2. Edit volunteers password.\n'
+                '3. Pick your working perference.\n'
+                '4. Edit your campID.\n'
+                '0. Exit'
+            )
         case 'manage_camp_file':
             return (
                 '1. Create Emergency Refugee File.\n'
