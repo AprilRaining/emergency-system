@@ -24,7 +24,7 @@ def pd_read_by_IDs(table, IDs):
 def get_all_IDs(table):
     with sqlite3.connect('../info_files/emergency_system.db') as conn:
         c = conn.cursor()
-        result = c.execute(f'select {table}ID from plan').fetchall()
+        result = c.execute(f'select {table}ID from {table}').fetchall()
         IDs = []
         for i in result:
             IDs.append(i[0])
