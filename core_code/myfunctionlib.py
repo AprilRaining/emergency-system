@@ -49,6 +49,13 @@ def menu(name=''):
                 '4. Display Volunteer Account.\n'
                 '0. Exit'
             )
+        case 'display_volunteer_account':
+            return (
+                '1. Display Account By ID.\n'
+                '2. Display Account By Camp.\n'
+                '3. Display All Account.\n'
+                '0. Exit'
+            )
         case 'manage_personal_information':
             return (
                 '1. Edit My Information.\n'
