@@ -1,4 +1,5 @@
 import json
+from get import Get
 import pandas as pd
 from manageEmergencyPlan import *
 from accountInput import *
@@ -49,9 +50,9 @@ class Admin:
                     return
 
     def reactive_volunteer_account(self):
-        ID = input('Enter the volunteer ID:')
+        ID = Get.int('Enter the volunteer ID:')
         try:
-            with db.connect('emergency_system.db') as conn:
+            with db.connect('info_files/emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute(f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID, ))
                 status = c.fetchall()[0][0]
@@ -67,9 +68,9 @@ class Admin:
 
 
     def deactive_volunteer_account(self):
-        ID = input('Enter the volunteer ID:')
+        ID = Get.int('Enter the volunteer ID:')
         try:
-            with db.connect('emergency_system.db') as conn:
+            with db.connect('info_files/emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute(f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID,))
                 status = c.fetchall()[0][0]
@@ -111,7 +112,7 @@ class Admin:
         new_volunteer.append(json_preference)
 
         print(new_volunteer)
-        with db.connect('emergency_system.db') as conn:
+        with db.connect('info_files/emergency_system.db') as conn:
             c = conn.cursor()
             sql = '''INSERT INTO volunteer 
             (fName, lName, username, password, campID, preference, accountStatus) VALUES (?, ?, ?, ?, ?, ?, 1)'''
@@ -133,20 +134,23 @@ class Admin:
                     return
 
     def display_account_byID(self):
-        ID = input('Enter the volunteer ID:')
+        ID = Get.int('Enter the volunteer ID:')
         try:
-            with db.connect('emergency_system.db') as conn:
+            with db.connect('info_files/emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
                 volunteerID = (?)''', (ID,))
             fd = pd.DataFrame(list(c.fetchall()), columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp iD", "Account status"])
-            print(fd)
+            if fd.empty:
+                print(f"There is no account based on the volunteerID: {ID}")
+            else:
+                print("The result is \n", fd)
         except IndexError:
             print("{} is an invalid ID".format(ID))
     def display_account_byCamp(self):
-        ID = input('Enter the Camp ID:')
+        ID = Get.int('Enter the Camp ID:')
         try:
-            with db.connect('emergency_system.db') as conn:
+            with db.connect('info_files/emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
                         campID = (?)''', (ID,))
@@ -159,7 +163,7 @@ class Admin:
 
     def display_all_account(self):
         try:
-            with db.connect('emergency_system.db') as conn:
+            with db.connect('info_files/emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
                                 1''')

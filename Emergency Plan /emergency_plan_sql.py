@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 import sqlite3 as db
 
-conn = db.connect('emergency_system.db')
+conn = db.connect('info_files/emergency_system.db')
 c = conn.cursor()
 
 # To do 

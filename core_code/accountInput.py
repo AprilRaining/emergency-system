@@ -12,7 +12,7 @@ class AccountCreation:
                 campID = Get.int('Enter the campID:')
                 camp_id = (campID,)
 
-                with db.connect('emergency_system.db') as conn:
+                with db.connect('info_files/emergency_system.db') as conn:
                     c = conn.cursor()
                     c.execute(f'''SELECT * FROM camp WHERE campID = (?)''', camp_id)
                     camp_existence = c.fetchall()
@@ -20,7 +20,7 @@ class AccountCreation:
                 if len(camp_existence) == 0:
                     raise IndexError
                 else:
-                    with db.connect('emergency_system.db') as conn:
+                    with db.connect('info_files/emergency_system.db') as conn:
                         c = conn.cursor()
                         c.execute(f'''SELECT * FROM volunteer WHERE campID = (?)''', camp_id)
                         camp_current = c.fetchall()

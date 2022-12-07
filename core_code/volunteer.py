@@ -16,7 +16,7 @@ class Volunteer:
     This is class for volunteer to operate the system.
     """
 
-    def __init__(self):
+    def __init__(self, volunteer_id=None):
         """
         To Do:
         1. Process Login when construct a new admin
@@ -25,7 +25,7 @@ class Volunteer:
         :return:
         """
         self.menu = menu(self.__class__.__name__)
-        self.volunteerID = None
+        self.volunteerID = volunteer_id
 
     def sub_main(self):
         while True:
@@ -226,7 +226,7 @@ class Volunteer:
 
         def display_schedule(volunteer, day, date):
             try:
-                with db.connect('emergency_system.db') as conn:
+                with db.connect('info_files/emergency_system.db') as conn:
                     c = conn.cursor()
                     c.execute(f'''SELECT * FROM task WHERE volunteerID = (?) and startDate = (?)''', (volunteer, date))
                     task = c.fetchall()

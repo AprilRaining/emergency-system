@@ -93,7 +93,7 @@ class ManageEmergencyPlan:
                 return PlanInput.number_of_camps()
 
     def update_new_value(self, planID, column, newValue):
-        with sqlite3.connect('../info_files/emergency_system.db') as conn:
+        with sqlite3.connect('info_files/emergency_system.db') as conn:
             c = conn.cursor()
             c.execute("update plan set {} = '{}' where planID = {}"
                       .format(column, newValue, planID))
@@ -122,7 +122,7 @@ class ManageEmergencyPlan:
                     if volunteerIDs:
                         print(
                             'There are volunteers in this plan, close it will move away those volunteers.')
-                        with sqlite3.connect('../info_files/emergency_system.db') as conn:
+                        with sqlite3.connect('info_files/emergency_system.db') as conn:
                             c = conn.cursor()
                             c.execute(
                                 f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
@@ -152,7 +152,7 @@ class ManageEmergencyPlan:
                 if volunteerIDs:
                     print(
                         'There are volunteers in this plan, close it will move away those volunteers.')
-                    with sqlite3.connect('../info_files/emergency_system.db') as conn:
+                    with sqlite3.connect('info_files/emergency_system.db') as conn:
                         c = conn.cursor()
                         c.execute(
                             f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
@@ -161,7 +161,7 @@ class ManageEmergencyPlan:
             print('Succeed!')
 
     def insert_one_plan(self, plan):
-        with sqlite3.connect('../info_files/emergency_system.db') as conn:
+        with sqlite3.connect('info_files/emergency_system.db') as conn:
             c = conn.cursor()
             maxPlanID = c.execute('select max(planID) from plan').fetchone()[0]
             seqPlan = 0 if maxPlanID is None else maxPlanID
