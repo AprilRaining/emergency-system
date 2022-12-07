@@ -170,15 +170,23 @@ class Refugee:
                     # select task
                     req_opt = refugee_input_option("Task Request")
                     print(
-                        "Select 1 special request that a refugee would like to receive from a volunteer.")
+                        "Select 1 special request that a refugee would like to receive from a volunteer.\n")
                     req_inpt = numerical_input_check(req_opt)
                     req_dict = input_matching("Task Request")
                     self.req_task = req_dict[int(req_inpt[0])]
                     print("--------------------------------------------")
+                    # show volunteer schedule FYI
+                    print("[Hint]Please see our volunteer schedule below for your information.\nWe recommend selecting volunteer who is available at the date and time of refugee's request.\n")
+                    if req_counter == 1:
+                        df_vol_sch = get_volunteer_schedule_df(
+                            self.conn, self.assigned_camp)
+                    print(df_vol_sch)
+                    print(
+                        "---------------------------------------------------------------------------------------")
                     # select date
                     dates = get_date_list()
                     print(
-                        "Select the request's start date from options below:\n")
+                        "\nSelect the request's start date from options below:\n")
                     c = 1
                     for i in dates:
                         dn = pd.Timestamp(i).day_name()
@@ -188,53 +196,64 @@ class Refugee:
                         "request", dates[0], dates[-1])
                     d = pd.Timestamp(self.req_date)
                     self.day_name = d.day_name()
-                    print("-------------------------------------------")
-                    # select workshift
-                    print(
-                        "Select 1 shift time that refugee's would like to receive a service.")
-                    shift_opt = refugee_input_option("Shift Time")
-                    shift_inpt = numerical_input_check(shift_opt)
-                    shift_dict = input_matching("Shift Time")
-                    self.req_shift = shift_dict[int(shift_inpt[0])]
-                    print("-------------------------------------------")
-                    # select volunteer
-                    # query data from volunteer db which meet condition above
-                    if purpose == "add":
-                        self.assigned_camp = int(
-                            refugee_df.loc[refugee_df["refugeeID"] == req_edit_id, "campID"].values[0])
-                    vol_query = f'''SELECT volunteerID,fName,lName,workShift FROM volunteer WHERE workShift = "{self.req_shift}" AND accountStatus = 1 AND campID = {self.assigned_camp} AND {self.day_name} = 0'''
-                    pd_sql = pd.read_sql_query(vol_query, self.conn)
-                    vol_df = pd.DataFrame(
-                        pd_sql, columns=['volunteerID', 'fName', 'lName', 'workShift'])
-                    if vol_df.empty:
+                    print("-------------------------------------------\n")
+                    # show recommended volunteer
+                    df_match_vol = df_vol_sch.loc[df_vol_sch[self.day_name] == "free", :]
+                    if df_match_vol.empty:
                         warn(
-                            "There's no volunteer available for your selected date and work shift.\nPlease try again!\n")
+                            "There is no volunteer available on your selected date. Please try again!")
                     else:
+                        # select workshift
                         print(
-                            "Please see the list of available volunteers who match refugee's request:\n")
-                        print(vol_df)
-                        # list : vol ID to help with multiple request case
-                        self.vol_ID = volunteer_ID_req_check(vol_df)
-                        print(
-                            f"The request is successfully assigned to volunteer ID: {self.vol_ID}")
+                            "Select 1 shift time that refugee's would like to receive a service.")
+                        shift_opt = refugee_input_option("Shift Time")
+                        shift_inpt = numerical_input_check(shift_opt)
+                        shift_dict = input_matching("Shift Time")
+                        self.req_shift = shift_dict[int(shift_inpt[0])]
                         print("-------------------------------------------")
-                        # to be assigned with task ID
-                        if req_counter == 1 and purpose == "create":
-                            self.ref_row.append("-1")
-                        # assign 1 request to collector: list of dict
-                        self.req_form_coll.append({"task": self.req_task, "date": self.req_date, "day": self.day_name,
-                                                   "workshift": self.req_shift, "volunteer": self.vol_ID})
-                        req_counter += 1
-                        # allow adding multiple request, if no more -> end loop
-                        end_req = yn_valid(
-                            "Would refugee like to add more requests? (Yes/No): ")
-                        if end_req == "No":
-                            if purpose == "add":
-                                # add to databases
-                                req_ids = task_ref_vol_db(
-                                    self.conn, self.req_form_coll, req_edit_id, refugee_df, "add")
-                                self.ref_row.append(req_ids)
-                            return self.req_form_coll
+                        # select volunteer
+                        # query data from volunteer db which meet condition above
+                        if purpose == "add":
+                            self.assigned_camp = int(
+                                refugee_df.loc[refugee_df["refugeeID"] == req_edit_id, "campID"].values[0])
+                        vol_query = f'''SELECT volunteerID,fName,lName,workShift FROM volunteer WHERE workShift = "{self.req_shift}" AND accountStatus = 1 AND campID = {self.assigned_camp} AND {self.day_name} = 0'''
+                        pd_sql = pd.read_sql_query(vol_query, self.conn)
+                        time.sleep(1.0)
+                        vol_df = pd.DataFrame(
+                            pd_sql, columns=['volunteerID', 'fName', 'lName', 'workShift'])
+                        if vol_df.empty:
+                            warn(
+                                "There's no volunteer available for your selected date and work shift.\nWe recommend checking our volunteer schedule below and try again!\n")
+                            print(df_vol_sch)
+                        else:
+                            print(
+                                "Please see the list of available volunteers who match refugee's request:\n")
+                            print(vol_df)
+                            # list : vol ID to help with multiple request case
+                            self.vol_ID = volunteer_ID_req_check(vol_df)
+                            print(
+                                f"The request is successfully assigned to volunteer ID: {self.vol_ID}")
+                            # alter dataframe display
+                            df_vol_sch.loc[df_vol_sch["volunteerID"] ==
+                                           self.vol_ID, self.day_name] = "booked"
+                            print("-------------------------------------------")
+                            # to be assigned with task ID
+                            if req_counter == 1 and purpose == "create":
+                                self.ref_row.append("-1")
+                            # assign 1 request to collector: list of dict
+                            self.req_form_coll.append({"task": self.req_task, "date": self.req_date, "day": self.day_name,
+                                                       "workshift": self.req_shift, "volunteer": self.vol_ID})
+                            req_counter += 1
+                            # allow adding multiple request, if no more -> end loop
+                            end_req = yn_valid(
+                                "Would refugee like to add more requests? (Yes/No): ")
+                            if end_req == "No":
+                                if purpose == "add":
+                                    # add to databases
+                                    req_ids = task_ref_vol_db(
+                                        self.conn, self.req_form_coll, req_edit_id, refugee_df, "add")
+                                    self.ref_row.append(req_ids)
+                                return self.req_form_coll
 
         elif purpose == "edit":
             # case 2: edit existing request
@@ -258,6 +277,7 @@ class Refugee:
                 task_edit_arr.append(task_edit)
             # print("edit_task", task_edit_arr)
             # loop through selected task ID to edit
+            task_count = 1
             for t in task_edit_arr:
                 vol_id = df_task.loc[df_task["taskID"]
                                      == int(t), "volunteerID"].values[0]
@@ -268,6 +288,14 @@ class Refugee:
                     f"Note: You are allowed to change only request's date and work shift related to volunteer ID: {vol_id}.\n")
                 print(f"\n-----EDITING TASK ID: [{t}]-----")
                 while True:
+                    # show  volunteer schedule
+                    print("[Hint]Please see the volunteer schedule below for your information.")
+                    if task_count == 1:
+                        df_vol_sch = get_volunteer_schedule_df(
+                            conn = self.conn, volunteer_ID = vol_id)
+                    print(df_vol_sch)
+                    print(
+                        "---------------------------------------------------------------------------------------")
                     # select new date
                     dates = get_date_list()
                     print("Please select the new request's date from options below: ")
@@ -303,15 +331,22 @@ class Refugee:
                         task_upd = f'''UPDATE task SET week={week_num}, startDate = "{self.req_date}", workShift = "{self.req_shift}" WHERE taskID = {int(t)}'''
                         cur.execute(task_upd)
                         self.conn.commit()
-                        time.sleep(2.0)
+                        time.sleep(1.0)
+                        # update old day to 0 and new day to task ID
                         vol_upd = f'''UPDATE volunteer SET {old_start_day} = 0, {self.day_name} = {int(t)} WHERE volunteerID = {vol_id}'''
                         cur.execute(vol_upd)
                         self.conn.commit()
-                        time.sleep(2.0)
+                        time.sleep(1.0)
                         print(
                             f"You have made change to refugee's request date and work shift of task ID: {int(t)}.")
                         print("-------------------------------------------\n")
+                        # alter dataframe display
+                        df_vol_sch.loc[df_vol_sch["volunteerID"] ==
+                                           vol_id, self.day_name] = "booked"
+                        df_vol_sch.loc[df_vol_sch["volunteerID"] ==
+                                           vol_id, old_start_day] = "free"
                         break
+                task_count +=1
 
     def add_refugee_to_db(self):
         # add status
@@ -364,5 +399,6 @@ class Refugee:
         refugeeID = self.add_refugee_to_db()
 
         # CREATE case: update refugee, task, and volunteer table: can handle multiple req.
-        req_id = task_ref_vol_db(self.conn, req_list, refugeeID, refugee_df, "create")
+        req_id = task_ref_vol_db(
+            self.conn, req_list, refugeeID, refugee_df, "create")
         print("New refugee is registered to the system. Thank you!")
