@@ -100,7 +100,7 @@ def camp_capacity_check(conn):
             print(camp_df)
             print("-------------------------------------------")
             camp = int(input("Assign the camp ID to the refugee: "))
-            if camp > camp_df.shape[0] or camp < 0:
+            if camp > camp_df.shape[0] or camp <= 0:
                 raise exc.camp_id_out_of_range
             for ind in camp_df.index:
                 if ind+1 == camp:

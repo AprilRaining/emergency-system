@@ -420,7 +420,7 @@ class Volunteer:
                 cur = conn.cursor()
                 cur.execute(del_task)
                 conn.commit()
-                time.sleep(5.0)
+                time.sleep(3.0)
 
             # delete refugee
             delete_ref_by_id(conn, ref_df_by_id)

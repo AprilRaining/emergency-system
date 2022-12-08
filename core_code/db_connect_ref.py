@@ -25,7 +25,7 @@ def insert_refdb_row(conn, refugee_row):
     cur = conn.cursor()
     cur.execute(query, refugee_row)
     conn.commit()
-    time.sleep(8.0)
+    time.sleep(4.0)
     cur.close()
     return cur.lastrowid
 
@@ -79,3 +79,27 @@ def select_task_by_ref_id(conn,refugeeID):
     df_task_ref_id = pd.DataFrame(pd_task,columns=["taskID","refugeeID","volunteerID","taskInfo","week","startDate","workShift","status"])
     time.sleep(1.0)
     return df_task_ref_id
+
+def get_volunteer_schedule_df(conn,campID=0,volunteer_ID = 0):
+     # select from volunteer table which match the camp of refugee
+    query = f'''SELECT volunteerID,fName,lName,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer WHERE campID = {campID}'''
+    if volunteer_ID != 0 and campID==0:
+        query =  f'''SELECT volunteerID,fName,lName,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer WHERE volunteerID={volunteer_ID}'''
+
+    pd_select = pd.read_sql_query(query,conn)
+    df_vol = pd.DataFrame(pd_select, columns=['volunteerID', 'fName', 'lName', 'workShift','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday', 'Sunday'])
+    time.sleep(1.0)
+    df_vol_sch = df_vol.copy(deep=True)
+    col_list = list(df_vol_sch.columns[4:])
+    data_row = df_vol_sch.shape[0]
+    for c in col_list:
+        for ind in range(data_row):
+            if df_vol_sch.loc[ind,c] == 0:
+                df_vol_sch.at[ind,c] = "free"
+            elif df_vol_sch.loc[ind,c] == -1 :
+                df_vol_sch.at[ind,c] = "unavailable"
+            else:
+                # task ID
+                df_vol_sch.at[ind,c] = "booked"
+
+    return df_vol_sch

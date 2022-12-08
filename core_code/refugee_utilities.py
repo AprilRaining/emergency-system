@@ -2,6 +2,7 @@ from refugee_exception import *
 from refugee_validation import *
 from db_connect_ref import *
 import datetime
+import progress_bar as pb
 
 
 def get_date_list():
@@ -44,14 +45,14 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
     3.update refugee's request => contain added taskID
     '''
     req_id_mul = ""
-    print("Loading................")
     if req_list != []:
+        print("-----Refugee's requests processing-----")
         cur = conn.cursor()
         task_id = []
         if purpose == "create":
-            print("Note: This usually takes around 30-45 seconds for multiple requests.")
-        for req in req_list:
-            print("Adding refugee's request................")
+            print("Note: This usually takes around 15-20 seconds to add requests.")
+        pb.progress_bar(0,len(req_list),"")
+        for ind,req in enumerate(req_list):
             # insert data to task table: multiple insertion
             week_num = get_week_number(req["date"])
             task_insert = (refugeeID, req["volunteer"], req["task"], week_num,
@@ -59,13 +60,14 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             ins_task_query = f'''INSERT INTO task(refugeeID,volunteerID,taskInfo,week,startDate,workShift,status) VALUES {task_insert}'''
             cur.execute(ins_task_query)
             conn.commit()
-            time.sleep(8.0)
+            time.sleep(4.0)
             task_id.append(cur.lastrowid)
             # update volunteer available day by task_ID
             upd_vol_query = f'''UPDATE volunteer SET "{req["day"]}" = {cur.lastrowid} WHERE volunteerID = {req["volunteer"]}'''
             cur.execute(upd_vol_query)
             conn.commit()
-            time.sleep(6.0)
+            time.sleep(2.0)
+            pb.progress_bar(ind+1,len(req_list),"")
 
         # update request column in refugee table: insert ex. 1,2,3
         if purpose == "add":
@@ -84,7 +86,7 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             req_id_mul = ','.join([str(i) for i in task_id])
             upd_ref_query = f''' UPDATE refugee SET request = "{req_id_mul}" WHERE refugeeID = {refugeeID}'''
             cur.execute(upd_ref_query)
-            time.sleep(4.0)
+            time.sleep(3.0)
             conn.commit()
             cur.close()
     return req_id_mul
