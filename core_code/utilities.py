@@ -17,7 +17,7 @@ def volunteer_login():
         c = conn.cursor()
         while True:
             name = input("Input your username:")
-            password = input("Input the password of admin:")
+            password = input("Input the password of volunteer:")
 
             result = c.execute(f"select volunteerID from volunteer where username = '{name}' and password = '{password}'").fetchall()
             if len(result) > 0:

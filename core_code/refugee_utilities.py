@@ -2,6 +2,7 @@ from refugee_exception import *
 from refugee_validation import *
 from db_connect_ref import *
 import datetime
+import progress_bar as pb
 
 
 def get_date_list():
@@ -44,14 +45,14 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
     3.update refugee's request => contain added taskID
     '''
     req_id_mul = ""
-    print("Loading................")
     if req_list != []:
+        print("-----Refugee's requests processing-----")
         cur = conn.cursor()
         task_id = []
         if purpose == "create":
-            print("Note: This usually takes around 15-30 seconds to add requests.")
-        for req in req_list:
-            print("Adding refugee's request................")
+            print("Note: This usually takes around 15-20 seconds to add requests.")
+        pb.progress_bar(0,len(req_list),"")
+        for ind,req in enumerate(req_list):
             # insert data to task table: multiple insertion
             week_num = get_week_number(req["date"])
             task_insert = (refugeeID, req["volunteer"], req["task"], week_num,
@@ -66,6 +67,7 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             cur.execute(upd_vol_query)
             conn.commit()
             time.sleep(2.0)
+            pb.progress_bar(ind+1,len(req_list),"")
 
         # update request column in refugee table: insert ex. 1,2,3
         if purpose == "add":

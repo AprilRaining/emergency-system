@@ -96,8 +96,10 @@ def get_volunteer_schedule_df(conn,campID=0,volunteer_ID = 0):
         for ind in range(data_row):
             if df_vol_sch.loc[ind,c] == 0:
                 df_vol_sch.at[ind,c] = "free"
+            elif df_vol_sch.loc[ind,c] == -1 :
+                df_vol_sch.at[ind,c] = "unavailable"
             else:
-                # task
+                # task ID
                 df_vol_sch.at[ind,c] = "booked"
 
     return df_vol_sch
