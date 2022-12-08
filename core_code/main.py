@@ -28,7 +28,7 @@ if __name__ == "__main__":
                     admin.sub_main()
                 case 2:
                     v_ID = utilities.volunteer_login()
-                    volunteer = Volunteer(v_ID)
+                    volunteer = Volunteer(volunteer_id=v_ID)
                     volunteer.sub_main()
                 case 0:
                     break

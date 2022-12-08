@@ -24,6 +24,6 @@ def volunteer_login():
                 print(f'\nWelcome to the system, {name}.')
                 return result[0][0]
             else:
-                print("Wrong password! Check your input please.")
+                print("Wrong username or password! Check your input please.")
 
 

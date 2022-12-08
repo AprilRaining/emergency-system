@@ -63,6 +63,14 @@ def menu(name=''):
                 '2. Show My Information.\n'
                 '0. Exit'
             )
+        case 'edit_my_information':
+            return (
+                '1. Edit volunteer name.\n'
+                '2. Edit volunteers password.\n'
+                '3. Pick your working perference.\n'
+                '4. Edit your campID.\n'
+                '0. Exit'
+            )
         case 'manage_camp_file':
             return (
                 '1. Create Emergency Refugee File.\n'
@@ -134,3 +142,11 @@ def search(table, column, keyword):
                 table, table, column, keyword)).fetchall():
             result.append(i[0])
     return result
+
+
+def list_to_sqlite_string(indexList):
+    if type(indexList) == list:
+        indexList = map(str, indexList)
+        return '(' + ','.join(indexList) + ')'
+    elif type(indexList) == int:
+        return '({})'.format(indexList)

@@ -8,7 +8,21 @@ from refugee_info_edit import *
 from refugee import Refugee
 import pandas as pd
 import sqlite3 as db
+from get import *
+import json
+from options import *
+import copy
 
+
+def connection_database(db_file):
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        print("access system successfully!\n")
+    except Exception as e:
+        print("could not connect to the database")
+        print(e)
+    return conn
 
 
 class Volunteer:
@@ -16,7 +30,7 @@ class Volunteer:
     This is class for volunteer to operate the system.
     """
 
-    def __init__(self, volunteer_id=None):
+    def __init__(self, last_name=None, first_name=None, password=None, campID=None, workingShift=None, workingdays=None, volunteer_id=None):
         """
         To Do:
         1. Process Login when construct a new admin
@@ -25,6 +39,12 @@ class Volunteer:
         :return:
         """
         self.menu = menu(self.__class__.__name__)
+        self.last_name = last_name
+        self.first_name = first_name
+        self.password = password
+        self.campID = campID
+        self.workingShift = workingShift
+        self.workingdays = workingdays
         self.volunteerID = volunteer_id
 
     def sub_main(self):
@@ -52,9 +72,230 @@ class Volunteer:
                     return
 
     def edit_my_information(self):
-        pass
+        while True:
+            print(menu())
+            match menu_choice_get(menu('edit_my_information').count('\n') + 1):
+                case 1:
+                    self.edit_volunteers_name()
+                case 2:
+                    self.edit_password()
+                case 3:
+                    self.edit_working_perference()
+                case 4:
+                    self.edit_campid()
+                case 0:
+                    return
+
+    def edit_volunteers_name(self):
+        conn = connection_database("info_files/emergency_system.db")
+        cur = conn.cursor()
+        while True:
+            volunteer_input_id = self.volunteerID
+            query_1 = f'''SELECT Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday from volunteer WHERE volunteerID={volunteer_input_id}'''
+            cur.execute(query_1)
+
+            weekday = cur.fetchall()
+
+            if len(weekday) == 0:
+                print("you input the wrong volunteerID please try again!")
+                continue
+            else:
+                break
+
+        last_name = input("please input your new last name:\n")
+        first_name = input("please input your new first name:\n")
+        self.last_name = last_name
+        self.first_name = first_name
+
+        query = f'''UPDATE volunteer SET fName='{first_name}',lName='{last_name}' WHERE volunteerID = {volunteer_input_id}'''
+        cur.execute(query)
+        conn.commit()
+        cur.close()
+        print("your new name have been changed to:\n" + first_name + " " + last_name)
+
+    def edit_password(self):
+        conn = connection_database("info_files/emergency_system.db")
+        cur = conn.cursor()
+        while True:
+            volunteer_input_id = self.volunteerID
+            query_1 = f'''SELECT Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday from volunteer WHERE volunteerID={volunteer_input_id}'''
+            cur.execute(query_1)
+
+            weekday = cur.fetchall()
+
+            if weekday == []:
+                print("you input the wrong volunteerID please try again:\n")
+                continue
+            else:
+                break
+
+        new_password = input("please input your new password\n")
+        self.password = new_password
+        query = f'''UPDATE volunteer SET password ='{new_password}' WHERE volunteerID = {volunteer_input_id}'''
+        cur.execute(query)
+        conn.commit()
+        cur.close()
+        print("you have changed your password successfully!\n")
+
+    def edit_working_perference(self):
+        conn = connection_database("info_files/emergency_system.db")
+        cur = conn.cursor()
+
+        preference = {'Monday': -1,
+                      'Tuesday': -1,
+                      'Wednesday': -1,
+                      'Thursday': -1,
+                      'Friday': -1,
+                      'Saturday': -1,
+                      'Sunday': -1,
+                      'workShift': "Morning shift"}  # used to store the json information
+
+        while True:
+            volunteer_input_id = self.volunteerID
+            query_1 = f'''SELECT Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday from volunteer WHERE volunteerID={volunteer_input_id}'''
+            cur.execute(query_1)
+
+            weekday = cur.fetchall()
+
+            if weekday == []:
+                print("you input the wrong volunteerID please try again:\n")
+                continue
+            else:
+                break
+        the_day = datetime.datetime.now().weekday()
+        print("today is weekday:" + str(the_day + 1))
+
+        for the_day in range(the_day, 6):
+            judge = weekday[0][the_day]
+            if judge > 0:
+                print("you cannot change your working shift because you still have unfinished work")
+                break
+        else:
+            if confirm("you can change your preference now,please press y to continue:\n"):
+
+                print("please select your prefer day to work:\n"
+                      "1.Monday\n"
+                      "2.Tuesday\n"
+                      "3.Wednesday\n"
+                      "4.Thursday\n"
+                      "5.Friday\n"
+                      "6.Saturday\n"
+                      "7.Sunday\n")
+                options = Get.list(1, 8, "please input your option in format with number and split by space button! \n")
+
+            else:
+                return
+
+            match = {1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday', 7: 'Sunday'}
+            for i in options:
+                preference[match[i]] = 0
+
+            preference_json = json.dumps(preference)
+            print(preference_json)
+            query = f'''UPDATE volunteer SET preference='{preference_json}' WHERE volunteerID = {volunteer_input_id}'''
+            cur.execute(query)
+            conn.commit()
+
+            print("you successfully changed your next weeks working day!\n")
+            print("your current working shift is:\n" + preference['workShift'])
+            print("if you dont want to change the working shift, please select same option with previous one! \n")
+
+            options_shift = Options(['Morning shift', 'Evening shift', 'Night shift'], limited=True)
+            print(options_shift)
+            options_preference = options_shift.get_option("please choose your preferred workShift\n")
+            match_preference = ['Morning shift', 'Evening shift', 'Night shift']
+            preference['workShift'] = match_preference[options_preference]
+            preference = json.dumps(preference)
+            query = f'''UPDATE volunteer SET preference='{preference}' WHERE volunteerID = {volunteer_input_id}'''
+            cur.execute(query)
+            conn.commit()
+            cur.close()
+            print("you have changed your preferred workShift successfully!")
+
+
+    def edit_campid(self):
+        conn = connection_database("info_files/emergency_system.db")
+        cur = conn.cursor()
+
+        while True:
+            volunteer_input_id = self.volunteerID
+            query_1 = f'''SELECT Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday from volunteer WHERE volunteerID={volunteer_input_id}'''
+            cur.execute(query_1)
+
+            weekday = cur.fetchall()
+
+            if weekday == []:
+                print("you input the wrong volunteerID please try again:\n")
+                continue
+            else:
+                break
+        the_day = datetime.datetime.now().weekday()
+        print("today is weekday:" + str(the_day + 1))
+
+
+        for the_day in range(the_day, 6):
+            judge = weekday[0][the_day]
+            if judge > 0:
+                print("you cannot change your campID because you still have unfinished work")
+                break
+        else:
+            # cur.execute(f'''SELECT campID from volunteer where volunteerID = '{volunteer_input_id}''')
+            # volunteer_campid=cur.fetchall()[0][0]
+            # cur.execute(f'''select planID from camp where campID = {volunteer_campid}''')
+            # plan_id=cur.fetchall()[0][0]
+            # search("camp", "planID", plan_id)
+            input_new_campid=input("please input your new campid:\n")
+
+            query_camp=f'''UPDATE volunteer SET campID='{input_new_campid}' WHERE volunteerID = {volunteer_input_id}'''
+            self.campID=input_new_campid
+            cur.execute(query_camp)
+            conn.commit()
+            cur.close()
+            print("you have changed your campID successfully!\n")
 
     def show_my_information(self):
+        try:
+            with db.connect('info_files/emergency_system.db') as conn:
+                c = conn.cursor()
+                c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus,  
+                              Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, workShift, 
+                              preference FROM volunteer WHERE volunteerID = {self.volunteerID}''')
+                info = list(c.fetchall()[0])
+                person_info = copy.deepcopy(info[:6])
+                status = person_info.pop()
+                person_info.append("active" if status == 1 else "deactive")
+            fd = pd.DataFrame([person_info],
+                              columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp iD",
+                                       "Account status"])
+
+            print("Your personal information is here: \n", fd)
+            weekday = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            schedule = {}
+            for day, flag in enumerate(info[6:-2]):
+                if flag == -1:
+                    schedule[weekday[day]] = "not available"
+                elif flag == 0:
+                    schedule[weekday[day]] = "available"
+                else:
+                    schedule[weekday[day]] = f"taskID: {flag}"
+            schedule["work_period"] = info[-2]
+            info_df = pd.DataFrame(schedule, index=[0])
+            print(f"Your current schedule is:\n {info_df}")
+
+            preference = {}
+            for day, flag in json.loads(info[-1]).items():
+                if flag == -1:
+                    preference[day] = "not available"
+                elif flag == 0:
+                    preference[day] = "available"
+                elif day == "workShift":
+                    preference["work_period"] = flag
+                else:
+                    preference[weekday[day]] = f"taskID: {flag}"
+            pre_df = pd.DataFrame(preference, index=[0])
+            print(f"Your default schedule is: \n {pre_df} \n")
+        except:
+            print("Wrong connection to the database.")
         pass
 
     def manage_camp_file(self):
