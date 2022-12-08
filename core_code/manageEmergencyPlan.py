@@ -97,6 +97,7 @@ class ManageEmergencyPlan:
             c = conn.cursor()
             c.execute("update plan set {} = '{}' where planID = {}"
                       .format(column, newValue, planID))
+            conn.commit()
 
     def close_or_open_emergency_plan(self, planID):
         df = pd_read_by_IDs('plan', planID)
@@ -126,6 +127,7 @@ class ManageEmergencyPlan:
                             c = conn.cursor()
                             c.execute(
                                 f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
+                            conn.commit()
                 if confirm('This plan is opened\n'
                            'Do you want to close it now?\n'
                            'The end date will be set to today if you want to open it.'):
@@ -156,6 +158,7 @@ class ManageEmergencyPlan:
                         c = conn.cursor()
                         c.execute(
                             f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
+                        conn.commit()
                 delete_by_IDs('camp', campIDs)
                 delete_by_IDs('plan', planID)
             print('Succeed!')
@@ -167,23 +170,28 @@ class ManageEmergencyPlan:
             seqPlan = 0 if maxPlanID is None else maxPlanID
             c.execute(
                 "update sqlite_sequence set seq = {} where name = 'plan'".format(seqPlan))
+            conn.commit()
             if plan['endDate'] is None:
                 c.execute(
                     f'''insert into 
                     plan (type, description, area, startDate, endDate, numberOfCamps, status) 
                     values ('{plan['type']}','{plan['description']}','{plan['area']}','{plan['startDate']}',null,'{plan['numberOfCamps']}','{plan['status']}')'''
                 )
+                conn.commit()
             else:
                 c.execute(
                     f'''insert into 
                     plan (type, description, area, startDate, endDate, numberOfCamps, status) 
                     values ('{plan['type']}','{plan['description']}','{plan['area']}','{plan['startDate']}','{plan['endDate']}','{plan['numberOfCamps']}','{plan['status']}')'''
                 )
+                conn.commit()
             maxCampID = c.execute('select max(campID) from camp').fetchone()[0]
             seqCamp = 0 if maxCampID is None else maxCampID
             c.execute(
                 "update sqlite_sequence set seq = {} where name = 'camp'".format(seqCamp))
+            conn.commit()
             for i in range(plan['numberOfCamps']):
                 c.execute(
                     'insert into camp (capacity, planID) values (20, {})'.format(seqPlan + 1))
+                conn.commit()
             return seqPlan + 1

@@ -36,6 +36,7 @@ class Admin:
 
     def manage_account(self):
         while True:
+            print("\nChoose the number of operation you want to do:")
             print(menu())
             match menu_choice_get(menu().count('\n') + 1):
                 case 1:
@@ -56,7 +57,7 @@ class Admin:
                 c = conn.cursor()
                 c.execute(f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID, ))
                 status = c.fetchall()[0][0]
-            if status == '1':
+            if status == 1:
                 print("This account is already active.")
                 print("-------------------------------------")
             else:
@@ -65,6 +66,8 @@ class Admin:
                 print("Volunteer {}'s account is now reactive".format(ID))
         except IndexError:
             print("{} is an invalid ID".format(ID))
+        except:
+            print("Wrong connection to the database.")
 
 
     def deactive_volunteer_account(self):
@@ -74,7 +77,7 @@ class Admin:
                 c = conn.cursor()
                 c.execute(f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID,))
                 status = c.fetchall()[0][0]
-            if status == '0':
+            if status == 0:
                 print("This account is already deactive.")
                 print("-------------------------------------")
             else:
@@ -83,6 +86,8 @@ class Admin:
                 print("Volunteer {}'s account is now deactive".format(ID))
         except IndexError:
             print("{} is an invalid ID".format(ID))
+        except:
+            print("Wrong connection to the database.")
 
     def creat_a_volunteer_account(self):
         new_volunteer = []
@@ -93,32 +98,80 @@ class Admin:
         password = input('Enter the password:')
         campID = AccountCreation.get_camp_id()
 
-        preference = AccountCreation.preference_default()
-        preference['Monday'] = AccountCreation.get_work_day('Monday')
-        preference['Tuesday'] = AccountCreation.get_work_day('Tuesday')
-        preference['Wednesday'] = AccountCreation.get_work_day('Wednesday')
-        preference['Thursday'] = AccountCreation.get_work_day('Thursday')
-        preference['Friday'] = AccountCreation.get_work_day('Friday')
-        preference['Saturday'] = AccountCreation.get_work_day('Saturday')
-        preference['Sunday'] = AccountCreation.get_work_day('Sunday')
-        preference['workShift'] = AccountCreation.get_work_shift()
+
+        # preference = AccountCreation.preference_default()
+        # preference['Monday'] = AccountCreation.get_work_day('Monday')
+        # preference['Tuesday'] = AccountCreation.get_work_day('Tuesday')
+        # preference['Wednesday'] = AccountCreation.get_work_day('Wednesday')
+        # preference['Thursday'] = AccountCreation.get_work_day('Thursday')
+        # preference['Friday'] = AccountCreation.get_work_day('Friday')
+        # preference['Saturday'] = AccountCreation.get_work_day('Saturday')
+        # preference['Sunday'] = AccountCreation.get_work_day('Sunday')
+
+        preference = AccountCreation.get_week_preference()
+        workshift = AccountCreation.get_work_shift()
+
+        show_dict = {"first name": fname, "last name": lname, "username": username, "password": password,
+                     "campID": campID, "preference": preference, "workshift": workshift}
+        while True:
+            print("\nThis is the new account's information(In preference, 0 means available, -1 means not available):")
+            for key, value in show_dict.items():
+                print(key, ': ', value)
+            check = input("If the information is right, please press Y/y, or N/n to correct:\n")
+            if check == "Y" or check == "y":
+                break
+            elif check == "N" or check == "n":
+                while True:
+                    print("Please input what you want to correct from this list:")
+                    for i in show_dict.keys():
+                        print(i)
+                    input_second = input()
+                    if input_second in show_dict.keys():
+                        if input_second == "first name":
+                            show_dict["first name"] = input('Enter the first name:')
+                        elif input_second == "last name":
+                            show_dict["last name"] = input('Enter the last name:')
+                        elif input_second == "username":
+                            show_dict["username"] = AccountCreation.get_username()
+                        elif input_second == "password":
+                            show_dict["password"] = input('Enter the password:')
+                        elif input_second == "campID":
+                            show_dict["campID"] = AccountCreation.get_camp_id()
+                        elif input_second == "preference":
+                            show_dict["preference"] = AccountCreation.get_week_preference()
+                        elif input_second == "workshift":
+                            show_dict["workshift"] = AccountCreation.get_work_shift()
+                        break
+                    else:
+                        print("Wrong Input.")
+            else:
+                print("Illegal input!. Please input Y/y or N/n:\n")
+
+        preference = show_dict["preference"]
+        preference["workShift"] = show_dict["workshift"]
         json_preference = json.dumps(preference)
 
-        new_volunteer.append(fname)
-        new_volunteer.append(lname)
-        new_volunteer.append(username)
-        new_volunteer.append(password)
-        new_volunteer.append(campID)
+        new_volunteer.append(show_dict["first name"])
+        new_volunteer.append(show_dict["last name"])
+        new_volunteer.append(show_dict["username"])
+        new_volunteer.append(show_dict["password"])
+        new_volunteer.append(show_dict["campID"])
         new_volunteer.append(json_preference)
+        new_volunteer.append(1)
+        for i in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "workShift"]:
+            new_volunteer.append(preference[i])
 
-        print(new_volunteer)
         with db.connect('info_files/emergency_system.db') as conn:
             c = conn.cursor()
             sql = '''INSERT INTO volunteer 
-            (fName, lName, username, password, campID, preference, accountStatus) VALUES (?, ?, ?, ?, ?, ?, 1)'''
+            (fName, lName, username, password, campID, preference, accountStatus, 
+            Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, workShift) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
 
             # status default 1 !!!!!!!!!!
             c.execute(sql, new_volunteer)
+            conn.commit()
+            print("Your account has been created!")
 
     def display_volunteer_account(self):
         while True:
@@ -144,9 +197,12 @@ class Admin:
             if fd.empty:
                 print(f"There is no account based on the volunteerID: {ID}")
             else:
-                print("The result is \n", fd)
+                print(f"The information about volunteer {ID} is below: \n", fd)
         except IndexError:
             print("{} is an invalid ID".format(ID))
+        except:
+            print("Wrong connection to the database.")
+
     def display_account_byCamp(self):
         ID = Get.int('Enter the Camp ID:')
         try:
@@ -157,9 +213,12 @@ class Admin:
             fd = pd.DataFrame(list(c.fetchall()),
                               columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp iD",
                                        "Account status"])
-            print(fd)
-        except IndexError:
-            print("{} is an invalid ID".format(ID))
+            if fd.empty:
+                print(f"There is no account based in the camp {ID}.")
+            else:
+                print(f"Volunteers in camp {ID} are below: \n", fd)
+        except:
+            print("Wrong connection to the database.")
 
     def display_all_account(self):
         try:
@@ -170,6 +229,9 @@ class Admin:
             fd = pd.DataFrame(list(c.fetchall()),
                               columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp iD",
                                        "Account status"])
-            print(fd)
-        except IndexError:
+            if fd.empty:
+                print(f"There is no volunteer account in the system! Recruit some volunteers please.")
+            else:
+                print("All volunteers are here: \n", fd)
+        except:
             print("Wrong connection to the database")

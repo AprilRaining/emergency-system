@@ -37,6 +37,7 @@ def delete_by_IDs(table, IDs):
         c = conn.cursor()
         c.execute(
             f'delete from {table} where {table}ID in {list_to_sqlite_string(IDs)}')
+        conn.commit()
 
 
 def display_by_IDs(table, IDs):
