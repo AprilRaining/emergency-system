@@ -264,7 +264,7 @@ class Refugee:
             task_query = f'''SELECT * FROM task WHERE refugeeID = {req_edit_id} and status = "active"'''
             pd_task = pd.read_sql_query(task_query, self.conn)
             df_task = pd.DataFrame(pd_task, columns=[
-                                   "taskID", "refugeeID", "volunteerID", "taskInfo", "week", "startDate", "workShift", "status"])
+                                   "taskID", "refugeeID", "volunteerID", "taskInfo", "week", "requestDate", "workShift", "status"])
             print(
                 "\nPlease see details below for the existing tasks assoiated with refugee's request:\n")
             print(df_task)
@@ -282,7 +282,7 @@ class Refugee:
                 vol_id = df_task.loc[df_task["taskID"]
                                      == int(t), "volunteerID"].values[0]
                 old_start_date = df_task.loc[df_task["taskID"] == int(
-                    t), "startDate"].values[0]
+                    t), "requestDate"].values[0]
                 old_start_day = pd.Timestamp(old_start_date).day_name()
                 print(
                     f"Note: You are allowed to change only request's date and work shift related to volunteer ID: {vol_id}.\n")
@@ -328,7 +328,7 @@ class Refugee:
                         # volunteer is available: update data in task table and volunteer table
                         cur = self.conn.cursor()
                         week_num = get_week_number(self.req_date)
-                        task_upd = f'''UPDATE task SET week={week_num}, startDate = "{self.req_date}", workShift = "{self.req_shift}" WHERE taskID = {int(t)}'''
+                        task_upd = f'''UPDATE task SET week={week_num}, requestDate = "{self.req_date}", workShift = "{self.req_shift}" WHERE taskID = {int(t)}'''
                         cur.execute(task_upd)
                         self.conn.commit()
                         time.sleep(1.0)

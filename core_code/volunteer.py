@@ -188,14 +188,6 @@ class Volunteer:
         self.system_exit_check()
 
 
-# v1 = Volunteer()
-# v1.create_emergency_refugee_file()
-# v1.edit_emergency_refugee_file()
-# v1.delete_emergency_refugee_file()
-# v1.close_emergency_refugee_file()
-# v1.reopen_emergency_refugee_file()
-
-
     def manage_task(self):
         while True:
             print(menu())
@@ -228,7 +220,7 @@ class Volunteer:
             try:
                 with db.connect('info_files/emergency_system.db') as conn:
                     c = conn.cursor()
-                    c.execute(f'''SELECT * FROM task WHERE volunteerID = (?) and startDate = (?)''', (volunteer, date))
+                    c.execute(f'''SELECT * FROM task WHERE volunteerID = (?) and requestDate = (?)''', (volunteer, date))
                     task = c.fetchall()
                     task_info = task[0][3]
                     task_schedule = task[0][5]
@@ -268,3 +260,10 @@ class Volunteer:
 
 
 
+
+# v1 = Volunteer()
+# v1.create_emergency_refugee_file()
+# v1.edit_emergency_refugee_file()
+# v1.delete_emergency_refugee_file()
+# v1.close_emergency_refugee_file()
+# v1.reopen_emergency_refugee_file()

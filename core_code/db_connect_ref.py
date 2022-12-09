@@ -54,7 +54,7 @@ def clear_request_schedule(conn,df_task_by_ref):
     task_ID_arr = df_task_by_ref["taskID"].tolist()
     for tid in task_ID_arr:
         date = pd.Timestamp(
-        str(df_task_by_ref.loc[df_task_by_ref["taskID"] == tid, "startDate"].values[0]))
+        str(df_task_by_ref.loc[df_task_by_ref["taskID"] == tid, "requestDate"].values[0]))
         dn = date.day_name()
         # set volunteer related to refugee schedule to 0
         vol_id = df_task_by_ref.loc[df_task_by_ref["taskID"]== tid, "volunteerID"].values[0]
@@ -76,7 +76,7 @@ def get_refugee_dataframe(conn):
 def select_task_by_ref_id(conn,refugeeID):
     task_query = f'''SELECT * FROM task WHERE refugeeID = {refugeeID} and status = "active"'''
     pd_task = pd.read_sql_query(task_query,conn)
-    df_task_ref_id = pd.DataFrame(pd_task,columns=["taskID","refugeeID","volunteerID","taskInfo","week","startDate","workShift","status"])
+    df_task_ref_id = pd.DataFrame(pd_task,columns=["taskID","refugeeID","volunteerID","taskInfo","week","requestDate","workShift","status"])
     time.sleep(1.0)
     return df_task_ref_id
 

@@ -57,7 +57,7 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             week_num = get_week_number(req["date"])
             task_insert = (refugeeID, req["volunteer"], req["task"], week_num,
                            req["date"], req["workshift"],"active")
-            ins_task_query = f'''INSERT INTO task(refugeeID,volunteerID,taskInfo,week,startDate,workShift,status) VALUES {task_insert}'''
+            ins_task_query = f'''INSERT INTO task(refugeeID,volunteerID,taskInfo,week,requestDate,workShift,status) VALUES {task_insert}'''
             cur.execute(ins_task_query)
             conn.commit()
             time.sleep(4.0)
