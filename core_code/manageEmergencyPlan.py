@@ -1,6 +1,10 @@
 from planInput import *
 from sqliteFunctions import *
-
+import sys
+import os
+# print(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Emergency_Plan.emergency_plan_sql import emergency_plan
 
 class ManageEmergencyPlan:
 
@@ -12,7 +16,9 @@ class ManageEmergencyPlan:
             print(self.menu)
             match menu_choice_get(self.menu.count('\n') + 1):
                 case 1:
-                    self.create_emergency_plan()
+                    # self.create_emergency_plan()
+                    create = emergency_plan.Create_Emergency_Plan()
+                    create.add()
                     back()
                 case 2:
                     self.edit_emergency_plan(select_sqlite('plan'))
@@ -24,8 +30,10 @@ class ManageEmergencyPlan:
                     self.close_or_open_emergency_plan(select_sqlite('plan'))
                     back()
                 case 5:
-                    self.delete_emergency_plan(select_sqlite('plan'))
-                    back()
+                    # self.delete_emergency_plan(select_sqlite('plan'))
+                    delete = emergency_plan.Delete_Emergency_Plan()
+                    delete.delete_now()
+                    # back()
                 case 0:
                     return
 

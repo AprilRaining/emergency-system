@@ -85,7 +85,7 @@ def check_plan():
     try:
         with sqlite3.connect('info_files/emergency_system.db') as conn:
             c = conn.cursor()
-            c.execute("update plan set status = 2 where endDate < DATE()")
+            c.execute("update plan set status = 1 where startDate >= DATE()")
             conn.commit()
     except Exception as e:
         print("Wrong connection to the database.")
