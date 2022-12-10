@@ -48,6 +48,7 @@ def menu(name=''):
                 '2. De-active Volunteer Account.\n'
                 '3. Create A New Volunteer Account.\n'
                 '4. Display Volunteer Account.\n'
+                '5. Delete volunteer account.\n'
                 '0. Exit'
             )
         case 'display_volunteer_account':

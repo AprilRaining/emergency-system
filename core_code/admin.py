@@ -47,6 +47,8 @@ class Admin:
                     self.creat_a_volunteer_account()
                 case 4:
                     self.display_volunteer_account()
+                case 5:
+                    self.delete_account()
                 case 0:
                     return
 
@@ -240,21 +242,25 @@ class Admin:
     def delete_account(self):
         ID = input('Enter the volunteer ID you would like to delete:')
         try:
-            with db.connect('emergency_system.db') as conn:
+            with db.connect('info_files/emergency_system.db') as conn:
                 c = conn.cursor()
-                c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
-                                    volunteerID = (?)''', (ID,))
+                c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus, password FROM volunteer 
+                            WHERE volunteerID = (?)''', (ID,))
                 a = c.fetchall()
+                print(a)
                 if a != []:
-                    fd = pd.DataFrame(list(a),
+                    fd = pd.DataFrame([a[0][:-1]],
                                       columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp iD",
                                                "Account status"])
                     print(fd)
                     confirm = AccountCreation.confirm_deletion()
                     if confirm == 1:
                         c = conn.cursor()
-                        sql = '''DELETE FROM  volunteer WHERE volunteerID = (?)'''
+                        sql = '''DELETE FROM volunteer WHERE volunteerID = (?)'''
                         c.execute(sql, (ID,))
+                        conn.commit()
+                        c.execute(f"insert into deleted_vol_account (volunteerID, username, password) "
+                                  f"values({ID}, '{a[0][3]}', '{a[0][-1]}') ")
                         print('The account is successfully deleted.')
                 else:
                     raise IndexError

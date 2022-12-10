@@ -19,18 +19,22 @@ def volunteer_login():
             name = input("Input your username:")
             password = input("Input the password of volunteer:")
 
-            result = c.execute(f"select volunteerID, accountStatus from volunteer where username = '{name}' and password = '{password}'").fetchall()
+            result = c.execute(f"select volunteerID, accountStatus from volunteer where username = '{name}' "
+                               f"and password = '{password}'").fetchall()
             if len(result) > 0:
                 if result[0][1] == 0:
                     print("Your account has been deactivated, contact the administrator.\n")
                     return -1
-                elif result[0][1] == -1:
-                    print("Account doesn't exist.")
-                    return -1
                 else:
                     return result[0][0]
             else:
-                print("Wrong username or password! Check your input please.")
+                vol_res = c.execute(f"select * from deleted_vol_account where username = '{name}' "
+                                    f"and password = '{password}'").fetchall()
+                if len(vol_res) > 0:
+                    print("Account doesn't exist.")
+                    return -1
+                else:
+                    print("Wrong username or password! Check your input please.")
 
 
 def check_week():
