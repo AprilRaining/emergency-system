@@ -1,13 +1,18 @@
 import sys
 import os
 import utilities
+import pandas as pd
+from admin import Admin
+from myfunctionlib import *
+from volunteer import Volunteer
+
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.set_option('max_colwidth',100)
 
 sys.path.insert(0, os.getcwd())
 # print(sys.path)
 
-from admin import Admin
-from myfunctionlib import *
-from volunteer import Volunteer
 
 if __name__ == "__main__":
     """
@@ -16,7 +21,10 @@ if __name__ == "__main__":
     1. update status of plans
     2. update time schedule of all volunteers
     """
+
     # For Log in
+    # utilities.check_plan()
+    utilities.check_week()
     try:
         while True:
             print('Welcome to the emergency system designed by Team K:)\nPlease select the account type:')
@@ -28,6 +36,8 @@ if __name__ == "__main__":
                     admin.sub_main()
                 case 2:
                     v_ID = utilities.volunteer_login()
+                    if v_ID < 0:
+                        continue
                     volunteer = Volunteer(volunteer_id=v_ID)
                     volunteer.sub_main()
                 case 0:

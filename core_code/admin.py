@@ -235,3 +235,29 @@ class Admin:
                 print("All volunteers are here: \n", fd)
         except:
             print("Wrong connection to the database")
+
+
+    def delete_account(self):
+        ID = input('Enter the volunteer ID you would like to delete:')
+        try:
+            with db.connect('emergency_system.db') as conn:
+                c = conn.cursor()
+                c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
+                                    volunteerID = (?)''', (ID,))
+                a = c.fetchall()
+                if a != []:
+                    fd = pd.DataFrame(list(a),
+                                      columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp iD",
+                                               "Account status"])
+                    print(fd)
+                    confirm = AccountCreation.confirm_deletion()
+                    if confirm == 1:
+                        c = conn.cursor()
+                        sql = '''DELETE FROM  volunteer WHERE volunteerID = (?)'''
+                        c.execute(sql, (ID,))
+                        print('The account is successfully deleted.')
+                else:
+                    raise IndexError
+
+        except IndexError:
+            print("The ID you entered does not exist, you can view all accounts first")

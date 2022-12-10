@@ -123,14 +123,31 @@ class AccountCreation:
                 work_shift = input("What will be the shift for the volunteer? \n 1. Morning (06:00-14:00) \n "
                                    "2. Afternoon (14:00-22:00) \n 3. Night (22:00-06:00) \n")
                 if work_shift == '1':
-                    shift = 'morning'
+                    shift = 'Morning'
                 elif work_shift == '2':
-                    shift = 'afternoon'
+                    shift = 'Afternoon'
                 elif work_shift == '3':
-                    shift = 'night'
+                    shift = 'Night'
                 else:
                     raise InvalidChoiceError(work_shift)
             except InvalidChoiceError as e:
                 print(e)
             else:
                 return shift
+
+
+    @staticmethod
+    def confirm_deletion():
+        while True:
+            try:
+                work_or_not = input("Do you confirm to delete this account? (Enter 'Y/y' as yes, 'N/n' as no) \n")
+                if work_or_not == 'Y' or work_or_not == 'y':
+                    choice = 1
+                elif work_or_not == 'N' or work_or_not == 'n':
+                    choice = 0
+                else:
+                    raise InvalidInput(work_or_not)
+            except InvalidInput as e:
+                print(e)
+            else:
+                return choice

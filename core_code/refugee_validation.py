@@ -93,10 +93,11 @@ def camp_capacity_check(conn):
     # check if the camp is full or can accept more refugee
     while True:
         try:
-            camp_query = '''SELECT camp.campID, COUNT(refugeeID) as no_of_refugees,capacity FROM camp LEFT JOIN refugee ON camp.campID = refugee.campID GROUP BY camp.campID'''
+            camp_query = '''SELECT camp.campID, COUNT(refugeeID) as no_of_refugees,capacity FROM camp 
+                            LEFT JOIN refugee ON camp.campID = refugee.campID GROUP BY camp.campID'''
             pd_camp = pd.read_sql_query(camp_query, conn)
-            camp_df = pd.DataFrame(
-            pd_camp, columns=['campID', 'no_of_refugees', 'capacity'])
+            camp_df = pd.DataFrame(pd_camp, columns=['campID', 'no_of_refugees', 'capacity'])
+            camp_df = camp_df.drop(camp_df[camp_df['campID'] == 0].index)
             print(camp_df)
             print("-------------------------------------------")
             camp = int(input("Assign the camp ID to the refugee: "))
@@ -123,7 +124,7 @@ def refugee_validity_check_by_ID(cond,refugee_df, conn):
             try:
                 print("Search for the refugee information by")
                 col_opt = ['fName','lName','campID','familyMemberName']
-                options = Options(col_opt, limied=True)
+                options = Options(col_opt, limited=True)
                 print(options)
                 opt = col_opt[int(input('Please select how you want to search: '))]
                 keyword = input(f"\nPlease enter the {opt} keyword: ")
@@ -143,7 +144,7 @@ def refugee_validity_check_by_ID(cond,refugee_df, conn):
                     if status == "inactive":
                         raise exc.inactive_refugee_edit
             except exc.refugee_id_out_of_range:
-                print_log("Your input is invalid in our database")
+                print_log("There is no search result, please change your keyword.")
             except ValueError:
                 print_log("Please enter a numerical value for your input.")
             except exc.inactive_refugee_edit:

@@ -62,6 +62,7 @@ class Volunteer:
 
     def manage_personal_information(self):
         while True:
+            print("Please select what you want to do:")
             print(menu())
             match menu_choice_get(menu().count('\n') + 1):
                 case 1:
@@ -148,7 +149,7 @@ class Volunteer:
                       'Friday': -1,
                       'Saturday': -1,
                       'Sunday': -1,
-                      'workShift': "Morning shift"}  # used to store the json information
+                      'workShift': "Morning"}  # used to store the json information
 
         while True:
             volunteer_input_id = self.volunteerID
@@ -200,10 +201,10 @@ class Volunteer:
             print("your current working shift is:\n" + preference['workShift'])
             print("if you dont want to change the working shift, please select same option with previous one! \n")
 
-            options_shift = Options(['Morning shift', 'Evening shift', 'Night shift'], limited=True)
+            options_shift = Options(['Morning', 'Evening', 'Night'], limited=True)
             print(options_shift)
             options_preference = options_shift.get_option("please choose your preferred workShift\n")
-            match_preference = ['Morning shift', 'Evening shift', 'Night shift']
+            match_preference = ['Morning', 'Evening', 'Night']
             preference['workShift'] = match_preference[options_preference]
             preference = json.dumps(preference)
             query = f'''UPDATE volunteer SET preference='{preference}' WHERE volunteerID = {volunteer_input_id}'''
@@ -300,6 +301,7 @@ class Volunteer:
 
     def manage_camp_file(self):
         while True:
+            print("Please select what you want to do:")
             print(menu())
             match menu_choice_get(menu().count('\n') + 1):
                 case 1:
@@ -320,7 +322,9 @@ class Volunteer:
         cont_proc = yn_valid(
                 "Would you like to exit the system?(Yes/No): ")
         if cont_proc == "Yes":
-            return
+            return True
+        else:
+            return False
 
     def create_emergency_refugee_file(self):
         conn = connect_db()
@@ -329,7 +333,8 @@ class Volunteer:
             new_ref = Refugee("Register", conn)
             # register new refugee
             new_ref.refugee_registration_form()
-            self.system_exit_check()
+            if self.system_exit_check():
+                return
 
     def edit_emergency_refugee_file(self):
         print("Welcome to refugee information system")
