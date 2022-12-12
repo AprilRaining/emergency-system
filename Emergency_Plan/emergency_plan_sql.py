@@ -86,6 +86,7 @@ class emergency_plan:
                                 else:
                                     self.status = 0
                             else:
+                                print("\nThe start date must be later than today or just today!")
                                 raise Invalid_input(date_format)
                         except Invalid_input as e:
                             print(e)
