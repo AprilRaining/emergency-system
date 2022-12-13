@@ -113,22 +113,24 @@ class emergency_plan:
                     newdataframe.to_sql('plan', conn, index= False)
                     print(newdataframe.to_string(index=False))
                     c.execute("CREATE TABLE camp (campID INTEGER PRIMARY KEY AUTOINCREMENT, capacity INTEGER, planID INTEGER)")
-                    for i in range(int(self.camp)):
+                    for _ in range(int(self.camp)):
                         c.execute("INSERT INTO camp (capacity, planID) VALUES (?, ?)", (20, 1))
                     conn.commit()
 
                 else: 
                     dataframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                    self.planID = dataframe['planID'].iloc[-1] + 1
+                    self.planID = int(dataframe['planID'].iloc[-1]) + 1
                     if((self.type in dataframe['Type'].values) & (self.desc in dataframe['Description'].values) & (self.area in dataframe['Area'].values) & (str(self.date) in dataframe['Start Date'].values) & (self.camp in dataframe['# camps'].values)):
-                        print(newdataframe.to_string(index=False))
+                        print(dataframe.to_string(index=False))
                     else:
                         newdataframe = pd.DataFrame({'planID': [self.planID], 'Type': [self.type], 'Description': [self.desc], 
                         'Area': [self.area], 'Start Date': [self.date], '# camps': [self.camp], 'status': [self.status]})
                         newdataframe.to_sql('plan', conn, index= False, if_exists="append")
                         updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                        for _ in range(int(self.camp)):
-                            c.execute("INSERT INTO camp (capacity, planID) VALUES (?, ?)", (20, self.planID))
+                        campframe = pd.read_sql_query('SELECT * FROM camp', conn)
+                        campID = int(campframe['campID'].iloc[-1]) + 1
+                        for i in range(int(self.camp)):
+                            c.execute("INSERT INTO camp (campID, capacity, planID) VALUES (?, ?, ?)", (campID + i, 20, self.planID))
                         conn.commit()
                         print(updatedframe.to_string(index=False))
             
