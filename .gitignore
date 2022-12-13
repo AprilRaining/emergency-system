@@ -3,3 +3,4 @@ core_code/__pycache__/
 .idea/
 temp/
 .vscode/
+.pyc
