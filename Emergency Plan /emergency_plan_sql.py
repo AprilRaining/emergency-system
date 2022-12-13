@@ -119,7 +119,7 @@ class emergency_plan:
 
                 else: 
                     dataframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                    self.planID = len(dataframe) + 1
+                    self.planID = dataframe['planID'].iloc[-1] + 1
                     if((self.type in dataframe['Type'].values) & (self.desc in dataframe['Description'].values) & (self.area in dataframe['Area'].values) & (str(self.date) in dataframe['Start Date'].values) & (self.camp in dataframe['# camps'].values)):
                         print(newdataframe.to_string(index=False))
                     else:
