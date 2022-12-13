@@ -1,7 +1,6 @@
 core_code/__pycache__/
+Emergency_Plan/__pycache__/
 .DS_Store
 .idea/
 temp/
 .vscode/
-.pyc
-Emergency_Plan/__pycache__/
