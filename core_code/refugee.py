@@ -363,7 +363,7 @@ class Refugee:
         # convert list to tuple
         self.ref_row_new = tuple(self.ref_row)
         # insert new refugee to db
-        print("..........Adding new refugee to the system............")
+        print("..........Adding new refugee to the system............\n")
         refugee_id = insert_refdb_row(self.conn, self.ref_row_new)
         return refugee_id
 
@@ -406,8 +406,9 @@ class Refugee:
 
         # add to database
         refugeeID = self.add_refugee_to_db()
+        print(f"\nNew refugee ID created: [{refugeeID}]\n")
 
         # CREATE case: update refugee, task, and volunteer table: can handle multiple req.
         req_id = task_ref_vol_db(
             self.conn, req_list, refugeeID, refugee_df, "create")
-        print(u'\u2705'+"New refugee is registered to the system. Thank you!")
+        print("\n",u'\u2705'+"New refugee is successfully registered to the system!")

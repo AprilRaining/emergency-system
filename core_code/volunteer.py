@@ -516,7 +516,7 @@ class Volunteer:
             # delete refugee
             delete_ref_by_id(conn, ref_df_by_id)
             print("--------------------------------------------------")
-            print(u'\u2705'+"The refugee's information is successfully deleted.\n")
+            print(u'\u2705'+f"The refugee with ID {ref_df_by_id}'s information is successfully deleted.\n")
         self.system_exit_check()
 
 
@@ -559,7 +559,7 @@ class Volunteer:
             try:
                 with db.connect('info_files/emergency_system.db') as conn:
                     c = conn.cursor()
-                    c.execute(f'''SELECT taskInfo, workShift FROM task WHERE volunteerID = (?) and requestDate = (?)''',
+                    c.execute(f'''SELECT * FROM task WHERE volunteerID = (?) and requestDate = (?)''',
                               (volunteer, date))
                     task = c.fetchall()
 
