@@ -78,6 +78,8 @@ def select_sqlite(table):
     IDs = get_all_IDs(table)
     while True:
         display_by_IDs(table, IDs)
+        if not IDs:
+            IDs = get_all_IDs(table)
         print('Input 0 to search')
         IDs.append(0)
         ID = Get.option_in_list(
