@@ -13,7 +13,7 @@ import json
 from options import *
 import copy
 from print_table import *
-
+from system_log import *
 
 def connection_database(db_file):
     conn = None
@@ -21,8 +21,8 @@ def connection_database(db_file):
         conn = sqlite3.connect(db_file)
         # print("Access system successfully!\n")
     except Exception as e:
-        print("could not connect to the database")
-        print(e)
+        print_log("could not connect to the database")
+        print_log(e)
     return conn
 
 
@@ -321,31 +321,53 @@ class Volunteer:
             print(u"\U0001F539"+ f"\nYour default schedule when first registered is: \n")
             print_table(pre_df.columns,pre_df.to_numpy().tolist(),(20,20,20,20,20,20,20,20))
         except:
-            print("Wrong connection to the database.")
+            print_log("Wrong connection to the database.")
         pass
 
     def manage_camp_file(self):
+        print("--------------------------------------------------------")
+        print("\t\tREFUGEES AND CAMP MANAGEMENT\n")
         while True:
             print("Please select what you want to do: \n")
             print(menu())
             match menu_choice_get(menu().count('\n') + 1,"\n-->"):
                 case 1:
+                    print("--------------------------------------------------------")
+                    print("\t\tREGISTER NEW REFUGEE\n")
                     self.create_emergency_refugee_file()
+                    back()
                 case 2:
+                    print("--------------------------------------------------------")
+                    print("\t\tEDIT REFUGEE INFORMATION\n")
                     self.edit_emergency_refugee_file()
+                    back()
                 case 3:
-                    self.close_emergency_refugee_file()
+                    print("--------------------------------------------------------")
+                    print("\t\tVIEW REFUGEE SCHEDULE\n")
+                    self.view_refugee_req_schedule()
+                    back()
                 case 4:
-                    self.reopen_emergency_refugee_file()
+                    print("--------------------------------------------------------")
+                    print("\t\tDEACTIVATE REFUGEE ACCOUNT\n")
+                    self.close_emergency_refugee_file()
+                    back()
                 case 5:
+                    print("--------------------------------------------------------")
+                    print("\t\tACTIVATE REFUGEE ACCOUNT\n")
+                    self.reopen_emergency_refugee_file()
+                    back()
+                case 6:
+                    print("--------------------------------------------------------")
+                    print("\t\tDELETE REFUGEE ACCOUNT\n")
                     self.delete_emergency_refugee_file()
+                    back()
                 case 0:
                     return
 
     @staticmethod
     def system_exit_check():
         cont_proc = yn_valid(
-                "Would you like to exit the system?(Yes/No): ")
+                u"\U0001F539"+"Would you like to exit this section of refugee management system?(Yes/No): ")
         if cont_proc == "Yes":
             return True
         else:
@@ -361,18 +383,17 @@ class Volunteer:
             if self.system_exit_check():
                 return
 
+
     def edit_emergency_refugee_file(self):
-        print("Welcome to refugee information system")
-        print("---------------------------------------------------")
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df, conn)
-        print("---------------------------------------------------")
-        print("Select a database field that you would like to edit: ")
+        print("--------------------------------------------------")
+        print(u"\U0001F539"+"Select a database field that you would like to edit: ")
         edit_opt = refugee_input_option("Edit")
         edit_arr = numerical_input_check(edit_opt)
         # print("arr",edit_arr)
-        print("\n-------------------INFO EDITION-------------------")
+        print("\n------------------------INFO EDITION-----------------------\n")
         edited_dict = input_matching("Edit")
         for e in edit_arr:
             # array of ref_row
@@ -385,32 +406,68 @@ class Volunteer:
                 update_refdb_attr(conn, ref_df_by_id,
                                   col_name_arr[i], edited_fields[i])
 
-        print("---------------------------------------------------")
-        print("The refugee's information is successfully updated.\n")
+        print("--------------------------------------------------")
+        print(u'\u2705'+"The refugee's information is successfully updated.\n")
         self.system_exit_check()
 
+    def view_refugee_req_schedule(self):
+        conn = connect_db()
+        refugee_df = get_refugee_dataframe(conn)
+        ref_df_by_id = refugee_validity_check_by_ID("schedule", refugee_df, conn)
+        day_index = {"Monday":1,"Tuesday":2,"Wednesday":3,"Thursday":4,"Friday":5,"Saturday":6,"Sunday":7}
+        data_sch = {
+            "Day": list(day_index.keys()),
+            "Morning" : [u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA"],
+            "Afternoon":[u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA"],
+            "Night":[u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA",u"\u26AA"],
+        }
+        print(u"\U0001F531"+"If a refugee has booked a request with the volunteer, you will see the request together with volunteer ID in the table.\n")
+        task_df = select_task_by_ref_id(conn,ref_df_by_id)
+        if task_df.empty:
+            print("There is no refugee request for this week")
+        else:
+            for ind in task_df.index:
+                req_date = task_df["requestDate"][ind]
+                day_name = pd.Timestamp(req_date).day_name()
+                data_sch[task_df["workShift"][ind]][day_index[day_name]-1] = str(task_df["taskInfo"][ind])+f"[volID:{task_df['volunteerID'][ind]}]"
+
+        display_sch = pd.DataFrame(data_sch)
+        print_table(display_sch.columns,display_sch.to_numpy().tolist(),(50,50,50,50))
+
+        print("\nNote: ")
+        print(u"\U0001F538",u"\u26AA"+" = No request")
+        print(u"\U0001F538","Morning Shift " + "= 06:00 - 14:00")
+        print(u"\U0001F538","Afternoon Shift " + "= 14:00 - 22:00")
+        print(u"\U0001F538","Night Shift " + "= 22:00 - 06:00\n")
+
+
     def close_emergency_refugee_file(self):
-        print("Welcome to refugee information system")
-        print("-------------------------------------------")
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("deactivate", refugee_df, conn)
         print("\nPlease see refugee details below.\nYou can activate this refugee account anytime.\n")
-        print(refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id])
+        df_id = refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id]
+        print_table(df_id.columns,df_id.to_numpy().tolist(),(18,16,25,25,30,25,32,70,60,70,70,60,30,30,30,25))
         # get req id
         ref_req = str(
             refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id, "request"].values[0])
-        if ref_req != "0":
-            # task
-            df_task_ref_id = select_task_by_ref_id(conn, ref_df_by_id)
-            # clear out volunteer schedule related to this refugee req
-            print("deactivating refugee account.................")
-            clear_request_schedule(conn,df_task_ref_id)
+        ref_status = str(
+            refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id, "status"].values[0])
         # update status and request: refugee table => set status to inactive + set request to 0
-        update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
-        update_refdb_attr(conn, ref_df_by_id, "request", "0")
-        print("--------------------------------------------------")
-        print("The refugee's information is successfully deactivated.\n")
+        if ref_status == "inactive":
+          warn("Refugee's status is currently inactive. There's no need to deactivate an account again!")
+        else:
+            if ref_req != "0":
+                # task
+                df_task_ref_id = select_task_by_ref_id(conn, ref_df_by_id)
+                # clear out volunteer schedule related to this refugee req
+                print("..............Deactivating refugee account................")
+                clear_request_schedule(conn,df_task_ref_id)
+
+            update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
+            update_refdb_attr(conn, ref_df_by_id, "request", "0")
+            print("--------------------------------------------------")
+            print(u'\u2705'+"The refugee's information is successfully deactivated.\n")
         self.system_exit_check()
 
     def reopen_emergency_refugee_file(self):
@@ -419,31 +476,35 @@ class Volunteer:
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("activate", refugee_df, conn)
-        # update datebase: refugee[status] to active
-        update_refdb_attr(conn, ref_df_by_id, "status", "active")
-        print("--------------------------------------------------")
-        print("The refugee's information is successfully activated.\n")
+        ref_status = str(
+            refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id, "status"].values[0])
+        if ref_status == "active":
+            warn("Refugee's status is currently active. There's no need to activate an account again!")
+        else: 
+            # update datebase: refugee[status] to active
+            update_refdb_attr(conn, ref_df_by_id, "status", "active")
+            print("--------------------------------------------------")
+            print(u'\u2705'+"The refugee's information is successfully activated.\n")
         self.system_exit_check()
 
     def delete_emergency_refugee_file(self):
-        print("Welcome to refugee information system")
-        print("-------------------------------------------")
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("delete", refugee_df, conn)
         print("\nPlease see refugee details below before deleting.\n")
-        print(refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id])
+        df_id = refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id]
+        print_table(df_id.columns,df_id.to_numpy().tolist(),(18,16,25,25,30,25,32,70,60,70,70,60,30,30,30,25))
         # get req id
         ref_req = refugee_df.loc[refugee_df["refugeeID"]
                                  == ref_df_by_id, "request"].values[0]
-        confirm_del = yn_valid(
-            "Are you sure you want to delete this refugee from the system?(Yes/No): ")
+        confirm_del = yn_valid("\n",
+            u"\U0001F539"+"Are you sure you want to delete this refugee from the system?(Yes/No): ")
         if confirm_del == "Yes":
             if ref_req != "0":
                 # task
                 df_task_ref_id = select_task_by_ref_id(conn, ref_df_by_id)
                 # clear out volunteer schedule related to this refugee req
-                print("deleting refugee information................")
+                print(".............Deleting refugee information..............")
                 clear_request_schedule(conn,df_task_ref_id)
                 # delete related task
                 del_task = f'''DELETE FROM task WHERE refugeeID = {ref_df_by_id}'''
@@ -455,18 +516,21 @@ class Volunteer:
             # delete refugee
             delete_ref_by_id(conn, ref_df_by_id)
             print("--------------------------------------------------")
-            print("The refugee's information is successfully deleted.\n")
+            print(u'\u2705'+"The refugee's information is successfully deleted.\n")
         self.system_exit_check()
 
 
     def manage_task(self):
-        print("--------------------------------------------------------")
+        print("--------------------------------------------------")
         print("\t\tVOLUNTEER TASK MANAGEMENT\n")
         while True:
             print(menu())
             match menu_choice_get(menu().count('\n') + 1, "\n-->"):
                 case 1:
+                    print("--------------------------------------------------")
+                    print("\t\tVIEW VOLUNTEER SCHEDULE\n")
                     volunteer_id = input(u"\U0001F539"+"Enter volunteer ID: ")
+                    print("If a refugee has booked a request with you, you will see the task together with refugee ID in the table.\n")
                     self.view_my_schedule(volunteer_id)
                 case 0:
                     return
@@ -498,22 +562,23 @@ class Volunteer:
                     c.execute(f'''SELECT taskInfo, workShift FROM task WHERE volunteerID = (?) and requestDate = (?)''',
                               (volunteer, date))
                     task = c.fetchall()
-                    task_arr = []
-                    task_sch = []
-                    for ind,t in enumerate(task):
-                        task_arr.append(task[ind][3])
-                        task_sch.append(task[ind][6])
 
-                    task_info = ",".join(task_arr)
+                    task_sch = []
+                    display_info = []
+                    for ind,t in enumerate(task):
+                        task_sch.append(task[ind][6])
+                        display_info.append(task[ind][3] + f"[refID:{task[ind][1]}]")
+
                     task_schedule = ",".join(task_sch)
+                    display_task = ",".join(display_info)
 
                 day_schedule = [day, u"\u26AA", u"\u26AA", u"\u26AA"]
                 if task_schedule == 'Morning':
-                    day_schedule = [day, task_info, u"\u26AA", u"\u26AA"]
+                    day_schedule = [day, display_task, u"\u26AA", u"\u26AA"]
                 elif task_schedule == 'Afternoon':
-                    day_schedule = [day, u"\u26AA", task_info, u"\u26AA"]
+                    day_schedule = [day, u"\u26AA", display_task, u"\u26AA"]
                 elif task_schedule == 'Night':
-                    day_schedule = [day, u"\u26AA", u"\u26AA", task_info]
+                    day_schedule = [day, u"\u26AA", u"\u26AA", display_task]
             except IndexError:
                 day_schedule = [day, u"\u26AA", u"\u26AA", u"\u26AA"]
             return day_schedule
@@ -540,8 +605,10 @@ class Volunteer:
 
         for v in d:
             day, morning, afternoon, night = v
-            print("{:<15} \t{:<22} {:<24} {:<15}".format(day, morning, afternoon, night))
-        print("\n")
+            print("{:<15} {:<22} {:<24} {:<15}".format(day, morning, afternoon, night))
+
+        print("\nNote: "+u"\u26AA"+" = No task\n")
+
 
 
 

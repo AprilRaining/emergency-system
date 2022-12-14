@@ -49,7 +49,7 @@ def display_by_IDs(table, IDs):
             col_width = (8,20,30,16,20,20,14,8)
         print_table(table_df.columns, table_df.to_numpy().tolist(), col_width)
     else:
-        print('No Result!')
+        warn('\nNo Result!')
 
 
 def get_linked_IDs(sonTable, fatherTable, TableIDs):
@@ -74,7 +74,8 @@ def search_sqlite(table):
         print(options)
         option = options.get_option(
             u"\U0001F539" + 'Please choose which one you want to search by: ')
-        keyword = input('Please input the keyword:')
+        keyword = input("\n"+u"\U0001F531"+'Please input the search keyword: ')
+        print("/n")
         IDs = search(table, options.values[option], keyword)
         return IDs
 
@@ -85,7 +86,7 @@ def select_sqlite(table):
         display_by_IDs(table, IDs)
         if not IDs:
             IDs = get_all_IDs(table)
-        print('Input 0 to search')
+        print("\n",u"\U0001F531"+ '[Hint]Input 0 to search by other keys e.g area, status')
         IDs.append(0)
         ID = Get.option_in_list(
             IDs, u"\U0001F539"+ f'Please input the {table}ID to choose a {table}: ')

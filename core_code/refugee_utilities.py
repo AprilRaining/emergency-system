@@ -46,11 +46,11 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
     '''
     req_id_mul = ""
     if req_list != []:
-        print("-----Refugee's requests processing-----")
+        print("\n..........Refugee's requests processing..........")
         cur = conn.cursor()
         task_id = []
         if purpose == "create":
-            print("Note: This usually takes around 15-20 seconds to add requests.")
+            print("\nNote: This usually takes around 15-20 seconds to add multiple requests.\n")
         pb.progress_bar(0,len(req_list),"")
         for ind,req in enumerate(req_list):
             # insert data to task table: multiple insertion

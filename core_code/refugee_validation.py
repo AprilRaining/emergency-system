@@ -9,12 +9,13 @@ from system_log import *
 from myfunctionlib import *
 from refugee_utilities import *
 from options import *
+from print_table import *
 
 def refugee_existence_check(conn):
     while True:
         try:
-            firstname = input("Enter refugee's firstname: ")
-            lastname = input("Enter refugee's lastname: ")
+            firstname = input(u"\U0001F539"+"Enter refugee's firstname: ")
+            lastname = input(u"\U0001F539"+"Enter refugee's lastname: ")
             get_ref = f'''SELECT fName,lName FROM refugee WHERE fName = "{firstname}" AND lName = "{lastname}"'''
             pd_query = pd.read_sql_query(get_ref,conn)
             df_row = pd.DataFrame(pd_query,columns=["firstname","lastname"])
@@ -22,17 +23,17 @@ def refugee_existence_check(conn):
                 raise exc.refugee_duplicated_regis
                     
         except exc.refugee_duplicated_regis:
-            print("The refugee's firstname and lastname already exist in the database.\nPlease recheck if you're try to register the same person once again.")
+            print_log("The refugee's firstname and lastname already exist in the database.\nPlease recheck if you're try to register the same person once again.")
             confirm = yn_valid("Is this refugee the same person as whom you registered before?(Yes/No): ")
             if(confirm == "No"):
                 return (firstname,lastname)
             else:
-                cont = yn_valid("Would you like to continue the registration?(Yes/No): ")
+                cont = yn_valid(u"\U0001F539"+"Would you like to continue the registration?(Yes/No): ")
                 if(cont == "Yes"):
                     print("The process restarts!!!")
                 else:
                     print("The process ends")
-                    sys.exit()
+                    return
         except Exception as e:
             print_log(str(e))
         else:
@@ -42,7 +43,7 @@ def refugee_existence_check(conn):
 def date_format_check(purpose,limit_start = '',limit_end = ''):
     while True: 
         try:
-            input_date = input(f"Enter refugee's {purpose} (yyyy-mm-dd): ")
+            input_date = input(u"\U0001F539"+f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
             bd_val = (input_date).split("-")
             if len(bd_val) != 3:
                 raise exc.wrong_birthdate_format
@@ -77,7 +78,7 @@ def date_format_check(purpose,limit_start = '',limit_end = ''):
 def email_format_check():
     while True:  
         try:
-            email = input("Enter refugee's email (if any): ")
+            email = input(u"\U0001F539"+"Enter refugee's email (if any): ")
             if email=="":
                 return email
             elif "@" not in email or "." not in email:
@@ -98,9 +99,9 @@ def camp_capacity_check(conn):
             pd_camp = pd.read_sql_query(camp_query, conn)
             camp_df = pd.DataFrame(pd_camp, columns=['campID', 'no_of_refugees', 'capacity'])
             camp_df = camp_df.drop(camp_df[camp_df['campID'] == 0].index)
-            print(camp_df)
+            print_table(camp_df.columns,camp_df.to_numpy().tolist(),(25,40,40))
             print("-------------------------------------------")
-            camp = int(input("Assign the camp ID to the refugee: "))
+            camp = int(input(u"\U0001F539"+"Assign the camp ID to the refugee: "))
             if camp > camp_df.shape[0] or camp <= 0:
                 raise exc.camp_id_out_of_range
             for ind in camp_df.index:
@@ -126,15 +127,16 @@ def refugee_validity_check_by_ID(cond,refugee_df, conn):
                 col_opt = ['fName','lName','campID','familyMemberName']
                 options = Options(col_opt, limited=True)
                 print(options)
-                opt = col_opt[int(input('Please select how you want to search: '))]
-                keyword = input(f"\nPlease enter the {opt} keyword: ")
+                opt = col_opt[int(input(u"\U0001F539"+'Please select how you want to search: '))]
+                keyword = input(u"\U0001F539"+f"\nPlease enter the {opt} keyword: ")
                 refugee_list = search_refugee(opt,keyword,conn)
                 if refugee_list.empty:
                     raise exc.refugee_id_out_of_range
                 else:
-                    print("\nPlease see details below for the list of refugees that match your search:")
-                    print(refugee_list)
-                ref_id = int(input(f"Please input refugee ID of whom you wish to {cond} the information: "))
+                    print("\nPlease see details below for the list of refugees that match your search:\n")
+                    print_table(refugee_list.columns,refugee_list.to_numpy().tolist(),(18,16,25,25,30,25,32,70,60,70,70,60,30,30,30,25))
+                    print("\n")
+                ref_id = int(input(u"\U0001F539"+f"Please input refugee ID of whom you wish to {cond} the information: "))
                 if ref_id > (refugee_df["refugeeID"]).max() or ref_id<0 :
                     raise exc.refugee_id_out_of_range
                 if ref_id not in refugee_df["refugeeID"].values:
@@ -157,7 +159,7 @@ def refugee_validity_check_by_ID(cond,refugee_df, conn):
 def numerical_input_check(options):
     while True:
         try:
-            selected_opts = input(options + "\n:")
+            selected_opts = input(options + "\n-->")
             array_opts = []
             if "," in selected_opts:
                 array_opts.extend(list(OrderedDict.fromkeys(selected_opts.split(","))))
@@ -166,7 +168,7 @@ def numerical_input_check(options):
                         raise InvalidChoiceError(v)
             else:
                 array_opts.append(selected_opts)
-                if int(selected_opts) > options.count("\n")+1:
+                if int(selected_opts) > options.count("\n")+1 or int(selected_opts)<=0:
                     raise InvalidChoiceError(selected_opts)
         except InvalidChoiceError:
             print_log("Your input number is invalid in our options. Please try again.")
@@ -178,10 +180,32 @@ def numerical_input_check(options):
             # array of numerical input (no duplication)
             return array_opts
 
+def single_input_check(options):
+    while True:
+        try:
+            selected_opts = input(options + "\n-->")
+            array_opts = []
+            if "," in selected_opts:
+                raise ValueError
+            else:
+                if int(selected_opts) > options.count("\n")+1 or int(selected_opts)<=0:
+                    raise InvalidChoiceError
+        except InvalidChoiceError:
+            print_log("Your input number is invalid in our options. Please try again.")
+        except ValueError:
+            print_log("Please enter a single numerical value for your selected options.")
+        except Exception as e:
+            print_log(str(e))
+        else:
+            # array of numerical input (no duplication)
+            array_opts.append(selected_opts)
+            return array_opts
+   
+
 def volunteer_ID_req_check(volunteer_df):
     while True:
         try:
-            vol_ID = int(input(
+            vol_ID = int(input(u"\U0001F539"+
                         "\nEnter the volunteer ID of whom you want to assign this request to: "))
             if vol_ID > (volunteer_df["volunteerID"]).max() or vol_ID < 1:
                 raise exc.volunteer_id_out_of_range

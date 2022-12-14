@@ -7,7 +7,7 @@ import refugee_exception as exc
 def admin_login():
     while True:
         print("--------------------------------------------------------")
-        print("\t\t\tADMIN LOGIN\n")
+        prYellow("\t\t\tADMIN LOGIN\n")
         password = input(u"\U0001F539"+"Input the password of admin:")
         if str(password) == "12345":
             print("\n",u'\u2705','Welcome to the system, Admin!.')
@@ -19,7 +19,7 @@ def admin_login():
 
 def volunteer_login():
     print("--------------------------------------------------------")
-    print("\t\t\tVOLUNTEER LOGIN\n")
+    prYellow("\t\t\tVOLUNTEER LOGIN\n")
     with sqlite3.connect('info_files/emergency_system.db') as conn:
         c = conn.cursor()
         while True:
@@ -84,7 +84,7 @@ def check_week():
                 json.dump(json_file, f)
 
     except FileNotFoundError:
-        warn("The conf file is not exist, please create it now and restart the system!")
+        print_log("The conf file is not exist, please create it now and restart the system!")
         exit()
     except Exception as e:
         exit(e)
@@ -97,8 +97,8 @@ def check_plan():
             c.execute("update plan set status = 1 where startDate >= DATE()")
             conn.commit()
     except Exception as e:
-        print("Wrong connection to the database.")
-        print(e)
+        print_log("Wrong connection to the database.")
+        print_log(e)
 
 def yn_valid(question):
     while True:

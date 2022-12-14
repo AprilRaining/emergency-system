@@ -33,9 +33,9 @@ class AccountCreation:
                         raise CampCapacityError(campID)
                 break
             except IndexError:
-                warn("Camp not existed")
+                print_log("Camp not existed")
             except CampCapacityError as e:
-                print(e)
+                print_log(e)
 
         return campID
 
@@ -56,7 +56,7 @@ class AccountCreation:
                     raise IndexError
                 break
             except IndexError:
-                print("User name already existed")
+                print_log("User name already existed")
         return username
 
     @staticmethod
@@ -84,7 +84,7 @@ class AccountCreation:
                 else:
                     raise InvalidInput(work_or_not)
             except InvalidInput as e:
-                print(e)
+                print_log(e)
             else:
                 return choice
 
@@ -144,7 +144,7 @@ class AccountCreation:
                 else:
                     raise InvalidChoiceError(work_shift)
             except InvalidChoiceError as e:
-                print(e)
+                print_log(e)
             else:
                 return shift
 
@@ -161,6 +161,6 @@ class AccountCreation:
                 else:
                     raise InvalidInput(work_or_not)
             except InvalidInput as e:
-                print(e)
+                print_log(e)
             else:
                 return choice

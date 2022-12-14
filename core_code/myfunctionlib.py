@@ -29,7 +29,7 @@ def menu(name=''):
         case 'Volunteer':
             return (
                 '[ 1.] Manage Personal Information.\n'
-                '[ 2.] Manage Camp File\n'
+                '[ 2.] Manage Refugees and Camp File\n'
                 '[ 3.] Manage Tasks (Refugee Request)\n'
                 '[ 0.] Exit'
             )
@@ -74,11 +74,12 @@ def menu(name=''):
             )
         case 'manage_camp_file':
             return (
-                '[ 1.] Create Emergency Refugee File.\n'
-                '[ 2.] Edit Emergency Refugee File.\n'
-                '[ 3.] Close Emergency Refugee File.\n'
-                '[ 4.] Reopen Emergency Refugee File.\n'
-                '[ 5.] Delete Emergency Refugee File.\n'
+                '[ 1.] Create Refugee Account.\n'
+                '[ 2.] Edit Refugee Information.\n'
+                '[ 3.] View Refugee Request Schedule.\n'
+                '[ 4.] Deactivate Refugee Account.\n'
+                '[ 5.] Activate Refugee Account.\n'
+                '[ 6.] Delete Refugee Account.\n'
                 '[ 0.] Exit'
             )
         case 'manage_task':
@@ -102,10 +103,10 @@ def menu_choice_get(span, hint=''):
             if option not in range(span):
                 raise InvalidChoiceError(option)
         except ValueError:
-            print("You entered a non-numeric value.")
-            print("Please reenter a valid Number")
+            print_log("You entered a non-numeric value.")
+            print_log("Please reenter a valid Number")
         except InvalidChoiceError as e:
-            print(e)
+            print_log(e)
         else:
             return option
 
@@ -118,7 +119,7 @@ def confirm(hint=''):
     :return: Bool
     """
     print(hint)
-    key = input("Enter Yes/No to confirm your action: ")
+    key = input("Enter Yes/yes to confirm your action: ")
     if key == 'Yes' or key == 'yes':
         return True
     else:

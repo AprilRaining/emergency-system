@@ -5,6 +5,7 @@ from manageEmergencyPlan import *
 from accountInput import *
 import sqlite3 as db
 from db_connect_ref import *
+from system_log import *
 
 
 class Admin:
@@ -62,7 +63,7 @@ class Admin:
     def reactive_volunteer_account(self):
         print("--------------------------------------------------------")
         print("\t\tREACTIVATE VOLUNTEER ACCOUNT\n")
-        ID = Get.int('Enter the volunteer ID:')
+        ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
         try:
             with db.connect('info_files/emergency_system.db') as conn:
                 c = conn.cursor()
@@ -79,14 +80,14 @@ class Admin:
                 print(
                     u'\u2705', "Volunteer with ID {}'s account is now reactivated".format(ID))
         except IndexError:
-            print("{} is an invalid ID".format(ID))
+            print_log("{} is an invalid ID".format(ID))
         except:
-            print("Wrong connection to the database.")
+            print_log("Wrong connection to the database.")
 
     def deactive_volunteer_account(self):
         print("--------------------------------------------------------")
         print("\t\tDEACTIVATE VOLUNTEER ACCOUNT\n")
-        ID = Get.int('Enter the volunteer ID:')
+        ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
         try:
             with db.connect('info_files/emergency_system.db') as conn:
                 c = conn.cursor()
@@ -106,9 +107,9 @@ class Admin:
                 else:
                     return
         except IndexError:
-            print("{} is an invalid ID".format(ID))
+            print_log("{} is an invalid ID".format(ID))
         except:
-            print("Wrong connection to the database.")
+            print_log("Wrong connection to the database.")
 
     def creat_a_volunteer_account(self):
         print("--------------------------------------------------------")
@@ -285,7 +286,7 @@ class Admin:
                 print("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
                 print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
         except:
-            print("Wrong connection to the database.")
+            print_log("Wrong connection to the database.")
 
     def display_all_account(self):
         try:
@@ -308,7 +309,7 @@ class Admin:
                 print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
                 
         except:
-            print("Wrong connection to the database")
+            print_log("Wrong connection to the database")
 
 
     def delete_account(self):

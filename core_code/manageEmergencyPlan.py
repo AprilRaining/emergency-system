@@ -127,13 +127,14 @@ class ManageEmergencyPlan:
         df = pd_read_by_IDs('plan', planID)
         match df.loc[0, 'status']:
             case 0:
-                if confirm('This plan is waiting for open\n'
-                           'Do you want to open it now?\n'
-                           'The start date will be set to today if you want to open it.'):
+                if confirm('This plan is waiting for be reopenned.\n'
+                           u"\U0001F539"+ 'Do you want to open it now?\n'
+                           'Note: The start date will be set to today if you want to open it.'):
                     self.update_new_value(planID, 'status', 1)
                     self.update_new_value(
                         planID, 'startDate', datetime.date.today())
-                    print('Succeed!')
+                    print('\nSucceed!')
+                    print(u"\U0001F4C6"+'This emergency plan is successfully reopenned.')
                     return
             case 1:
                 campIDs = get_linked_IDs('camp', 'plan', planID)

@@ -25,7 +25,7 @@ def insert_refdb_row(conn, refugee_row):
     cur = conn.cursor()
     cur.execute(query, refugee_row)
     conn.commit()
-    time.sleep(4.0)
+    time.sleep(2.0)
     cur.close()
     return cur.lastrowid
 
@@ -62,7 +62,7 @@ def clear_request_schedule(conn,df_task_by_ref):
         cur = conn.cursor()
         cur.execute(vol_upd1)
         conn.commit()
-        time.sleep(4.0)
+        time.sleep(2.0)
 
 
 def get_refugee_dataframe(conn):

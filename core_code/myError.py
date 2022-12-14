@@ -4,7 +4,7 @@ class InvalidInput(Exception):
         self.value = value
 
     def __str__(self):
-        return f'{self.value} is an invalid input.\nPlease reenter.'
+        return f"\033[91m{self.value} is an invalid input.\nPlease reenter.\033[00m"
 
 
 class InvalidChoiceError(Exception):
@@ -13,7 +13,7 @@ class InvalidChoiceError(Exception):
         self.value = value
 
     def __str__(self):
-        return f'{self.value} is an invalid choice.\nPlease reenter a number specified above.'
+        return f"\033[91m{self.value} is an invalid choice.\nPlease reenter a number specified above.\033[00m"
 
 class CampCapacityError(Exception):
     def __init__(self, value):
@@ -21,4 +21,6 @@ class CampCapacityError(Exception):
         self.value = value
 
     def __str__(self):
-        return f'Camp {self.value} is now full.\nPlease choose another camp.'
+        return f"\033[91m Camp {self.value} is now full.\nPlease reenter a number specified above.\033[00m"
+        
+        

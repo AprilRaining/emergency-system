@@ -12,6 +12,7 @@
 """
 import os
 DEFAULT_WIDTH = 80
+from system_log import *
 
 def print_table(headers, rows, sizes):
     def fit_to_term():
