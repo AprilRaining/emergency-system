@@ -1,6 +1,5 @@
 import os
 import sys
-
 import pandas as pd
 
 import utilities
@@ -29,9 +28,11 @@ if __name__ == "__main__":
     utilities.check_week()
     try:
         while True:
-            print('Welcome to the emergency system designed by Team K:)\nPlease select the account type:')
+            print('Welcome to the emergency system designed by Team K:)\n')
+            print("---------------------------------------------------")
+            print("Please select the account type to login :\n")
             print(menu('Login'))
-            match menu_choice_get(menu('Login').count('\n') + 1):
+            match menu_choice_get(menu('Login').count('\n') + 1, "\n-->"):
                 case 1:
                     utilities.admin_login()
                     admin = Admin()

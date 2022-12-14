@@ -9,12 +9,12 @@ class Options:
         temp = []
         if not self.limited:
             for i in range(self.len):
-                temp.append('{}. {}'.format(i + 1, self.values[i]))
+                temp.append('[ {}.] {}'.format(i + 1, self.values[i]))
             temp.append('0. Manual input.')
             self.optionRange = self.len + 1
         else:
             for i in range(self.len):
-                temp.append('{}. {}'.format(i, self.values[i]))
+                temp.append('[ {}.] {}'.format(i, self.values[i]))
             self.optionRange = self.len
         self.menu = '\n'.join(temp)
 

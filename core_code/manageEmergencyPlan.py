@@ -2,6 +2,7 @@ from planInput import *
 from sqliteFunctions import *
 import sys
 import os
+from system_log import *
 # print(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Emergency_Plan.emergency_plan_sql import emergency_plan
@@ -12,28 +13,40 @@ class ManageEmergencyPlan:
         self.menu = menu(self.__class__.__name__)
 
     def sub_main(self):
+        print("--------------------------------------------------------")
+        print("\t\t\tPLAN MANAGEMENT\n")
         while True:
             print(self.menu)
-            match menu_choice_get(self.menu.count('\n') + 1):
+            match menu_choice_get(self.menu.count('\n') + 1, "\n-->"):
                 case 1:
                     # self.create_emergency_plan()
                     create = emergency_plan.Create_Emergency_Plan()
                     create.add()
+                    print("\n",u'\u2705','New emergency plan is successfully created.')
                     back()
                 case 2:
+                    print("--------------------------------------------------------")
+                    print("\t\tEDIT EMERGENCY PLAN\n")
                     self.edit_emergency_plan(select_sqlite('plan'))
+                    print("\n",u'\u2705','The emergency plan is successfully updated.')
                     back()
                 case 3:
+                    print("--------------------------------------------------------")
+                    print("\t\tDISPLAY EMERGENCY PLAN\n")
                     display_by_IDs('plan', get_all_IDs('plan'))
                     back()
                 case 4:
+                    print("--------------------------------------------------------")
+                    print("\t\tCLOSE or REOPEN EMERGENCY PLAN\n")
                     self.close_or_open_emergency_plan(select_sqlite('plan'))
                     back()
                 case 5:
                     # self.delete_emergency_plan(select_sqlite('plan'))
+                    print("--------------------------------------------------------")
+                    print("\t\tDELETE EMERGENCY PLAN\n")
                     delete = emergency_plan.Delete_Emergency_Plan()
                     delete.delete_now()
-                    # back()
+                    back()
                 case 0:
                     return
 
@@ -64,28 +77,31 @@ class ManageEmergencyPlan:
                     'numberOfCamps',
                 ], limited=True)
                 print('This plan has not been opened.\n'
-                      'Please choose one of properties below you want to change.')
+                      u"\U0001F539" + 'Please choose one of properties below that you want to edit:')
             case 1:
                 options = Options([
                     'description',
                     'endDate',
                 ], limited=True)
-                print('This plan has been opened.\n'
-                      'Please choose one of properties below you want to change.')
+                print(u'\u2705','This plan has been opened.\n'
+                      u"\U0001F539" + 'Please choose one of properties below that you want to edit: ')
             case 2:
-                print('This plan has been closed, you can not change it.')
+                warn('This plan has been closed, you can not change it.')
                 return
         print(options)
         option = options.get_option(
-            'Please choose which one you want to edit: ')
+            u"\U0001F539" + 'Please choose one of properties below that you want to edit: ')
         newValue = self.get_new_value(planID, options.values[option])
         self.update_new_value(
             planID=planID, column=options.values[option], newValue=newValue)
+        if options.values[option] == 'startDate':
+            if newValue == datetime.date.today():
+                self.update_new_value(planID=planID, column='status', newValue=1)
         print('Succeed!')
 
     def get_new_value(self, planID, column):
         df = pd_read_by_IDs('plan', planID)
-        print('Please input a new value.')
+        print('\n---INPUT A NEW VALUE---')
         match column:
             case 'type':
                 return PlanInput.type()
@@ -124,29 +140,30 @@ class ManageEmergencyPlan:
                 volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
                 refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
                 if refugeeIDs:
-                    print('There are refugees in this plan\n'
+                    warn('There are refugees in this plan\n'
                           'Please make sure no refugees in the plan before close it.')
                     return
                 else:
                     if volunteerIDs:
                         print(
-                            'There are volunteers in this plan, close it will move away those volunteers.')
+                            'There are volunteers in this plan, closing it will remove those volunteers.')
                         with sqlite3.connect('info_files/emergency_system.db') as conn:
                             c = conn.cursor()
                             c.execute(
                                 f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
                             conn.commit()
-                if confirm('This plan is opened\n'
-                           'Do you want to close it now?\n'
-                           'The end date will be set to today if you want to open it.'):
+                if confirm(u'\u2705' + 'This plan is opened\n'
+                           u"\U0001F539" + 'Do you want to close it now?\n'
+                           'Note: The end date of this plan will be set to today date.'):
                     delete_by_IDs('camp', campIDs)
                     self.update_new_value(planID, 'status', 2)
                     self.update_new_value(
                         planID, 'endDate', datetime.date.today())
                     print('Succeed!')
+                    print(u'\u2705',f"This plan ID: {planID} is successfully closed.")
                     return
             case 2:
-                print('This plan has been closed, you can not change it.')
+                warn('This plan has been closed, you can not change it.')
                 return
 
     def delete_emergency_plan(self, planID):

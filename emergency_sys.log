@@ -1,0 +1,49 @@
+2022-12-13 21:31:06,878 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 250, in display_account_byID
+    sch = get_volunteer_schedule_df(c,campID=0,volunteer_ID=ID,purpose ="Display")
+  File "/Users/beautiez/Documents/emergency-system/core_code/db_connect_ref.py", line 97, in get_volunteer_schedule_df
+    pd_select = pd.read_sql_query(query,conn)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/io/sql.py", line 397, in read_sql_query
+    return pandas_sql.read_query(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/io/sql.py", line 2078, in read_query
+    cursor = self.execute(*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/io/sql.py", line 2016, in execute
+    cur = self.con.cursor()
+AttributeError: 'sqlite3.Cursor' object has no attribute 'cursor'
+2022-12-13 22:09:26,314 — ERROR : 5 is an invalid ID
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 261, in display_account_byID
+    print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,18,18,18,18,18,18,18))
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 67, in print_table
+    process_row(headers)
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 62, in process_row
+    line.append(str(s)[:short_sizes[n]])
+IndexError: list index out of range
+2022-12-13 22:11:19,494 — ERROR : 5 is an invalid ID
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 261, in display_account_byID
+    print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,18,18,18,18,18,18,18))
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 67, in print_table
+    process_row(headers)
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 62, in process_row
+    line.append(str(s)[:short_sizes[n]])
+IndexError: list index out of range
+2022-12-13 22:13:29,877 — ERROR : 8 is an invalid ID
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 261, in display_account_byID
+    print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,18,18,18,18,18,18,18))
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 67, in print_table
+    process_row(headers)
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 62, in process_row
+    line.append(str(s)[:short_sizes[n]])
+IndexError: list index out of range
+2022-12-13 22:21:00,251 — ERROR : 8 is an invalid ID
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 261, in display_account_byID
+    print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,18,18,18,18,18,18,18))
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 67, in print_table
+    process_row(headers)
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 62, in process_row
+    line.append(str(s)[:short_sizes[n]])
+IndexError: list index out of range

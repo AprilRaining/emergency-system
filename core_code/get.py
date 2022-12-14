@@ -1,5 +1,5 @@
 import datetime
-
+from system_log import *
 from myError import *
 
 
@@ -39,21 +39,21 @@ class Get:
                 return date
 
     @staticmethod
-    def list(start, end, hint=''):
+    def listing(start, end, hint=''):
         while True:
             try:
                 l = input(hint)
-                arr = l.split(' ')
+                arr = l.split(',')
                 for i in range(len(arr)):
                     arr[i] = int(arr[i])
                 for i in arr:
                     if i not in range(start, end):
                         raise InvalidInput(l)
             except InvalidInput as e:
-                print(e)
+                print_log(e)
             except Exception as e:
-                print("unknown error")
-                print(e)
+                print_log("Unknown error")
+                print_log(e)
             else:
                 return arr
 
