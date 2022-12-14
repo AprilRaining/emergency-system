@@ -439,7 +439,7 @@ class Volunteer:
             print(menu())
             match menu_choice_get(menu().count('\n') + 1):
                 case 1:
-                    volunteer_id = input("Enter ur ID")
+                    volunteer_id = self.volunteerID
                     self.view_my_schedule(volunteer_id)
                 case 0:
                     return
@@ -462,19 +462,23 @@ class Volunteer:
                    datetime.datetime.strftime(friday, "%Y-%m-%d"), datetime.datetime.strftime(saturday, "%Y-%m-%d"), \
                    datetime.datetime.strftime(sunday, "%Y-%m-%d")
 
+        day_schedule = []
+
         def display_schedule(volunteer, day, date):
             try:
                 with db.connect('info_files/emergency_system.db') as conn:
                     c = conn.cursor()
-                    c.execute(f'''SELECT * FROM task WHERE volunteerID = (?) and requestDate = (?)''', (volunteer, date))
+                    c.execute(f'''SELECT taskInfo, workShift FROM task WHERE volunteerID = (?) and requestDate = (?)''',
+                              (volunteer, date))
                     task = c.fetchall()
-                    task_info = task[0][3]
-                    task_schedule = task[0][5]
-                if task_schedule == 'morning':
+                    task_info = task[0][0]
+                    task_schedule = task[0][1]
+                global day_schedule
+                if task_schedule == 'Morning':
                     day_schedule = [day, task_info, '/', '/']
-                elif task_schedule == 'afternoon':
+                elif task_schedule == 'Afternoon':
                     day_schedule = [day, '/', task_info, '/']
-                elif task_schedule == 'night':
+                elif task_schedule == 'Night':
                     day_schedule = [day, '/', '/', task_info]
             except IndexError:
                 day_schedule = [day, '/', '/', '/']
