@@ -6,9 +6,7 @@ import sqlite3 as db
 conn = db.connect('emergency_system.db')
 c = conn.cursor()
 
-# To do 
-# Fix exceptions, Add stop button (while loop)
-# change delete functions to include planid and status of the plan
+
 
 
 def validate(date_text):
@@ -31,6 +29,7 @@ class Invalid_input(Exception):
 
 class emergency_plan: 
     def selection(self):
+        print("0. Exit the program.")
         print("1. Create Emergency Plan.")
         print("2. Display Emergency Plan.")
         print("3. Edit Emergency Plan.")
@@ -39,7 +38,9 @@ class emergency_plan:
         loop = True 
         while loop == True:
             try:
-                if self.user == '1':
+                if self.user == '0':
+                    break 
+                elif self.user == '1':
                     create = self.Create_Emergency_Plan()
                     create.add()
                     loop = False
@@ -119,7 +120,10 @@ class emergency_plan:
 
                 else: 
                     dataframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                    self.planID = int(dataframe['planID'].iloc[-1]) + 1
+                    if len(dataframe) == 0:
+                        self.planID = 1
+                    else:
+                        self.planID = int(dataframe['planID'].iloc[-1]) + 1
                     if((self.type in dataframe['Type'].values) & (self.desc in dataframe['Description'].values) & (self.area in dataframe['Area'].values) & (str(self.date) in dataframe['Start Date'].values) & (self.camp in dataframe['# camps'].values)):
                         print(dataframe.to_string(index=False))
                     else:
@@ -128,7 +132,10 @@ class emergency_plan:
                         newdataframe.to_sql('plan', conn, index= False, if_exists="append")
                         updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
                         campframe = pd.read_sql_query('SELECT * FROM camp', conn)
-                        campID = int(campframe['campID'].iloc[-1]) + 1
+                        if len(campframe) == 0: 
+                            campID = 1
+                        else: 
+                            campID = int(campframe['campID'].iloc[-1]) + 1
                         for i in range(int(self.camp)):
                             c.execute("INSERT INTO camp (campID, capacity, planID) VALUES (?, ?, ?)", (campID + i, 20, self.planID))
                         conn.commit()
@@ -146,12 +153,15 @@ class emergency_plan:
     class Delete_Emergency_Plan:
          def __init__(self):
             print('Do you want to delete the emergencey plan now: ')
+            print('0. Exit')
             print('1. Now')
             self.when = input('Please enter your choice: ')
             loop = True
             while loop == True: 
                 try:
-                 if self.when == '1':
+                 if self.when == '0':
+                    break 
+                 elif self.when == '1':
                         self.delete_now()
                         loop = False
                  else: 
@@ -162,6 +172,7 @@ class emergency_plan:
                 
         #Delete Plan Now
          def delete_now(self):
+            print('0. Exit.')
             print('1. Delete by viewing the type of the emergency plan.')
             print('2. Delete by viewing the start date of the emergency plan.')
             print('3. Delete by viewing the geographical area of the emergency plan.')
@@ -169,7 +180,9 @@ class emergency_plan:
             loop = True
             while loop == True: 
                 try:
-                 if self.choice == '1':
+                 if self.choice == '0':
+                    break 
+                 elif self.choice == '1':
                         loop = False
                         typeframe = pd.read_sql_query('SELECT * FROM plan', conn)
                         print(f'The choices of type are: {set(typeframe.Type.values)}.')
@@ -183,68 +196,84 @@ class emergency_plan:
                                     finalframe = finalframe.reset_index(drop = True)
                                     print(finalframe)
                                     self.row = input('Please choose which row starting from 0 above you want to delete: ')
-                                    date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
-                                    date = date_format.split('-')
                                     loop2 = True
                                     loop3 = True
                                     while loop2 == True:
-                                        try:
-                                            row = finalframe.iloc[int(self.row)]
-                                            planID = row[0]
-                                            type = row[1]
-                                            desc = row[2]
-                                            area = row[3]
-                                            start_date = row[4]
-                                            camp = row[5]
-                                            status = row[6]
-                                            self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-                                            start_date_raw = start_date.split('-')
-                                            start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
-                                            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.close >= start_datetime:
-                                                loop2 = False
-                                                while loop3 == True: 
-                                                    try:
-                                                        if int(self.row) in finalframe.index:
-                                                            loop3 = False
-                                                            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
-                                                            if len(c.fetchall()) == 0: 
-                                                                  newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
-                                                                  'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
-                                                                  'Clost Date': [self.close], 'status': [2]})
-                                                                  newdataframe.to_sql('delete', conn, index= False)
+                                        try: 
+                                            if self.row.isdigit():  
+                                                try:
+                                                    if int(self.row) in finalframe.index:
+                                                        row = finalframe.iloc[int(self.row)]
+                                                        planID = row[0]
+                                                        type = row[1]
+                                                        desc = row[2]
+                                                        area = row[3]
+                                                        start_date = row[4]
+                                                        camp = row[5]
+                                                        status = row[6]
+                                                        loop2 = False
+                                                        while loop3 == True: 
+                                                            try:
+                                                                date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ')
+                                                                if validate(date_format) == True:
+                                                                    date = date_format.split('-')
+                                                                    try:
+                                                                        self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+                                                                        start_date_raw = start_date.split('-')
+                                                                        start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
+                                                                        if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.close >= start_datetime and validate(date_format) == True:
+                                                                            loop3 = False
+                                                                            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
+                                                                            if len(c.fetchall()) == 0: 
+                                                                                newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
+                                                                                'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                                'Clost Date': [self.close], 'status': [2]})
+                                                                                newdataframe.to_sql('delete', conn, index= False)
                                                                  
-                                                            else: 
-                                                                 newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
-                                                                 'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
-                                                                 'Clost Date': [self.close], 'status': [2]})
-                                                                 newdataframe.to_sql('delete', conn, index= False, if_exists="append")
+                                                                            else: 
+                                                                                newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
+                                                                                'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                                'Clost Date': [self.close], 'status': [2]})
+                                                                                newdataframe.to_sql('delete', conn, index= False, if_exists="append")
                                                                  
                                                                  
                                                              
-                                                            index = typeframe[(typeframe['planID'] == planID) & (typeframe['Type'] == type) &
-                                                            (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
-                                                            (typeframe['Start Date'] == start_date) & (typeframe['# camps'] == camp)
-                                                            & (typeframe['status'] == status)].index
-                                                            typeframe = typeframe.drop(index)
-                                                            typeframe.to_sql('plan', conn, index= False, if_exists="replace")
-                                                            updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                                                            print(updatedframe.to_string(index=False))
+                                                                            index = typeframe[(typeframe['planID'] == planID) & (typeframe['Type'] == type) &
+                                                                            (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
+                                                                            (typeframe['Start Date'] == start_date) & (typeframe['# camps'] == camp)
+                                                                            & (typeframe['status'] == status)].index
+                                                                            typeframe = typeframe.drop(index)
+                                                                            typeframe.to_sql('plan', conn, index= False, if_exists="replace")
+                                                                            updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
+                                                                            print(updatedframe.to_string(index=False))
 
-                                                            campframe = pd.read_sql_query('SELECT * FROM camp', conn)
-                                                            index1 = campframe[campframe['planID'] == planID].index
-                                                            campframe = campframe.drop(index1)
-                                                            campframe.to_sql('camp', conn, index= False, if_exists="replace")
-                                                        else: 
-                                                             raise Invalid_input(self.row)
-                                                    except Invalid_input as e:
-                                                            print(e)
-                                                            self.row = input('Please enter your choice: ')
-                                            else: 
-                                                raise Invalid_input(date_format)
+                                                                            campframe = pd.read_sql_query('SELECT * FROM camp', conn)
+                                                                            index1 = campframe[campframe['planID'] == planID].index
+                                                                            campframe = campframe.drop(index1)
+                                                                            campframe.to_sql('camp', conn, index= False, if_exists="replace")
+                                                                        else: 
+                                                                            raise Invalid_input(date_format)
+                                                                    except Invalid_input as e:
+                                                                        print(e)
+                                                                else:
+                                                                    raise Invalid_input(date_format) 
+                                                            except Invalid_input as e:
+                                                                print(e)
+                                                        
+                                                        
+
+                                                    else: 
+                                                        raise Invalid_input(self.row)
+                                                except Invalid_input as e:
+                                                    print(e)
+                                                    self.row = input('Please enter your choice: ')
+                                            else:
+                                                raise Invalid_input(self.row)
                                         except Invalid_input as e:
                                             print(e)
-                                            date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
-                                            date = date_format.split('-')
+                                            self.row = input('Please enter your choice: ')
+
+
                                 else: 
                                     raise Invalid_input(self.type)
                             except Invalid_input as e:
@@ -255,90 +284,103 @@ class emergency_plan:
                         loop = False
                         typeframe = pd.read_sql_query('SELECT * FROM plan', conn)
                         print(set(typeframe['Start Date']))
-                        self.date = input('Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
-                        start_date_entered = self.date.split('-')
                         loop1 = True
                         while loop1 == True:
                             try:
-                                if (2000 <= int(start_date_entered[0])) and (1 <= int(start_date_entered[1]) <= 12) and (1 <= int(start_date_entered[2]) <= 31) and self.date in set(typeframe['Start Date']):
+                                self.date = input('Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
+                                if self.date in set(typeframe['Start Date']):
                                     loop1 = False
                                     finalframe = typeframe[typeframe['Start Date'] == self.date]
                                     finalframe = finalframe.reset_index(drop = True)
                                     print(finalframe)
                                     self.row = input('Please choose which row starting from 0 above you want to delete: ')
-                                    date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
-                                    date = date_format.split('-')
                                     loop2 = True
                                     loop3 = True
                                     while loop2 == True:
                                         try:
-                                            row = finalframe.iloc[int(self.row)]
-                                            planID = row[0]
-                                            type = row[1]
-                                            desc = row[2]
-                                            area = row[3]
-                                            start_date = row[4]
-                                            camp = row[5]
-                                            status = row[6]
-                                            self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-                                            start_date_raw = start_date.split('-')
-                                            start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
-                                            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.close >= start_datetime:
-                                                loop2 = False
-                                                while loop3 == True: 
-                                                    try:
-                                                        if int(self.row) in finalframe.index:
-                                                            loop3 = False
-                                                            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
-                                                            if len(c.fetchall()) == 0: 
-                                                                  newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
-                                                                  'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
-                                                                  'Clost Date': [self.close], 'status': [2]})
-                                                                  newdataframe.to_sql('delete', conn, index= False)
+                                            if self.row.isdigit():
+                                                try:
+                                                    if int(self.row) in finalframe.index:
+                                                        row = finalframe.iloc[int(self.row)]
+                                                        planID = row[0]
+                                                        type = row[1]
+                                                        desc = row[2]
+                                                        area = row[3]
+                                                        start_date = row[4]
+                                                        camp = row[5]
+                                                        status = row[6]
+                                                        loop2 = False
+                                                        while loop3 == True: 
+                                                            try:
+                                                                date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
+                                                                if validate(date_format) == True: 
+                                                                    date = date_format.split('-')
+                                                                    try:
+                                                                        self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+                                                                        start_date_raw = start_date.split('-')
+                                                                        start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
+                                                                        if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.close >= start_datetime:
+                                                                            loop3 = False
+                                                                            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
+                                                                            if len(c.fetchall()) == 0: 
+                                                                                newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
+                                                                                'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                                'Clost Date': [self.close], 'status': [2]})
+                                                                                newdataframe.to_sql('delete', conn, index= False)
                                                                  
-                                                            else: 
-                                                                 newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
-                                                                 'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
-                                                                 'Clost Date': [self.close], 'status': [2]})
-                                                                 newdataframe.to_sql('delete', conn, index= False, if_exists="append")
+                                                                            else: 
+                                                                                newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
+                                                                                'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                                'Clost Date': [self.close], 'status': [2]})
+                                                                                newdataframe.to_sql('delete', conn, index= False, if_exists="append")
                                                             
-                                                                 
-                                                           
-                                                                    
-                                                            index = typeframe[(typeframe['planID'] == planID) & (typeframe['Type'] == type) &
-                                                            (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
-                                                            (typeframe['Start Date'] == start_date) & (typeframe['# camps'] == camp)
-                                                            & (typeframe['status'] == status)].index
-                                                            typeframe = typeframe.drop(index)
-                                                            typeframe.to_sql('plan', conn, index= False, if_exists="replace")
-                                                            updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                                                            print(updatedframe.to_string(index=False))
+                                                                        
+                                                                            index = typeframe[(typeframe['planID'] == planID) & (typeframe['Type'] == type) &
+                                                                            (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
+                                                                            (typeframe['Start Date'] == start_date) & (typeframe['# camps'] == camp)
+                                                                            & (typeframe['status'] == status)].index
+                                                                            typeframe = typeframe.drop(index)
+                                                                            typeframe.to_sql('plan', conn, index= False, if_exists="replace")
+                                                                            updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
+                                                                            print(updatedframe.to_string(index=False))
 
-                                                            campframe = pd.read_sql_query('SELECT * FROM camp', conn)
-                                                            index1 = campframe[campframe['planID'] == planID].index
-                                                            campframe = campframe.drop(index1)
-                                                            campframe.to_sql('camp', conn, index= False, if_exists="replace")
+                                                                            campframe = pd.read_sql_query('SELECT * FROM camp', conn)
+                                                                            index1 = campframe[campframe['planID'] == planID].index
+                                                                            campframe = campframe.drop(index1)
+                                                                            campframe.to_sql('camp', conn, index= False, if_exists="replace")
                                                              
-                                                        else: 
-                                                             raise Invalid_input(self.row)
-                                                    except Invalid_input as e:
-                                                            print(e)
-                                                            self.row = input('Please enter your choice: ')
-                                            else: 
-                                                raise Invalid_input(date_format)
+                                                                        else: 
+                                                                            raise Invalid_input(date_format)
+                                                                    except Invalid_input as e:
+                                                                        print(e)
+                                                                else:
+                                                                    raise Invalid_input(date_format)
+                                                            except Invalid_input as e:
+                                                                print(e)
+                                                           
+                                                            
+                                                    else: 
+                                                        raise Invalid_input(self.row)
+                                                except Invalid_input as e:
+                                                    print(e)
+                                                    self.row = input('Please enter your choice: ')
+                                            else:
+                                                raise Invalid_input(self.row)
                                         except Invalid_input as e:
                                             print(e)
-                                            date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
-                                            date = date_format.split('-')
+                                            self.row = input('Please enter your choice: ')
+
+                                        
+                                            
                                 else: 
                                     raise Invalid_input(self.date)
                             except Invalid_input as e:
                                  print(e)
-                                 self.date = input('Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
+                                
                  elif self.choice == '3':
                     loop = False
                     typeframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                    print(f'The choices of type are: {set(typeframe.Area.values)}.')
+                    print(f'The choices of area are: {set(typeframe.Area.values)}.')
                     self.area = input('Please enter the area of the emergency plan you want to view and then delete: ')
                     loop1 = True
                     while loop1 == True:
@@ -349,72 +391,88 @@ class emergency_plan:
                                     finalframe = finalframe.reset_index(drop = True)
                                     print(finalframe)
                                     self.row = input('Please choose which row starting from 0 above you want to delete: ')
-                                    date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
-                                    date = date_format.split('-')
                                     loop2 = True
                                     loop3 = True
                                     while loop2 == True:
-                                        try:
-                                            row = finalframe.iloc[int(self.row)]
-                                            planID = row[0]
-                                            type = row[1]
-                                            desc = row[2]
-                                            area = row[3]
-                                            start_date = row[4]
-                                            camp = row[5]
-                                            status = row[6]
-                                            self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-                                            start_date_raw = start_date.split('-')
-                                            start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2]))
-                                            if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.close >= start_datetime:
-                                                loop2 = False
-                                                while loop3 == True: 
-                                                    try:
-                                                        if int(self.row) in finalframe.index:
-                                                            loop3 = False
-                                                            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
-                                                            if len(c.fetchall()) == 0: 
-                                                                  newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
-                                                                  'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
-                                                                  'Clost Date': [self.close], 'status': [2]})
-                                                                  newdataframe.to_sql('delete', conn, index= False)
+                                        try: 
+                                            if self.row.isdigit() == True:
+                                                try:
+                                                    if int(self.row) in finalframe.index:
+                                                        row = finalframe.iloc[int(self.row)]
+                                                        planID = row[0]
+                                                        type = row[1]
+                                                        desc = row[2]
+                                                        area = row[3]
+                                                        start_date = row[4]
+                                                        camp = row[5]
+                                                        status = row[6]
+                                                        loop2 = False
+                                                        while loop3 == True: 
+                                                            try:
+                                                                date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ')
+                                                                if validate(date_format) == True:
+                                                                    date = date_format.split('-')
+                                                                    try:
+                                                                         self.close = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+                                                                         start_date_raw = start_date.split('-')
+                                                                         start_datetime = datetime.date(int(start_date_raw[0]),  int(start_date_raw[1]), int(start_date_raw[2])) 
+
+                                                                         if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31) and self.close >= start_datetime:
+                                                                            loop3 = False
+                                                                            c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
+                                                                            if len(c.fetchall()) == 0: 
+                                                                                 newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
+                                                                                'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                                'Clost Date': [self.close], 'status': [2]})
+                                                                                 newdataframe.to_sql('delete', conn, index= False)
                                                                  
-                                                            else: 
-                                                                 newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
-                                                                 'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
-                                                                 'Clost Date': [self.close], 'status': [2]})
-                                                                 newdataframe.to_sql('delete', conn, index= False, if_exists="append")
+                                                                            else: 
+                                                                                newdataframe = pd.DataFrame({'planID': [planID], 'Type': [type], 'Description': [desc], 
+                                                                                'Area': [area], 'Start Date': [start_date], '# camps': [camp], 
+                                                                                'Clost Date': [self.close], 'status': [2]})
+                                                                                newdataframe.to_sql('delete', conn, index= False, if_exists="append")
                                                                  
                                                                  
                                                            
                                                                     
-                                                            index = typeframe[(typeframe['planID'] == planID) & (typeframe['Type'] == type) &
-                                                            (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
-                                                            (typeframe['Start Date'] == start_date) & (typeframe['# camps'] == camp)
-                                                            & (typeframe['status'] == status)].index
-                                                            typeframe = typeframe.drop(index)
-                                                            typeframe.to_sql('plan', conn, index= False, if_exists="replace")
-                                                            updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                                                            print(updatedframe.to_string(index=False))
+                                                                            index = typeframe[(typeframe['planID'] == planID) & (typeframe['Type'] == type) &
+                                                                            (typeframe['Description'] == desc) & (typeframe['Area'] == area) & 
+                                                                            (typeframe['Start Date'] == start_date) & (typeframe['# camps'] == camp)
+                                                                            & (typeframe['status'] == status)].index
+                                                                            typeframe = typeframe.drop(index)
+                                                                            typeframe.to_sql('plan', conn, index= False, if_exists="replace")
+                                                                            updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
+                                                                            print(updatedframe.to_string(index=False))
 
-                                                            campframe = pd.read_sql_query('SELECT * FROM camp', conn)
-                                                            index1 = campframe[campframe['planID'] == planID].index
-                                                            campframe = campframe.drop(index1)
-                                                            campframe.to_sql('camp', conn, index= False, if_exists="replace")
+                                                                            campframe = pd.read_sql_query('SELECT * FROM camp', conn)
+                                                                            index1 = campframe[campframe['planID'] == planID].index
+                                                                            campframe = campframe.drop(index1)
+                                                                            campframe.to_sql('camp', conn, index= False, if_exists="replace")
 
 
 
-                                                        else: 
-                                                             raise Invalid_input(self.row)
-                                                    except Invalid_input as e:
-                                                            print(e)
-                                                            self.row = input('Please enter your choice: ')
-                                            else: 
-                                                raise Invalid_input(date_format)
+                                                                         else: 
+                                                                            raise Invalid_input(date_format)
+                                                                    except Invalid_input as e:
+                                                                        print(e)
+                                                                else:
+                                                                    raise Invalid_input(date_format)
+                                                            except Invalid_input as e:
+                                                                print(e)  
+                                                            
+                                                    else: 
+                                                        raise Invalid_input(self.row)
+                                                except Invalid_input as e:
+                                                    print(e)
+                                                    self.row = input('Please enter your choice: ')
+                                            else:
+                                                raise Invalid_input(self.row)
                                         except Invalid_input as e:
                                             print(e)
-                                            date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
-                                            date = date_format.split('-')
+                                            self.row = input('Please enter your choice: ')
+
+                                        
+                                            
                                 else: 
                                     raise Invalid_input(self.area)
                             except Invalid_input as e:
