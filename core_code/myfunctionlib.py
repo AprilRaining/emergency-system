@@ -135,7 +135,7 @@ def back(hint=''):
 
 def search(table, column, keyword):
     result = []
-    if type(keyword) == type(''):
+    if type(keyword) == str:
         keyword = "'%{}%'".format(keyword)
     with sqlite3.connect('info_files/emergency_system.db') as conn:
         c = conn.cursor()
@@ -151,3 +151,7 @@ def list_to_sqlite_string(indexList):
         return '(' + ','.join(indexList) + ')'
     elif type(indexList) == int:
         return '({})'.format(indexList)
+
+def print_dataframe(df):
+    pass
+

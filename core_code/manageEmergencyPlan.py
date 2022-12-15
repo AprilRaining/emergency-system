@@ -1,10 +1,13 @@
+import os
+import sys
+
 from planInput import *
 from sqliteFunctions import *
-import sys
-import os
+
 # print(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Emergency_Plan.emergency_plan_sql import emergency_plan
+
 
 class ManageEmergencyPlan:
 
@@ -24,7 +27,8 @@ class ManageEmergencyPlan:
                     self.edit_emergency_plan(select_sqlite('plan'))
                     back()
                 case 3:
-                    display_by_IDs('plan', get_all_IDs('plan'))
+                    # self.display_plans(get_all_IDs('plan'))
+                    self.test(get_all_IDs('plan'))
                     back()
                 case 4:
                     self.close_or_open_emergency_plan(select_sqlite('plan'))
@@ -106,6 +110,21 @@ class ManageEmergencyPlan:
             c.execute("update plan set {} = '{}' where planID = {}"
                       .format(column, newValue, planID))
             conn.commit()
+
+    def display_plans(self, planIDs):
+        df = pd_read_by_IDs('plan', planIDs)
+        numberOfVolunteers = []
+        numberOfRefugees = []
+        for planID in planIDs:
+            campIDs = get_linked_IDs('camp', 'plan', planID)
+            volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
+            numberOfVolunteers.append(len(volunteerIDs))
+            refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+            numberOfRefugees.append(len(refugeeIDs))
+        df['numberOfVolunteers'] = numberOfVolunteers
+        df['numberOfRefugees'] = numberOfRefugees
+        df['status'] = df.apply(lambda a: self.status_to_string(a), axis=1)
+        print(df.to_string(index=False))
 
     def close_or_open_emergency_plan(self, planID):
         df = pd_read_by_IDs('plan', planID)
@@ -203,3 +222,13 @@ class ManageEmergencyPlan:
                     'insert into camp (capacity, planID) values (20, {})'.format(seqPlan + 1))
                 conn.commit()
             return seqPlan + 1
+
+    @staticmethod
+    def status_to_string(df):
+        match df['status']:
+            case 0:
+                return 'Not opened'
+            case 1:
+                return 'Opened'
+            case 2:
+                return 'Closed'

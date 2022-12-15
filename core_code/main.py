@@ -13,8 +13,6 @@ pd.set_option('display.max_rows', None)
 pd.set_option('max_colwidth', 100)
 
 sys.path.insert(0, os.getcwd())
-# print(sys.path)
-
 
 if __name__ == "__main__":
     """
