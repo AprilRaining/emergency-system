@@ -1,3 +1,4 @@
+import datetime
 import inspect
 import sqlite3
 
@@ -154,5 +155,8 @@ def list_to_sqlite_string(indexList):
         return '({})'.format(indexList)
 
 
-def print_plan(df):
-    pass
+def to_date(date):
+    if type(date) == str:
+        return datetime.datetime.strptime(date, '%Y-%m-%d').date()
+    else:
+        return date

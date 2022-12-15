@@ -81,12 +81,13 @@ def search_sqlite(table):
         return IDs
 
 
-def select_sqlite(table):
-    IDs = get_all_IDs(table)
+def select_sqlite(table, IDs):
+    IDsBackUp = IDs
     while True:
         display_by_IDs(table, IDs)
         if not IDs:
-            IDs = get_all_IDs(table)
+            IDs = IDsBackUp
+            display_by_IDs(table, IDs)
         print("\n", u"\U0001F531" +
               '[Hint]Input 0 to search by other keys e.g area, status')
         IDs.append(0)

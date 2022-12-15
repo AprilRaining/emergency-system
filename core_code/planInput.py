@@ -1,5 +1,6 @@
 from options import *
 from system_log import *
+from myfunctionlib import *
 
 
 class PlanInput:
@@ -55,46 +56,21 @@ class PlanInput:
             case 1:
                 return datetime.date.today()
             case 0:
-                while True:
-                    date = Get.data(
-                        u"\U0001F539"+ 'Please input the start date of the emergency plan in the format of yyyy-mm-dd: ')
-                    if date > datetime.date.today():
-                        return date
-                    else:
-                        warn('Please input a data later than today.')
+                return PlanInput.start_date_manual_input()
 
     @staticmethod
     def end_date(startDate):
         print('End Date:')
-        if type(startDate) == type(''):
-            startDate = datetime.datetime.strptime(
-                startDate, '%Y-%m-%d').date()
         options = Options([
-            'Today',
             'Input later'
         ])
         print(options)
         while True:
             match options.get_option():
                 case 1:
-                    while True:
-                        if startDate < datetime.date.today():
-                            return datetime.date.today().strftime('%Y-%m-%d')
-                        else:
-                            warn(
-                                '*End date is equal or earlier than the start date, please input a valid date.*')
-                            break
-                case 2:
                     return None
                 case 0:
-                    while True:
-                        endDate = Get.data(
-                            u"\U0001F539"+ 'Please input the close date of the emergency plan in the format of yyyy-mm-dd: ')
-                        if startDate < endDate:
-                            return endDate.strftime('%Y-%m-%d')
-                        else:
-                            warn(
-                                '*Close date is equal or earlier than the start date, please input a valid date.*')
+                    PlanInput.end_date_manual_input(startDate)
 
     @staticmethod
     def number_of_camps():
@@ -109,3 +85,31 @@ class PlanInput:
         ], limited=True)
         print(options)
         return options.get_option()
+
+    def start_date_update():
+        return PlanInput.start_date_manual_input()
+
+    @staticmethod
+    def end_date_update(startDate):
+        return PlanInput.end_date_manual_input(startDate)
+
+    @staticmethod
+    def end_date_manual_input(startDate):
+        while True:
+            endDate = Get.data(
+                u"\U0001F539" + 'Please input the close date of the emergency plan in the format of yyyy-mm-dd: ')
+            if startDate < endDate:
+                return endDate.strftime('%Y-%m-%d')
+            else:
+                warn(
+                    '*Close date is equal or earlier than the start date, please input a valid date.*')
+
+    @staticmethod
+    def start_date_manual_input():
+        while True:
+            date = Get.data(
+                u"\U0001F539" + 'Please input the start date of the emergency plan in the format of yyyy-mm-dd: ')
+            if date > datetime.date.today():
+                return date
+            else:
+                warn('Please input a data later than today.')
