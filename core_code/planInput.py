@@ -65,35 +65,19 @@ class PlanInput:
     @staticmethod
     def end_date(startDate):
         print('End Date:')
-        if type(startDate) == type(''):
+        if type(startDate) == str:
             startDate = datetime.datetime.strptime(
                 startDate, '%Y-%m-%d').date()
         options = Options([
-            'Today',
             'Input later'
         ])
         print(options)
         while True:
             match options.get_option():
                 case 1:
-                    while True:
-                        if startDate < datetime.date.today():
-                            return datetime.date.today().strftime('%Y-%m-%d')
-                        else:
-                            print(
-                                '*End date is equal or earlier than start date please input a valid date*')
-                            break
-                case 2:
                     return None
                 case 0:
-                    while True:
-                        endDate = Get.data(
-                            'Please input the close date of the emergency plan in the format of yyyy-mm-dd: ')
-                        if startDate < endDate:
-                            return endDate.strftime('%Y-%m-%d')
-                        else:
-                            print(
-                                '*close date is equal or earlier than start date please input a valid date*')
+                    PlanInput.end_date_manual_input(startDate)
 
     @staticmethod
     def number_of_camps():
@@ -108,3 +92,21 @@ class PlanInput:
         ], limited=True)
         print(options)
         return options.get_option()
+
+    @staticmethod
+    def end_date_update(startDate):
+        if type(startDate) == str:
+            startDate = datetime.datetime.strptime(
+                startDate, '%Y-%m-%d').date()
+        PlanInput.end_date_manual_input(startDate)
+
+    @staticmethod
+    def end_date_manual_input(startDate):
+        while True:
+            endDate = Get.data(
+                'Please input the close date of the emergency plan in the format of yyyy-mm-dd: ')
+            if startDate < endDate:
+                return endDate.strftime('%Y-%m-%d')
+            else:
+                print(
+                    '*End date is equal or earlier than start date please input a valid date*')

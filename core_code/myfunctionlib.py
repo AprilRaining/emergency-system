@@ -152,6 +152,5 @@ def list_to_sqlite_string(indexList):
     elif type(indexList) == int:
         return '({})'.format(indexList)
 
-def print_plan(df):
-    pass
+    
 

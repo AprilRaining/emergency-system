@@ -113,7 +113,7 @@ class ManageEmergencyPlan:
 
     def view_plans(self, planIDs):
         TableDisplayer.plan(planIDs)
-        self.select_in_camp(self.select_in_plan(planIDs))
+        self.select_in_camp_from(self.select_in_plan_from(planIDs))
 
     def close_or_open_emergency_plan(self, planID):
         df = pd_read_by_IDs('plan', planID)
@@ -215,7 +215,7 @@ class ManageEmergencyPlan:
             return seqPlan + 1
 
     @staticmethod
-    def select_in_plan(planIDs):
+    def select_in_plan_from(planIDs):
         while True:
             option = input(f"Input a plan ID to view more detail or 'q' to quit:")
             if option != 'q':
@@ -238,7 +238,7 @@ class ManageEmergencyPlan:
                 return False
 
     @staticmethod
-    def select_in_camp(campIDs):
+    def select_in_camp_from(campIDs):
         while True:
             option = input(f"Input a camp ID to view more detail or 'q' to quit:")
             if option != 'q':
