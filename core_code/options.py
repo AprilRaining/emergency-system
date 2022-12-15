@@ -10,7 +10,7 @@ class Options:
         if not self.limited:
             for i in range(self.len):
                 temp.append('[ {}.] {}'.format(i + 1, self.values[i]))
-            temp.append('0. Manual input.')
+            temp.append('Enter 0 for Manual input.')
             self.optionRange = self.len + 1
         else:
             for i in range(self.len):
@@ -21,5 +21,5 @@ class Options:
     def __str__(self):
         return self.menu
 
-    def get_option(self, hint='Please choose one option: '):
+    def get_option(self, hint=u"\U0001F539"+'Please choose one option: '):
         return Get.option_in_range(self.optionRange, hint)

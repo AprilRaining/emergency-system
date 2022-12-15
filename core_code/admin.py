@@ -6,6 +6,7 @@ from accountInput import *
 import sqlite3 as db
 from db_connect_ref import *
 from system_log import *
+from db_connect_ref import *
 
 
 class Admin:
@@ -220,6 +221,9 @@ class Admin:
             # status default 1 !!!!!!!!!!
             c.execute(sql, new_volunteer)
             conn.commit()
+            vol_df = get_volunteer_schedule_df(conn,purpose="Display")
+            vol_id = vol_df['volunteerID'].iloc[-1]
+            print(f"\nNew volunteer ID created: [{vol_id}]\n")
             print(u'\u2705',"New volunteer account is successfully created!")
 
     def display_volunteer_account(self):
@@ -316,6 +320,7 @@ class Admin:
         print("--------------------------------------------------------")
         print("\t\tDELETE VOLUNTEER ACCOUNT\n")
         ID = input(u"\U0001F539"+'Enter the volunteer ID you would like to delete:')
+        print("\n")
         try:
             with db.connect('info_files/emergency_system.db') as conn:
                 c = conn.cursor()

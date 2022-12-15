@@ -153,7 +153,7 @@ class AccountCreation:
     def confirm_deletion():
         while True:
             try:
-                work_or_not = input(u"\U0001F539"+"Do you confirm to delete this account? (Enter 'Y/y' as yes, 'N/n' as no): ")
+                work_or_not = input("\n"+u"\U0001F539"+"Do you confirm to delete this account? (Enter 'Y/y' as yes, 'N/n' as no): ")
                 if work_or_not == 'Y' or work_or_not == 'y':
                     choice = 1
                 elif work_or_not == 'N' or work_or_not == 'n':

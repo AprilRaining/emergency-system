@@ -14,12 +14,14 @@ class ManageEmergencyPlan:
 
     def sub_main(self):
         print("--------------------------------------------------------")
-        print("\t\t\tPLAN MANAGEMENT\n")
+        print("\t\tPLAN MANAGEMENT\n")
         while True:
             print(self.menu)
             match menu_choice_get(self.menu.count('\n') + 1, "\n-->"):
                 case 1:
                     # self.create_emergency_plan()
+                    print("--------------------------------------------------------")
+                    print("\t\tCREATE EMERGENCY PLAN\n")
                     create = emergency_plan.Create_Emergency_Plan()
                     create.add()
                     print("\n",u'\u2705','New emergency plan is successfully created.')
@@ -76,21 +78,20 @@ class ManageEmergencyPlan:
                     'endDate',
                     'numberOfCamps',
                 ], limited=True)
-                print('This plan has not been opened.\n'
-                      u"\U0001F539" + 'Please choose one of properties below that you want to edit:')
+                print("\n"+'This plan has not been opened.\n')
             case 1:
                 options = Options([
                     'description',
                     'endDate',
                 ], limited=True)
-                print(u'\u2705','This plan has been opened.\n'
-                      u"\U0001F539" + 'Please choose one of properties below that you want to edit: ')
+                print("\n",u'\u2705','This plan has been opened.\n')
+                print("\n")
             case 2:
-                warn('This plan has been closed, you can not change it.')
+                warn('This plan has been closed. You are not allowed change it.')
                 return
         print(options)
         option = options.get_option(
-            u"\U0001F539" + 'Please choose one of properties below that you want to edit: ')
+            u"\U0001F539" + 'Please choose one of properties above that you want to edit: ')
         newValue = self.get_new_value(planID, options.values[option])
         self.update_new_value(
             planID=planID, column=options.values[option], newValue=newValue)
@@ -164,7 +165,7 @@ class ManageEmergencyPlan:
                     print(u'\u2705',f"This plan ID: {planID} is successfully closed.")
                     return
             case 2:
-                warn('This plan has been closed, you can not change it.')
+                warn('This plan has been closed. You are not allowed change it.')
                 return
 
     def delete_emergency_plan(self, planID):

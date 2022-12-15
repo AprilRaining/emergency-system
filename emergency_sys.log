@@ -47,3 +47,146 @@ Traceback (most recent call last):
   File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 62, in process_row
     line.append(str(s)[:short_sizes[n]])
 IndexError: list index out of range
+2022-12-14 12:27:01,489 — ERROR : There is no search result, please change your keyword.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 133, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-14 14:19:07,131 — ERROR : Your input number is invalid in our options. Please try again.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 168, in numerical_input_check
+    raise InvalidChoiceError(v)
+myError.InvalidChoiceError: 555 is an invalid choice.
+Please reenter a number specified above.
+2022-12-14 14:20:10,818 — ERROR : Your input is invalid. Please enter either 'Yes' or 'No'
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 206, in yn_valid
+    raise exc.wrong_yn_input
+refugee_exception.wrong_yn_input
+2022-12-14 14:34:29,204 — ERROR : Please enter a single numerical value for your selected options.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 189, in single_input_check
+    raise ValueError
+ValueError
+2022-12-14 16:04:30,392 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 46, in <module>
+    utilities.admin_login()
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 11, in admin_login
+    password = input(u"\U0001F539"+"Input the password of admin:")
+KeyboardInterrupt
+2022-12-14 16:06:07,591 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 46, in <module>
+    utilities.admin_login()
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 11, in admin_login
+    password = input(u"\U0001F539"+"Input the password of admin:")
+KeyboardInterrupt
+2022-12-14 16:13:46,999 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 46, in <module>
+    utilities.admin_login()
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 11, in admin_login
+    password = input(u"\U0001F539"+"Input the password of admin:")
+KeyboardInterrupt
+2022-12-14 23:52:16,972 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 33, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 51, in sub_main
+    back()
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
+    key = input('Input "Q/q" to go back:')
+KeyboardInterrupt
+2022-12-14 23:54:34,062 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 97, in check_plan
+    c.execute("update plan set status = 1 where startDate >= DATE()")
+sqlite3.OperationalError: database is locked
+2022-12-14 23:54:34,064 — ERROR : database is locked
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 97, in check_plan
+    c.execute("update plan set status = 1 where startDate >= DATE()")
+sqlite3.OperationalError: database is locked
+2022-12-14 23:54:55,277 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 97, in check_plan
+    c.execute("update plan set status = 1 where startDate >= DATE()")
+sqlite3.OperationalError: database is locked
+2022-12-14 23:54:55,278 — ERROR : database is locked
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 97, in check_plan
+    c.execute("update plan set status = 1 where startDate >= DATE()")
+sqlite3.OperationalError: database is locked
+2022-12-15 00:08:56,443 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 33, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 51, in sub_main
+    back()
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
+    key = input('Input "Q/q" to go back:')
+KeyboardInterrupt
+2022-12-15 00:47:07,717 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 33, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 43, in sub_main
+    self.close_or_open_emergency_plan(select_sqlite('plan'))
+  File "/Users/beautiez/Documents/emergency-system/core_code/sqliteFunctions.py", line 94, in select_sqlite
+    IDs = search_sqlite(table)
+  File "/Users/beautiez/Documents/emergency-system/core_code/sqliteFunctions.py", line 75, in search_sqlite
+    option = options.get_option(
+  File "/Users/beautiez/Documents/emergency-system/core_code/options.py", line 25, in get_option
+    return Get.option_in_range(self.optionRange, hint)
+  File "/Users/beautiez/Documents/emergency-system/core_code/get.py", line 64, in option_in_range
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 00:48:23,988 — ERROR : You entered a non-numeric value.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/get.py", line 79, in option_in_list
+    option = int(input(hint))
+ValueError: invalid literal for int() with base 10: '#'
+2022-12-15 00:48:23,991 — ERROR : Please reenter a valid Number:
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/get.py", line 79, in option_in_list
+    option = int(input(hint))
+ValueError: invalid literal for int() with base 10: '#'
+2022-12-15 00:52:03,703 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 33, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 43, in sub_main
+    self.close_or_open_emergency_plan(select_sqlite('plan'))
+  File "/Users/beautiez/Documents/emergency-system/core_code/sqliteFunctions.py", line 91, in select_sqlite
+    ID = Get.option_in_list(
+  File "/Users/beautiez/Documents/emergency-system/core_code/get.py", line 79, in option_in_list
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 01:51:02,433 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 35, in sub_main
+    case 2:
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 44, in manage_account
+    print(menu())
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 102, in menu_choice_get
+    option = int(input(hint))
+KeyboardInterrupt
