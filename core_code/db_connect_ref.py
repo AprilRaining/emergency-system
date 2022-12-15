@@ -103,11 +103,10 @@ def get_volunteer_schedule_df(conn,campID=0,volunteer_ID = 0, purpose=''):
     pd_select = pd.read_sql_query(query,conn)
 
     # df_vol = pd.DataFrame(pd_select, columns=col_names)
-
     time.sleep(1.0)
     df_vol_sch = pd_select.copy(deep=True)
     if purpose == "Display":
-        col_list = list(df_vol_sch.columns[3:])
+        col_list = list(df_vol_sch.columns[5:])
     else:
         col_list = list(df_vol_sch.columns[5:])
     data_row = df_vol_sch.shape[0]

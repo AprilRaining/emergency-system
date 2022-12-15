@@ -31,6 +31,7 @@ def search_refugee(column, keyword, conn):
     if type(keyword) == type(''):
         keyword = "'%{}%'".format(keyword)
     search_query = "SELECT * FROM refugee WHERE {} LIKE {}".format(column, keyword)
+    # print(search_query)
     pd_search = pd.read_sql_query(search_query,conn)
     df_search = pd.DataFrame(pd_search, columns=["refugeeID","campID","fName","lName","birthdate","gender","ethnicGroup","email",
                 "phone","familyMemberName","illness","surgery","smoking","alcoholic","request","status"])
@@ -46,11 +47,11 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
     '''
     req_id_mul = ""
     if req_list != []:
-        print("\n..........Refugee's requests processing..........")
+        prGreen("\n.............Refugee's requests processing.............")
         cur = conn.cursor()
         task_id = []
         if purpose == "create":
-            print("\nNote: This usually takes around 15-20 seconds to add multiple requests.\n")
+            print("\n"+u"\u2757"+"Note: This usually takes around 15-20 seconds to add multiple requests.\n")
         pb.progress_bar(0,len(req_list),"")
         for ind,req in enumerate(req_list):
             # insert data to task table: multiple insertion

@@ -24,7 +24,7 @@ def refugee_existence_check(conn):
                     
         except exc.refugee_duplicated_regis:
             print_log("The refugee's firstname and lastname already exist in the database.\nPlease recheck if you're try to register the same person once again.")
-            confirm = yn_valid("Is this refugee the same person as whom you registered before?(Yes/No): ")
+            confirm = yn_valid(u"\U0001F539"+"Is this refugee the same person as whom you registered before?(Yes/No): ")
             if(confirm == "No"):
                 return (firstname,lastname)
             else:
@@ -69,7 +69,7 @@ def date_format_check(purpose,limit_start = '',limit_end = ''):
         except exc.month_out_of_range:
             print_log("Please input the month between 1 and 12")
         except exc.date_not_available:
-            print_log("Please select the date from the options provided by the system.")
+            print_log("You can only select the date from today till the last date of this week!")
         except Exception as e:
             print_log(str(e))
         else: 
@@ -100,9 +100,9 @@ def camp_capacity_check(conn):
             camp_df = pd.DataFrame(pd_camp, columns=['campID', 'no_of_refugees', 'capacity'])
             camp_df = camp_df.drop(camp_df[camp_df['campID'] == 0].index)
             print_table(camp_df.columns,camp_df.to_numpy().tolist(),(25,40,40))
-            print("-------------------------------------------")
+            print("-------------------------------\n")
             camp = int(input(u"\U0001F539"+"Assign the camp ID to the refugee: "))
-            if camp > camp_df.shape[0] or camp <= 0:
+            if camp > int(camp_df["campID"].iloc[-1]) or camp < int(camp_df["campID"].iloc[0]):
                 raise exc.camp_id_out_of_range
             for ind in camp_df.index:
                 if ind+1 == camp:
@@ -128,7 +128,7 @@ def refugee_validity_check_by_ID(cond,refugee_df, conn):
                 options = Options(col_opt, limited=True)
                 print(options)
                 opt = col_opt[int(input(u"\U0001F539"+'Please select how you want to search: '))]
-                keyword = input(u"\U0001F539"+f"\nPlease enter the {opt} keyword: ")
+                keyword = input("\n"+u"\U0001F539"+f"Please enter the {opt} keyword: ")
                 refugee_list = search_refugee(opt,keyword,conn)
                 if refugee_list.empty:
                     raise exc.refugee_id_out_of_range
@@ -205,8 +205,8 @@ def single_input_check(options):
 def volunteer_ID_req_check(volunteer_df):
     while True:
         try:
-            vol_ID = int(input(u"\U0001F539"+
-                        "\nEnter the volunteer ID of whom you want to assign this request to: "))
+            vol_ID = int(input("\n"+u"\U0001F539"+
+                        "Enter the volunteer ID of whom you want to assign this request to: "))
             if vol_ID > (volunteer_df["volunteerID"]).max() or vol_ID < 1:
                 raise exc.volunteer_id_out_of_range
             if vol_ID not in volunteer_df["volunteerID"].values:
@@ -229,7 +229,7 @@ def yn_valid(question):
         except exc.wrong_yn_input:
             print_log("Your input is invalid. Please enter either 'Yes' or 'No'")
         except Exception as e:
-            print_log(e)
+            print(e)
         else:
             return user_input
 

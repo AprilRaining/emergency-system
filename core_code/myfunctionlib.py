@@ -22,15 +22,15 @@ def menu(name=''):
             )
         case 'Admin':
             return (
-                '[ 1.] Manage Plans.\n'
-                '[ 2.] Manage Account.\n'
+                '[ 1.] Manage Emergency Plans.\n'
+                '[ 2.] Manage Accounts.\n'
                 '[ 0.] Exit'
             )
         case 'Volunteer':
             return (
                 '[ 1.] Manage Personal Information.\n'
-                '[ 2.] Manage Refugees and Camp File\n'
-                '[ 3.] Manage Tasks (Refugee Request)\n'
+                '[ 2.] Manage Refugees and Camp File.\n'
+                '[ 3.] Manage Tasks (Refugee Request).\n'
                 '[ 0.] Exit'
             )
         case 'ManageEmergencyPlan':
@@ -44,8 +44,8 @@ def menu(name=''):
             )
         case 'manage_account':
             return (
-                '[ 1.] Re-active Volunteer Account.\n'
-                '[ 2.] De-active Volunteer Account.\n'
+                '[ 1.] Reactivate Volunteer Account.\n'
+                '[ 2.] Deactivate Volunteer Account.\n'
                 '[ 3.] Create A New Volunteer Account.\n'
                 '[ 4.] Display Volunteer Account.\n'
                 '[ 5.] Delete volunteer account.\n'
@@ -106,7 +106,7 @@ def menu_choice_get(span, hint=''):
             print_log("You entered a non-numeric value.")
             print_log("Please reenter a valid Number")
         except InvalidChoiceError as e:
-            print_log(e)
+            print(e)
         else:
             return option
 

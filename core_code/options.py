@@ -10,7 +10,7 @@ class Options:
         if not self.limited:
             for i in range(self.len):
                 temp.append('[ {}.] {}'.format(i + 1, self.values[i]))
-            temp.append('Enter 0 for Manual input.')
+            temp.append(u"\U0001F531"+'[Hint]Enter 0 for Manual Input.')
             self.optionRange = self.len + 1
         else:
             for i in range(self.len):

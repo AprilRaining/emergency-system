@@ -14,7 +14,7 @@ class Invalid_input(Exception):
         Exception.__init__(self)
         self.input = input
     def __str__(self): 
-        return f'{self.input} is an invalid choice. Plese reenter a number specified above.'
+        return f"\033[91m Camp {self.input} is an invalid choice.\nPlease reenter a number specified above.\033[00m"
 
 
 class emergency_plan: 
@@ -46,7 +46,7 @@ class emergency_plan:
                 else:
                     raise Invalid_input(self.user)
             except Invalid_input as e:
-                print_log(e)
+                print(e)
                 self.user = input(u"\U0001F539" + 'Please enter your choice: ')
                 
         
@@ -66,7 +66,7 @@ class emergency_plan:
                else:
                 raise Invalid_input(date_format)
             except Invalid_input as e:
-                print_log(e)
+                print(e)
             try:
                 refugee = input(u"\U0001F539" + 'Please enter the number of refugees at the camp: ')
                 if refugee.isdigit():
@@ -74,7 +74,7 @@ class emergency_plan:
                 else:
                     raise Invalid_input(refugee)
             except Invalid_input as e:
-                print_log(e)
+                print(e)
             try:
                 volunteer = input(u"\U0001F539" + 'Please enter the number of volunteers required at the camp: ')
                 if volunteer.isdigit():
@@ -82,7 +82,7 @@ class emergency_plan:
                 else:
                     raise Invalid_input(volunteer)
             except Invalid_input as e:
-                print_log(e)
+                print(e)
             
         
         def add(self):
@@ -135,7 +135,7 @@ class emergency_plan:
                  else: 
                         raise Invalid_input(self.when)
                 except Invalid_input as e:
-                    print_log(e)
+                    print(e)
                     self.when = input(u"\U0001F539" + 'Please enter your choice: ')
                 
         #Delete Plan Now
@@ -214,18 +214,18 @@ class emergency_plan:
                                                         else: 
                                                              raise Invalid_input(self.row)
                                                     except Invalid_input as e:
-                                                            print_log(e)
+                                                            print(e)
                                                             self.row = input(u"\U0001F539" + 'Please enter your choice: ')
                                             else: 
                                                 raise Invalid_input(date_format)
                                         except Invalid_input as e:
-                                            print_log(e)
+                                            print(e)
                                             date_format = input(u"\U0001F539" + 'Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                             date = date_format.split('-')
                                 else: 
                                     raise Invalid_input(self.type)
                             except Invalid_input as e:
-                                 print_log(e)
+                                 print(e)
                                  self.type = input(u"\U0001F539" + 'Please enter your choice: ')
                         
                  elif self.choice == '2':
@@ -295,18 +295,18 @@ class emergency_plan:
                                                         else: 
                                                              raise Invalid_input(self.row)
                                                     except Invalid_input as e:
-                                                            print_log(e)
+                                                            print(e)
                                                             self.row = input(u"\U0001F539" + 'Please enter your choice: ')
                                             else: 
                                                 raise Invalid_input(date_format)
                                         except Invalid_input as e:
-                                            print_log(e)
+                                            print(e)
                                             date_format = input(u"\U0001F539" + 'Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                             date = date_format.split('-')
                                 else: 
                                     raise Invalid_input(self.date)
                             except Invalid_input as e:
-                                 print_log(e)
+                                 print(e)
                                  self.date = input(u"\U0001F539" + 'Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
                  elif self.choice == '3':
                     loop = False
@@ -374,23 +374,23 @@ class emergency_plan:
                                                         else: 
                                                              raise Invalid_input(self.row)
                                                     except Invalid_input as e:
-                                                            print_log(e)
+                                                            print(e)
                                                             self.row = input(u"\U0001F539" + 'Please enter your choice: ')
                                             else: 
                                                 raise Invalid_input(date_format)
                                         except Invalid_input as e:
-                                            print_log(e)
+                                            print(e)
                                             date_format = input(u"\U0001F539" + 'Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                             date = date_format.split('-')
                                 else: 
                                     raise Invalid_input(self.area)
                             except Invalid_input as e:
-                                 print_log(e)
+                                 print(e)
                                  self.area = input(u"\U0001F539" + 'Please enter the area of the emergency plan you want to view and then delete: ')
                  else: 
                         raise Invalid_input(self.choice)
                 except Invalid_input as e:
-                    print_log(e)
+                    print(e)
                     self.choice = input(u"\U0001F539" + 'Please enter your choice: ')
 
 

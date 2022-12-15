@@ -18,20 +18,20 @@ class Refugee:
         self.conn = conn
 
     def refugee_name(self):
-        print("------------------------NAME----------------------------")
+        print("------------------------NAME----------------------------\n")
         self.fname, self.lastname = refugee_existence_check(self.conn)
         self.ref_row.extend([self.fname, self.lastname])
         print("\n")
 
     def refugee_birthdate(self):
-        print("-----------------------BIRTHDAY-------------------------")
+        print("-----------------------BIRTHDAY-------------------------\n")
         # enter birthdate + validation
         self.birthdate = date_format_check("birthdate")
         self.ref_row.extend([self.birthdate])
         print("\n")
 
     def refugee_gender(self):
-        print("------------------------GENDER--------------------------")
+        print("------------------------GENDER--------------------------\n")
         gender_opt = refugee_input_option("Gender")
         gender_dict = input_matching("Gender")
         print(u"\U0001F539"+"Select refugee's gender")
@@ -40,7 +40,7 @@ class Refugee:
         print("\n")
 
     def refugee_race(self):
-        print("----------------------ETHNIC GROUP----------------------")
+        print("----------------------ETHNIC GROUP----------------------\n")
         race_opt = refugee_input_option("Ethnic Group")
         race_dict = input_matching("Ethnic Group")
         print(u"\U0001F539"+"Select refugee's ethnic group")
@@ -51,14 +51,14 @@ class Refugee:
         print("\n")
 
     def refugee_contact(self):
-        print("------------------------CONTACT-------------------------")
+        print("------------------------CONTACT-------------------------\n")
         self.email = email_format_check()
         self.phone = input(u"\U0001F539"+"Enter refugee's phone number (if any): ")
         self.ref_row.extend([self.email, self.phone])
         print("\n")
 
     def refugee_family(self):
-        print("---------------------FAMILY MEMBERS---------------------")
+        print("---------------------FAMILY MEMBERS---------------------\n")
         self.members = input(
             u"\U0001F539"+"Enter all members' first name (e.g. Dan, John, Emily) or put '-' if no member: ")
         # add member's name
@@ -67,9 +67,9 @@ class Refugee:
 
     def assign_camp_ID(self):
         # camp validation + assigned for creat and edit case only
-        print("\nINSTRUCTION: Please assign the camp identification to the refugee.")
+        print("\n"+u"\U0001F531"+"INSTRUCTION: Please assign the camp identification to the refugee.")
         print(
-            "The detail below shows the availability of each camp as well as its related conditions: ")
+            "The detail below shows the availability of each camp as well as its related conditions: \n")
         self.assigned_camp = camp_capacity_check(self.conn)
         # request
 
@@ -81,7 +81,7 @@ class Refugee:
 
     def refugee_illnesses(self):
 
-        print("------------- MEDICAL SECTION 1 : ILLNESSES --------------")
+        print("------------- MEDICAL SECTION 1 : ILLNESSES --------------\n")
         ill_opt = refugee_input_option("Illnesses")
         ill_dict = input_matching("Illnesses")
         print(u"\U0001F539"+"Select refugee's personal illness (Allow multiple selection(e.g. 1,3,6))")
@@ -95,7 +95,7 @@ class Refugee:
 
         for ind, il in enumerate(self.ref_illness):
             if "Allergies" in il:
-                print("-------------ALLERGIES--------------")
+                print("-------------ALLERGIES--------------\n")
                 aller_opt = refugee_input_option("Allergies")
                 aller_dict = input_matching("Allergies")
                 print(u"\U0001F539"+"Select refugee's allergy conditions (Allow multiple selection(e.g. 2,4))")
@@ -128,7 +128,7 @@ class Refugee:
                     "(" + self.ref_allergy + ")"
             if ("Others" in il):
                 #  other disease please specify
-                print("---------------OTHERS---------------")
+                print("---------------OTHERS---------------\n")
                 self.other_disc = input(
                     u"\U0001F539"+"Please specify other refugee's disease: ")
                 self.ref_illness[ind] = self.ref_illness[ind] + \
@@ -139,8 +139,8 @@ class Refugee:
         print("\n")
 
     def refugee_surgery(self):
-        print("---------------MEDICAL SECTION 2 : SURGERY--------------")
-        self.has_surgery = yn_valid(
+        print("---------------MEDICAL SECTION 2 : SURGERY--------------\n")
+        self.has_surgery = yn_valid(u"\U0001F539"+
             "Does refugee has the history of surgery? (Yes/No): ")
         if (self.has_surgery == "Yes"):
             self.surgery = input(u"\U0001F539"+"Enter refugee's surgery record: ")
@@ -150,13 +150,13 @@ class Refugee:
         print("\n")
 
     def refugee_smoking(self):
-        print("------------MEDICAL SECTION 3 : SMOKING HABIT------------")
+        print("------------MEDICAL SECTION 3 : SMOKING HABIT------------\n")
         self.smoker = yn_valid(u"\U0001F539"+"Does refugee smoke? (Yes/No): ")
         self.ref_row.extend([self.smoker])
         print("\n")
 
     def refugee_alcoholic(self):
-        print("----------MEDICAL SECTION 4 : ALCOHOL CONSUMPTION----------")
+        print("----------MEDICAL SECTION 4 : ALCOHOL CONSUMPTION----------\n")
         self.is_alcoholic = yn_valid(u"\U0001F539"+"Is refugee an alcoholic? (Yes/No): ")
         # add medical cond to row
         self.ref_row.extend([self.is_alcoholic])
@@ -165,6 +165,7 @@ class Refugee:
     def ref_request(self, purpose, req_edit_id=0):
         # df for use
         refugee_df = get_refugee_dataframe(self.conn)
+        df_vol_sch = ""
         # Request manipulation system
         self.req_form_coll = []
         # case 1: create/add new req
@@ -177,7 +178,7 @@ class Refugee:
             else:
                 req_counter = 1
                 while True:
-                    print("---------------------------------------------------------")
+                    print("---------------------------------------------------------------------------")
                     # select task
                     req_opt = refugee_input_option("Task Request")
                     print(
@@ -185,28 +186,36 @@ class Refugee:
                     req_inpt = single_input_check(req_opt)
                     req_dict = input_matching("Task Request")
                     self.req_task = req_dict[int(req_inpt[0])]
-                    print("---------------------------------------------------------")
+                    print("---------------------------------------------------------------------------")
                     # show volunteer schedule FYI
                     print(u"\U0001F531"+"[Hint]Please see our volunteer schedule below for your information.\nWe recommend selecting volunteer who is available at the date and time of refugee's request.\n")
                     if req_counter == 1:
                         df_vol_sch = get_volunteer_schedule_df(
                             self.conn, self.assigned_camp)
-                    print_table(df_vol_sch.columns,df_vol_sch.to_numpy().tolist(),(18,25,25,16,20,30,30,30,30,30,30,30))
-                    print("---------------------------------------------------------")
+                    if df_vol_sch.empty:
+                        # for testing
+                        warn("No volunteer in the camp! Please start again")
+                        sys.exit()
+                    else:
+                        print_table(df_vol_sch.columns,df_vol_sch.to_numpy().tolist(),(18,25,25,16,20,30,30,30,30,30,30,30))
+                    print("---------------------------------------------------------------------------")
                     # select date
                     dates = get_date_list()
                     print(
-                        "\n","Select your request's day for this week from options below\n")
+                        "\n"+u"\U0001F539"+"Select your request's day for this week from options below\n")
                     c = 1
+                    today_date = str(datetime.date.today())
+                    today_ind = dates.index(today_date)
                     for i in dates:
-                        dn = pd.Timestamp(i).day_name()
-                        print(str(c)+".", dn, i)
-                        c += 1
+                        if dates.index(i) >= int(today_ind):
+                            dn = pd.Timestamp(i).day_name()
+                            print("[ "+str(c)+".]", dn, i)
+                            c += 1
                     self.req_date = date_format_check(
-                        "request", datetime.date.today(), dates[-1])
+                        "request", today_date, dates[-1])
                     d = pd.Timestamp(self.req_date)
                     self.day_name = d.day_name()
-                    print("--------------------------------------------------------\n")
+                    print("--------------------------------------------------------------------------\n")
                     # show recommended volunteer
                     df_match_vol = df_vol_sch.loc[df_vol_sch[self.day_name] == "free", :]
                     if df_match_vol.empty:
@@ -220,7 +229,7 @@ class Refugee:
                         shift_inpt = single_input_check(shift_opt)
                         shift_dict = input_matching("Shift Time")
                         self.req_shift = shift_dict[int(shift_inpt[0])]
-                        print("--------------------------------------------------------")
+                        print("--------------------------------------------------------------------------")
                         # select volunteer
                         # query data from volunteer db which meet condition above
                         if purpose == "add":
@@ -234,11 +243,11 @@ class Refugee:
                         if vol_df.empty:
                             warn(
                                 "There's no volunteer available for your selected date and work shift.\nWe recommend checking our volunteer schedule below and try again!\n")
-                            print(df_vol_sch)
+                            print_table(df_vol_sch.columns,df_vol_sch.to_numpy().tolist(),(18,25,25,16,20,30,30,30,30,30,30,30))
                         else:
                             print(
-                                "Please see the list of available volunteers who match refugee's request:\n")
-                            print(vol_df)
+                               u"\U0001F539"+"Please see the list of available volunteers who match refugee's request:\n")
+                            print_table(vol_df.columns,vol_df.to_numpy().tolist(),(20,40,40,40))
                             # list : vol ID to help with multiple request case
                             self.vol_ID = volunteer_ID_req_check(vol_df)
                             print(
@@ -246,7 +255,7 @@ class Refugee:
                             # alter dataframe display
                             df_vol_sch.loc[df_vol_sch["volunteerID"] ==
                                            self.vol_ID, self.day_name] = "booked"
-                            print("--------------------------------------------------------")
+                            print("--------------------------------------------------------------------------")
                             # to be assigned with task ID
                             if req_counter == 1 and purpose == "create":
                                 self.ref_row.append("-1")
@@ -277,7 +286,7 @@ class Refugee:
                                    "taskID", "refugeeID", "volunteerID", "taskInfo", "week", "requestDate", "workShift", "status"])
             print(
                 "\nPlease see details below for the existing tasks assoiated with refugee's request:\n")
-            print(df_task)
+            print_table(df_task.columns,df_task.to_numpy().tolist(),(20,20,20,40,40,40,40,40))
             task_edit = input(
                 u"\U0001F539"+"Enter all task IDs which refugee would like to make change to: ")
             task_edit_arr = []
@@ -294,37 +303,46 @@ class Refugee:
                 old_start_date = df_task.loc[df_task["taskID"] == int(
                     t), "requestDate"].values[0]
                 old_start_day = pd.Timestamp(old_start_date).day_name()
-                print(
-                    f"Instruction: You are allowed to change only request's date and work shift related to volunteer ID: {vol_id}.\n")
-                print(f"\n-----EDITING TASK ID: [{t}]-----")
+                print("\n"+
+                   u"\U0001F531"+f"\nINSTRUCTION: You are allowed to change only request's date and work shift related to volunteer ID: {vol_id}.\n")
+                print(f"\n-----EDITING TASK ID: [{t}]-----\n")
                 while True:
                     # show  volunteer schedule
-                    print(u"\U0001F531"+"[Hint]Please see the volunteer schedule below for your information.")
+                    print(u"\U0001F531"+"[Hint]Please see the volunteer schedule below for your information.\n")
                     if task_count == 1:
                         df_vol_sch = get_volunteer_schedule_df(
                             conn = self.conn, volunteer_ID = vol_id)
                     print_table(df_vol_sch.columns,df_vol_sch.to_numpy().tolist(),(18,25,25,16,20,30,30,30,30,30,30,30))
-                    print("---------------------------------------------------------")
+                    print("\n")
                     # select new date
                     dates = get_date_list()
-                    print(u"\U0001F539"+"Please select the new request's date from options below: ")
                     c = 1
+                    today_date = str(datetime.date.today())
+                    today_ind = dates.index(today_date)
                     for i in dates:
-                        dn = pd.Timestamp(i).day_name()
-                        print(str(c)+".", dn, i)
-                        c += 1
+                        if dates.index(i) >= int(today_ind):
+                            dn = pd.Timestamp(i).day_name()
+                            print("[ "+str(c)+".]", dn, i)
+                            c += 1
+                    # check volunteer availability
+                    vol_row = df_vol_sch.iloc[0]
+                    vol_row_info = vol_row.to_numpy()
+                    if "free" not in vol_row_info[len(vol_row_info)-c:len(vol_row_info)]:
+                        warn("You cannot change the request schedule because the volunteer has no more availability from today till the end of this week.")
+                        sys.exit()
+                    print("\n"+u"\U0001F539"+"Please select the new request's date from options below: ")
                     self.req_date = date_format_check(
-                        "request", dates[0], dates[-1])
+                        "request", today_date, dates[-1])
                     d = pd.Timestamp(self.req_date)
                     self.day_name = d.day_name()
-                    print("--------------------------------------------------------")
+                    print("--------------------------------------------------------------------------")
                     # select new work shift
                     print(u"\U0001F539"+"Please select new shift time from the options below: ")
                     shift_opt = refugee_input_option("Shift Time")
                     shift_inpt = single_input_check(shift_opt)
                     shift_dict = input_matching("Shift Time")
                     self.req_shift = shift_dict[int(shift_inpt[0])]
-                    print("--------------------------------------------------------")
+                    print("--------------------------------------------------------------------------")
                     # check if volunteer is available
                     vol_query = f'''SELECT volunteerID,fName,lName,workShift FROM volunteer WHERE volunteerID = {vol_id} AND workShift = "{self.req_shift}" AND {self.day_name} = 0'''
                     pd_vol = pd.read_sql_query(vol_query, self.conn)
@@ -345,10 +363,10 @@ class Refugee:
                         vol_upd = f'''UPDATE volunteer SET {old_start_day} = 0, {self.day_name} = {int(t)} WHERE volunteerID = {vol_id}'''
                         cur.execute(vol_upd)
                         self.conn.commit()
-                        time.sleep(1.0)
+                        time.sleep(0.6)
                         print(
                            u'\u2705'+f"You have made change to refugee's request date and work shift of task ID: {int(t)}.")
-                        print("--------------------------------------------------------\n")
+                        print("--------------------------------------------------------------------------\n")
                         # alter dataframe display
                         df_vol_sch.loc[df_vol_sch["volunteerID"] ==
                                            vol_id, self.day_name] = "booked"
@@ -363,7 +381,7 @@ class Refugee:
         # convert list to tuple
         self.ref_row_new = tuple(self.ref_row)
         # insert new refugee to db
-        print("..........Adding new refugee to the system............\n")
+        prGreen("..........Adding new refugee to the system............\n")
         refugee_id = insert_refdb_row(self.conn, self.ref_row_new)
         return refugee_id
 
@@ -372,15 +390,15 @@ class Refugee:
         # df for use
         refugee_df = get_refugee_dataframe(self.conn)
         # assign_camp_ID
-        print("\n--------------------------------------------------------")
-        print("------------ASSIGNING CAMP IDENTIFICATION-----------------")
-        print("--------------------------------------------------------\n")
+        prCyan("\n--------------------------------------------------------------------------")
+        prLightPurple("----------------------ASSIGNING CAMP IDENTIFICATION-----------------------")
+        prCyan("--------------------------------------------------------------------------\n")
         self.assign_camp_ID()
 
         # general info
-        print("\n--------------------------------------------------------")
-        print("-------------REFUGEE'S GENERAL INFORMATION----------------")
-        print("--------------------------------------------------------\n")
+        prCyan("\n--------------------------------------------------------------------------")
+        prLightPurple("-----------------------REFUGEE'S GENERAL INFORMATION----------------------")
+        prCyan("--------------------------------------------------------------------------\n")
         self.refugee_name()
         self.refugee_birthdate()
         self.refugee_gender()
@@ -389,26 +407,26 @@ class Refugee:
         self.refugee_family()
 
         # medical condition
-        print("\n--------------------------------------------------------")
-        print("---------------REFUGEE'S MEDICAL PROFILE----------------")
-        print("--------------------------------------------------------\n")
+        prCyan("\n--------------------------------------------------------------------------")
+        prLightPurple("-------------------------REFUGEE'S MEDICAL PROFILE------------------------")
+        prCyan("--------------------------------------------------------------------------\n")
         self.refugee_illnesses()
         self.refugee_surgery()
         self.refugee_smoking()
         self.refugee_alcoholic()
 
         # request: return array of requests
-        print("\n--------------------------------------------------------")
-        print("-------------------REFUGEE'S REQUEST--------------------")
-        print("--------------------------------------------------------\n")
+        prCyan("\n--------------------------------------------------------------------------")
+        prLightPurple("-----------------------------REFUGEE'S REQUEST----------------------------")
+        prCyan("--------------------------------------------------------------------------\n")
         req_list = self.ref_request("create")
-        print("\n--------------------------------------------------------\n")
+        print("\n--------------------------------------------------------------------------\n")
 
         # add to database
         refugeeID = self.add_refugee_to_db()
-        print(f"\nNew refugee ID created: [{refugeeID}]\n")
+        print(u"\U0001F538"+f"\nNew refugee ID created: [{refugeeID}]\n")
 
         # CREATE case: update refugee, task, and volunteer table: can handle multiple req.
         req_id = task_ref_vol_db(
             self.conn, req_list, refugeeID, refugee_df, "create")
-        print("\n",u'\u2705'+"New refugee is successfully registered to the system!")
+        print("\n\n",u'\u2705'+"New refugee is successfully registered to the system!\n")

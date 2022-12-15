@@ -38,8 +38,8 @@ class Admin:
                     return
 
     def manage_account(self):
-        print("--------------------------------------------------------")
-        print("\t\tACCOUNT MANAGEMENT\n")
+        print("--------------------------------------------------------------------------")
+        prPurple("\t\t\tVOLUNTEER ACCOUNTS MANAGEMENT\n")
         while True:
             print(menu())
             match menu_choice_get(menu().count('\n') + 1, "\n-->"):
@@ -62,8 +62,8 @@ class Admin:
                     return
 
     def reactive_volunteer_account(self):
-        print("--------------------------------------------------------")
-        print("\t\tREACTIVATE VOLUNTEER ACCOUNT\n")
+        print("--------------------------------------------------------------------------")
+        prLightPurple("\t\t\tREACTIVATE VOLUNTEER ACCOUNT\n")
         ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
         try:
             with db.connect('info_files/emergency_system.db') as conn:
@@ -71,23 +71,29 @@ class Admin:
                 c.execute(
                     f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID, ))
                 status = c.fetchall()[0][0]
+                time.sleep(1.0)
             if status == 1:
-                print("This account is already active.")
+                print("This account is already active. No need to activate.")
                 print("-------------------------------------")
             else:
                 c.execute(
                     f'''UPDATE volunteer SET accountStatus = 1 WHERE volunteerID = (?)''', (ID, ))
                 conn.commit()
-                print(
-                    u'\u2705', "Volunteer with ID {}'s account is now reactivated".format(ID))
+                # time.sleep(1.0)
+                # vol_df = get_volunteer_schedule_df(conn,purpose="Display")
+                # sp_vol_df = vol_df.loc[vol_df["volunteerID"]==ID,"volunteerID":"accountStatus"]
+                # print("\n"+u"\U0001F538"+"Please see the volunteer status update below:\n")
+                # print_table(sp_vol_df.columns,sp_vol_df.to_numpy().tolist(),(30,30,30,30,30,30,40))
+                print("\n"+
+                    u'\u2705', "Volunteer with ID {}'s account is now reactivated.".format(ID))
         except IndexError:
             print_log("{} is an invalid ID".format(ID))
         except:
             print_log("Wrong connection to the database.")
 
     def deactive_volunteer_account(self):
-        print("--------------------------------------------------------")
-        print("\t\tDEACTIVATE VOLUNTEER ACCOUNT\n")
+        print("--------------------------------------------------------------------------")
+        prLightPurple("\t\t\tDEACTIVATE VOLUNTEER ACCOUNT\n")
         ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
         try:
             with db.connect('info_files/emergency_system.db') as conn:
@@ -95,15 +101,21 @@ class Admin:
                 c.execute(
                     f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID,))
                 status = c.fetchall()[0][0]
+                # time.sleep(1.0)
             if status == 0:
                 warn("This account is currently inactive.")
                 print("-------------------------------------")
             else:
-                if confirm("Do you want to deactivate this account ID {ID}?"):
+                if confirm(f"Do you want to deactivate this account ID {ID}?"):
                     c.execute(
                         f'''UPDATE volunteer SET accountStatus = 0 WHERE volunteerID = (?)''', (ID,))
                     conn.commit()
-                    print(
+                    # time.sleep(2.0)
+                    # vol_df = get_volunteer_schedule_df(conn,purpose="Display")
+                    # sp_vol_df = vol_df.loc[vol_df["volunteerID"]==ID,"volunteerID":"accountStatus"]
+                    # print("\n"+u"\U0001F538"+"Please see the volunteer status update below:\n")
+                    # print_table(sp_vol_df.columns,sp_vol_df.to_numpy().tolist(),(30,30,30,30,30,30,40))
+                    print("\n"+
                         u'\u2705', "Volunteer with ID {}'s account is now deactive".format(ID))
                 else:
                     return
@@ -113,8 +125,8 @@ class Admin:
             print_log("Wrong connection to the database.")
 
     def creat_a_volunteer_account(self):
-        print("--------------------------------------------------------")
-        print("\t\tCREATE VOLUNTEER ACCOUNT\n")
+        print("--------------------------------------------------------------------------")
+        prLightPurple("\t\t\tCREATE VOLUNTEER ACCOUNT\n")
         new_volunteer = []
 
         fname = input(u"\U0001F539"+'Enter the first name:')
@@ -221,14 +233,15 @@ class Admin:
             # status default 1 !!!!!!!!!!
             c.execute(sql, new_volunteer)
             conn.commit()
+            time.sleep(0.8)
             vol_df = get_volunteer_schedule_df(conn,purpose="Display")
             vol_id = vol_df['volunteerID'].iloc[-1]
             print(f"\nNew volunteer ID created: [{vol_id}]\n")
             print(u'\u2705',"New volunteer account is successfully created!")
 
     def display_volunteer_account(self):
-        print("--------------------------------------------------------")
-        print("\t\tDISPLAY VOLUNTEER ACCOUNT\n")
+        print("--------------------------------------------------------------------------")
+        prLightPurple("\t\t\tDISPLAY VOLUNTEER ACCOUNT\n")
         while True:
             print(menu())
             match menu_choice_get(menu().count('\n') + 1,"\n-->"):
@@ -245,8 +258,8 @@ class Admin:
                     return
 
     def display_account_byID(self):
-        print("--------------------------------------------------------")
-        print("\t\tDISPLAY BY VOLUNTEER ID\n")
+        print("--------------------------------------------------------------------------")
+        prLightPurple("\t\t\tDISPLAY BY VOLUNTEER ID\n")
         ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
         try:
             sch = ""
@@ -259,10 +272,10 @@ class Admin:
             if fd.empty:
                 warn(f"\nThere is no account based on the volunteerID: {ID}")
             else:
-                print(f"\nPlease see the information about volunteer with ID {ID} below: ")
-                print(u"\U0001F538","---GENERAL INFORMATION---\n")
+                print(f"\nPlease see the information about volunteer with ID {ID} below: \n")
+                prCyan(u"\U0001F538","---GENERAL INFORMATION---\n")
                 print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                print("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                prCyan("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
                 print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
         except IndexError:
             print_log("{} is an invalid ID".format(ID))
@@ -285,9 +298,9 @@ class Admin:
                 print(f"There is no account based in the camp {ID}.")
             else:
                 print(f"Please see the information about volunteers in camp ID {ID} below: \n")
-                print(u"\U0001F538","---GENERAL INFORMATION---\n")
+                prCyan(u"\U0001F538","---GENERAL INFORMATION---\n")
                 print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                print("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                prCyan("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
                 print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
         except:
             print_log("Wrong connection to the database.")
@@ -307,9 +320,9 @@ class Admin:
                 print(f"There is no volunteer account in the system! Recruit some volunteers please.")
             else:
                 print("Please see all volunteers information below: \n")
-                print(u"\U0001F538","---GENERAL INFORMATION---\n")
+                prCyan(u"\U0001F538","---GENERAL INFORMATION---\n")
                 print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                print("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                prCyan("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
                 print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
                 
         except:
@@ -317,8 +330,8 @@ class Admin:
 
 
     def delete_account(self):
-        print("--------------------------------------------------------")
-        print("\t\tDELETE VOLUNTEER ACCOUNT\n")
+        print("--------------------------------------------------------------------------")
+        prLightPurple("\t\t\tDELETE VOLUNTEER ACCOUNT\n")
         ID = input(u"\U0001F539"+'Enter the volunteer ID you would like to delete:')
         print("\n")
         try:

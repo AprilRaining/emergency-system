@@ -47,6 +47,7 @@ def display_by_IDs(table, IDs):
         col_width = ()
         if table == 'plan':
             col_width = (8,20,30,16,20,20,14,8)
+        print("\n")
         print_table(table_df.columns, table_df.to_numpy().tolist(), col_width)
     else:
         warn('\nNo Result!')

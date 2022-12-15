@@ -21,7 +21,7 @@ class Get:
                 print_log("You entered a non-numeric value.")
                 print_log("Please reenter a valid value.")
             except InvalidInput as e:
-                print_log(e)
+                print(e)
             else:
                 return n
 
@@ -32,9 +32,9 @@ class Get:
                 date = datetime.datetime.strptime(
                     input(hint), '%Y-%m-%d').date()
             except InvalidInput as e:
-                print_log(e)
+                print(e)
             except ValueError as e:
-                print_log(e)
+                print(e)
             else:
                 return date
 
@@ -50,10 +50,10 @@ class Get:
                     if i not in range(start, end):
                         raise InvalidInput(l)
             except InvalidInput as e:
-                print_log(e)
+                print(e)
             except Exception as e:
                 print_log("Unknown error")
-                print_log(e)
+                print(e)
             else:
                 return arr
 
@@ -68,7 +68,7 @@ class Get:
                 print_log("You entered a non-numeric value.")
                 print_log("Please reenter a valid Number:")
             except InvalidChoiceError as e:
-                print_log(e)
+                print(e)
             else:
                 return option
 
@@ -83,7 +83,7 @@ class Get:
                 print_log("You entered a non-numeric value.")
                 print_log("Please reenter a valid Number:")
             except InvalidChoiceError as e:
-                print_log(e)
+                print(e)
             else:
                 return option
 

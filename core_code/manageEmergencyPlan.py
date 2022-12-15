@@ -13,39 +13,39 @@ class ManageEmergencyPlan:
         self.menu = menu(self.__class__.__name__)
 
     def sub_main(self):
-        print("--------------------------------------------------------")
-        print("\t\tPLAN MANAGEMENT\n")
+        print("--------------------------------------------------------------------------")
+        prPurple("\t\t\tEMERGENCY PLAN MANAGEMENT\n")
         while True:
             print(self.menu)
             match menu_choice_get(self.menu.count('\n') + 1, "\n-->"):
                 case 1:
                     # self.create_emergency_plan()
-                    print("--------------------------------------------------------")
-                    print("\t\tCREATE EMERGENCY PLAN\n")
+                    print("--------------------------------------------------------------------------")
+                    prLightPurple("\t\t\tCREATE EMERGENCY PLAN\n")
                     create = emergency_plan.Create_Emergency_Plan()
                     create.add()
                     print("\n",u'\u2705','New emergency plan is successfully created.')
                     back()
                 case 2:
-                    print("--------------------------------------------------------")
-                    print("\t\tEDIT EMERGENCY PLAN\n")
+                    print("--------------------------------------------------------------------------")
+                    prLightPurple("\t\t\tEDIT EMERGENCY PLAN\n")
                     self.edit_emergency_plan(select_sqlite('plan'))
                     print("\n",u'\u2705','The emergency plan is successfully updated.')
                     back()
                 case 3:
-                    print("--------------------------------------------------------")
-                    print("\t\tDISPLAY EMERGENCY PLAN\n")
+                    print("--------------------------------------------------------------------------")
+                    prLightPurple("\t\t\tDISPLAY EMERGENCY PLAN\n")
                     display_by_IDs('plan', get_all_IDs('plan'))
                     back()
                 case 4:
-                    print("--------------------------------------------------------")
-                    print("\t\tCLOSE or REOPEN EMERGENCY PLAN\n")
+                    print("--------------------------------------------------------------------------")
+                    prLightPurple("\t\t\tCLOSE or REOPEN EMERGENCY PLAN\n")
                     self.close_or_open_emergency_plan(select_sqlite('plan'))
                     back()
                 case 5:
                     # self.delete_emergency_plan(select_sqlite('plan'))
-                    print("--------------------------------------------------------")
-                    print("\t\tDELETE EMERGENCY PLAN\n")
+                    print("--------------------------------------------------------------------------")
+                    prLightPurple("\t\t\tDELETE EMERGENCY PLAN\n")
                     delete = emergency_plan.Delete_Emergency_Plan()
                     delete.delete_now()
                     back()
@@ -65,6 +65,7 @@ class ManageEmergencyPlan:
         print('Succeed!')
 
     def edit_emergency_plan(self, planID):
+        print("Please see the current emergency plan database below:\n")
         df = pd_read_by_IDs('plan', planID)
         display_by_IDs('plan', planID)
         options = []
@@ -78,16 +79,16 @@ class ManageEmergencyPlan:
                     'endDate',
                     'numberOfCamps',
                 ], limited=True)
-                print("\n"+'This plan has not been opened.\n')
+                print("\n"+'This plan has not been opened yet. You could edit the properties below:\n')
             case 1:
                 options = Options([
                     'description',
                     'endDate',
                 ], limited=True)
-                print("\n",u'\u2705','This plan has been opened.\n')
+                print("\n",u'\u2705','This plan has already been opened. You can only edit the properties below: \n')
                 print("\n")
             case 2:
-                warn('This plan has been closed. You are not allowed change it.')
+                warn('This plan has been closed. You are not allowed edit it!')
                 return
         print(options)
         option = options.get_option(
@@ -130,7 +131,7 @@ class ManageEmergencyPlan:
             case 0:
                 if confirm('This plan is waiting for be reopenned.\n'
                            u"\U0001F539"+ 'Do you want to open it now?\n'
-                           'Note: The start date will be set to today if you want to open it.'):
+                           u"\u2757"+'Note: The start date will be set to today if you want to open it.'):
                     self.update_new_value(planID, 'status', 1)
                     self.update_new_value(
                         planID, 'startDate', datetime.date.today())
@@ -156,7 +157,7 @@ class ManageEmergencyPlan:
                             conn.commit()
                 if confirm(u'\u2705' + 'This plan is opened\n'
                            u"\U0001F539" + 'Do you want to close it now?\n'
-                           'Note: The end date of this plan will be set to today date.'):
+                           u"\u2757"+'Note: The end date of this plan will be set to today date.'):
                     delete_by_IDs('camp', campIDs)
                     self.update_new_value(planID, 'status', 2)
                     self.update_new_value(

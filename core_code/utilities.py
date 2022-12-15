@@ -6,8 +6,8 @@ import refugee_exception as exc
 
 def admin_login():
     while True:
-        print("--------------------------------------------------------")
-        prYellow("\t\t\tADMIN LOGIN\n")
+        print("--------------------------------------------------------------------------")
+        prYellow("\t\t\t\tADMIN LOGIN\n")
         password = input(u"\U0001F539"+"Input the password of admin:")
         if str(password) == "12345":
             print("\n",u'\u2705','Welcome to the system, Admin!.')
@@ -18,8 +18,8 @@ def admin_login():
 
 
 def volunteer_login():
-    print("--------------------------------------------------------")
-    prYellow("\t\t\tVOLUNTEER LOGIN\n")
+    print("--------------------------------------------------------------------------")
+    prYellow("\t\t\t\tVOLUNTEER LOGIN\n")
     with sqlite3.connect('info_files/emergency_system.db') as conn:
         c = conn.cursor()
         while True:
@@ -98,7 +98,7 @@ def check_plan():
             conn.commit()
     except Exception as e:
         print_log("Wrong connection to the database.")
-        print_log(e)
+        print(e)
 
 def yn_valid(question):
     while True:
@@ -109,6 +109,6 @@ def yn_valid(question):
         except exc.wrong_yn_input:
             print_log("Your input is invalid. Please enter either 'Yes' or 'No'")
         except Exception as e:
-            print_log(e)
+            print(e)
         else:
             return user_input

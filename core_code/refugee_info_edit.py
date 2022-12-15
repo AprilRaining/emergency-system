@@ -41,7 +41,7 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
             case 12:
                 while True:
                     print("\n------------REFUGEE'S REQUEST SYSTEM------------")
-                    purpose = input(u'\u2705'+"Specify your purpose of accessing refugee's request system? (add or edit or clear): ")
+                    purpose = input(u"\U0001F539"+"Specify your purpose of accessing refugee's request system? (add or edit or clear): ")
                     if purpose != "add" and purpose != "edit" and purpose != "clear":
                         print_log("Please enter either 'add' or 'edit' or 'clear'")
                     else:
@@ -49,7 +49,7 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                             if request == "0" and purpose =="edit":
                                 warn("You don't have any request in your schedule.")
                                 warn("We recommend changing your purpose to 'add'.")
-                                cont = yn_valid(u'\u2705'+"Would you like to abort your request edition? (Yes/No): ")
+                                cont = yn_valid(u"\U0001F539"+"Would you like to abort your request edition? (Yes/No): ")
                                 if cont == "Yes":
                                     ref.ref_row.append(0)
                                     break
@@ -63,7 +63,7 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                             print(df_task_by_ref)
                             if df_task_by_ref.empty:
                                 warn("The request is already empty. There is nothing to clear out.")
-                                cont = yn_valid(u'\u2705'+"Would you like to continue with request edition? (Yes/No): ")
+                                cont = yn_valid(u"\U0001F539"+"Would you like to continue with request edition? (Yes/No): ")
                                 if cont == "No":
                                     ref.ref_row.append(0)
                                     break
@@ -72,7 +72,7 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                                 clear_request_schedule(conn, df_task_by_ref)
                                 # refugee
                                 update_refdb_attr(conn, refugeeID, "request", "0")
-                                print(u'\u2705'+"The request schedule related to volunteer and refugee are successfully cleared out.")
+                                print(u"\U0001F539"+"The request schedule related to volunteer and refugee are successfully cleared out.")
                                 ref.ref_row.append(0)
                                 break
             case 13:
