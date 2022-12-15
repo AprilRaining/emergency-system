@@ -37,7 +37,7 @@ def menu(name=''):
             return (
                 '1. Create Emergency Plan.\n'
                 '2. Edit Emergency Plan.\n'
-                '3. Display Emergency Plan.\n'
+                '3. View Emergency Plan.\n'
                 '4. Close Or Open Emergency Plan.\n'
                 '5. Delete Emergency Plan.\n'
                 '0. Exit'
@@ -68,7 +68,7 @@ def menu(name=''):
             return (
                 '1. Edit volunteer name.\n'
                 '2. Edit volunteers password.\n'
-                '3. Pick your working perference.\n'
+                '3. Pick your working preference.\n'
                 '4. Edit your campID.\n'
                 '0. Exit'
             )
@@ -152,6 +152,6 @@ def list_to_sqlite_string(indexList):
     elif type(indexList) == int:
         return '({})'.format(indexList)
 
-def print_dataframe(df):
+def print_plan(df):
     pass
 
