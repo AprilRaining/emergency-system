@@ -31,7 +31,7 @@ if __name__ == "__main__":
             print(menu('Login'))
             match menu_choice_get(menu('Login').count('\n') + 1):
                 case 1:
-                    utilities.admin_login()
+                    # utilities.admin_login()
                     admin = Admin()
                     admin.sub_main()
                 case 2:

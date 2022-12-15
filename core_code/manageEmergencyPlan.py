@@ -1,10 +1,9 @@
 import os
 import sys
 
+from TableDisplayer import *
 from planInput import *
-from sqliteFunctions import *
 
-# print(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Emergency_Plan.emergency_plan_sql import emergency_plan
 
@@ -27,8 +26,7 @@ class ManageEmergencyPlan:
                     self.edit_emergency_plan(select_sqlite('plan'))
                     back()
                 case 3:
-                    # self.display_plans(get_all_IDs('plan'))
-                    self.test(get_all_IDs('plan'))
+                    self.view_plans(get_all_IDs('plan'))
                     back()
                 case 4:
                     self.close_or_open_emergency_plan(select_sqlite('plan'))
@@ -87,7 +85,8 @@ class ManageEmergencyPlan:
             planID=planID, column=options.values[option], newValue=newValue)
         print('Succeed!')
 
-    def get_new_value(self, planID, column):
+    @staticmethod
+    def get_new_value(planID, column):
         df = pd_read_by_IDs('plan', planID)
         print('Please input a new value.')
         match column:
@@ -104,27 +103,17 @@ class ManageEmergencyPlan:
             case 'numberOfCamps':
                 return PlanInput.number_of_camps()
 
-    def update_new_value(self, planID, column, newValue):
+    @staticmethod
+    def update_new_value(planID, column, newValue):
         with sqlite3.connect('info_files/emergency_system.db') as conn:
             c = conn.cursor()
             c.execute("update plan set {} = '{}' where planID = {}"
                       .format(column, newValue, planID))
             conn.commit()
 
-    def display_plans(self, planIDs):
-        df = pd_read_by_IDs('plan', planIDs)
-        numberOfVolunteers = []
-        numberOfRefugees = []
-        for planID in planIDs:
-            campIDs = get_linked_IDs('camp', 'plan', planID)
-            volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
-            numberOfVolunteers.append(len(volunteerIDs))
-            refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
-            numberOfRefugees.append(len(refugeeIDs))
-        df['numberOfVolunteers'] = numberOfVolunteers
-        df['numberOfRefugees'] = numberOfRefugees
-        df['status'] = df.apply(lambda a: self.status_to_string(a), axis=1)
-        print(df.to_string(index=False))
+    def view_plans(self, planIDs):
+        TableDisplayer.plan(planIDs)
+        self.select_in_camp(self.select_in_plan(planIDs))
 
     def close_or_open_emergency_plan(self, planID):
         df = pd_read_by_IDs('plan', planID)
@@ -168,7 +157,8 @@ class ManageEmergencyPlan:
                 print('This plan has been closed, you can not change it.')
                 return
 
-    def delete_emergency_plan(self, planID):
+    @staticmethod
+    def delete_emergency_plan(planID):
         campIDs = get_linked_IDs('camp', 'plan', planID)
         volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
         refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
@@ -190,7 +180,8 @@ class ManageEmergencyPlan:
                 delete_by_IDs('plan', planID)
             print('Succeed!')
 
-    def insert_one_plan(self, plan):
+    @staticmethod
+    def insert_one_plan(plan):
         with sqlite3.connect('info_files/emergency_system.db') as conn:
             c = conn.cursor()
             maxPlanID = c.execute('select max(planID) from plan').fetchone()[0]
@@ -224,11 +215,55 @@ class ManageEmergencyPlan:
             return seqPlan + 1
 
     @staticmethod
-    def status_to_string(df):
-        match df['status']:
-            case 0:
-                return 'Not opened'
-            case 1:
-                return 'Opened'
-            case 2:
-                return 'Closed'
+    def select_in_plan(planIDs):
+        while True:
+            option = input(f"Input a plan ID to view more detail or 'q' to quit:")
+            if option != 'q':
+                try:
+                    option = int(option)
+                except ValueError:
+                    print("Please reenter a valid value.")
+                else:
+                    if option not in planIDs:
+                        print(f'{option} is not a valid input. Please try again.')
+                    else:
+                        campIDs = get_linked_IDs('camp', 'plan', option)
+                        if campIDs:
+                            TableDisplayer.camp(campIDs)
+                            return campIDs
+                        else:
+                            print('No camps under this plan.')
+                            return False
+            else:
+                return False
+
+    @staticmethod
+    def select_in_camp(campIDs):
+        while True:
+            option = input(f"Input a camp ID to view more detail or 'q' to quit:")
+            if option != 'q':
+                try:
+                    option = int(option)
+                except ValueError:
+                    print("Please reenter a valid value.")
+                else:
+                    if option not in campIDs:
+                        print(f'{option} is not a valid input. Please try again.')
+                    else:
+                        volunteerIDs = get_linked_IDs('volunteer', 'camp', option)
+                        refugeeIDs = get_linked_IDs('refugee', 'camp', option)
+                        if volunteerIDs:
+                            print("Volunteers in this camps:")
+                            display_by_IDs('volunteer', volunteerIDs)
+                            print('')
+                        else:
+                            print('No volunteer in this camp')
+                        if refugeeIDs:
+                            print("Refugees in this camps:")
+                            display_by_IDs('refugee', refugeeIDs)
+                            print('')
+                        else:
+                            print('No refugee in this camp')
+                        return
+            else:
+                return

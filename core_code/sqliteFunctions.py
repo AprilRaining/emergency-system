@@ -47,11 +47,11 @@ def display_by_IDs(table, IDs):
         print('No Result!')
 
 
-def get_linked_IDs(sonTable, fatherTable, TableIDs):
+def get_linked_IDs(subTable, superTable, TableIDs):
     with sqlite3.connect('info_files/emergency_system.db') as conn:
         c = conn.cursor()
         result = c.execute(
-            f'select {sonTable}ID from {sonTable} where {fatherTable}ID in {list_to_sqlite_string(TableIDs)}')
+            f'select {subTable}ID from {subTable} where {superTable}ID in {list_to_sqlite_string(TableIDs)}')
         sonTableIDs = []
         for i in result:
             sonTableIDs.append(i[0])
@@ -79,9 +79,7 @@ def select_sqlite(table):
     while True:
         display_by_IDs(table, IDs)
         if not IDs:
-            hint = "Please input 0 to search again." \
-                   "'a' to view all again." \
-                   "'q' to go back."
+            hint = "Please input 0 to search again."
         else:
             print('Input 0 to search')
             hint = f'Please input the {table}ID to choose a {table}: '

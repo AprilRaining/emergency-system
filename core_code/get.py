@@ -81,9 +81,22 @@ class Get:
                     raise InvalidChoiceError(option)
             except ValueError:
                 print("You entered a non-numeric value.")
-                print("Please reenter a valid Number:")
+                print("Please reenter a valid Number.")
             except InvalidChoiceError as e:
                 print(e)
             else:
                 return option
 
+    def option_in_list_full(li, hint=''):
+        while True:
+            try:
+                option = input(hint)
+                if option not in li:
+                    raise InvalidChoiceError(option)
+            except ValueError:
+                print("Invalid input.")
+                print("Please reenter a valid value.")
+            except InvalidChoiceError as e:
+                print(e)
+            else:
+                return option
