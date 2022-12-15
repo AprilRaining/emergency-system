@@ -1,0 +1,985 @@
+2022-12-13 21:31:06,878 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 250, in display_account_byID
+    sch = get_volunteer_schedule_df(c,campID=0,volunteer_ID=ID,purpose ="Display")
+  File "/Users/beautiez/Documents/emergency-system/core_code/db_connect_ref.py", line 97, in get_volunteer_schedule_df
+    pd_select = pd.read_sql_query(query,conn)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/io/sql.py", line 397, in read_sql_query
+    return pandas_sql.read_query(
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/io/sql.py", line 2078, in read_query
+    cursor = self.execute(*args)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/io/sql.py", line 2016, in execute
+    cur = self.con.cursor()
+AttributeError: 'sqlite3.Cursor' object has no attribute 'cursor'
+2022-12-13 22:09:26,314 — ERROR : 5 is an invalid ID
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 261, in display_account_byID
+    print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,18,18,18,18,18,18,18))
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 67, in print_table
+    process_row(headers)
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 62, in process_row
+    line.append(str(s)[:short_sizes[n]])
+IndexError: list index out of range
+2022-12-13 22:11:19,494 — ERROR : 5 is an invalid ID
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 261, in display_account_byID
+    print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,18,18,18,18,18,18,18))
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 67, in print_table
+    process_row(headers)
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 62, in process_row
+    line.append(str(s)[:short_sizes[n]])
+IndexError: list index out of range
+2022-12-13 22:13:29,877 — ERROR : 8 is an invalid ID
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 261, in display_account_byID
+    print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,18,18,18,18,18,18,18))
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 67, in print_table
+    process_row(headers)
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 62, in process_row
+    line.append(str(s)[:short_sizes[n]])
+IndexError: list index out of range
+2022-12-13 22:21:00,251 — ERROR : 8 is an invalid ID
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 261, in display_account_byID
+    print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,18,18,18,18,18,18,18))
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 67, in print_table
+    process_row(headers)
+  File "/Users/beautiez/Documents/emergency-system/core_code/print_table.py", line 62, in process_row
+    line.append(str(s)[:short_sizes[n]])
+IndexError: list index out of range
+2022-12-14 12:27:01,489 — ERROR : There is no search result, please change your keyword.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 133, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-14 14:19:07,131 — ERROR : Your input number is invalid in our options. Please try again.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 168, in numerical_input_check
+    raise InvalidChoiceError(v)
+myError.InvalidChoiceError: 555 is an invalid choice.
+Please reenter a number specified above.
+2022-12-14 14:20:10,818 — ERROR : Your input is invalid. Please enter either 'Yes' or 'No'
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 206, in yn_valid
+    raise exc.wrong_yn_input
+refugee_exception.wrong_yn_input
+2022-12-14 14:34:29,204 — ERROR : Please enter a single numerical value for your selected options.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 189, in single_input_check
+    raise ValueError
+ValueError
+2022-12-14 16:04:30,392 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 46, in <module>
+    utilities.admin_login()
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 11, in admin_login
+    password = input(u"\U0001F539"+"Input the password of admin:")
+KeyboardInterrupt
+2022-12-14 16:06:07,591 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 46, in <module>
+    utilities.admin_login()
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 11, in admin_login
+    password = input(u"\U0001F539"+"Input the password of admin:")
+KeyboardInterrupt
+2022-12-14 16:13:46,999 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 46, in <module>
+    utilities.admin_login()
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 11, in admin_login
+    password = input(u"\U0001F539"+"Input the password of admin:")
+KeyboardInterrupt
+2022-12-14 23:52:16,972 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 33, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 51, in sub_main
+    back()
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
+    key = input('Input "Q/q" to go back:')
+KeyboardInterrupt
+2022-12-14 23:54:34,062 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 97, in check_plan
+    c.execute("update plan set status = 1 where startDate >= DATE()")
+sqlite3.OperationalError: database is locked
+2022-12-14 23:54:34,064 — ERROR : database is locked
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 97, in check_plan
+    c.execute("update plan set status = 1 where startDate >= DATE()")
+sqlite3.OperationalError: database is locked
+2022-12-14 23:54:55,277 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 97, in check_plan
+    c.execute("update plan set status = 1 where startDate >= DATE()")
+sqlite3.OperationalError: database is locked
+2022-12-14 23:54:55,278 — ERROR : database is locked
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 97, in check_plan
+    c.execute("update plan set status = 1 where startDate >= DATE()")
+sqlite3.OperationalError: database is locked
+2022-12-15 00:08:56,443 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 33, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 51, in sub_main
+    back()
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
+    key = input('Input "Q/q" to go back:')
+KeyboardInterrupt
+2022-12-15 00:47:07,717 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 33, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 43, in sub_main
+    self.close_or_open_emergency_plan(select_sqlite('plan'))
+  File "/Users/beautiez/Documents/emergency-system/core_code/sqliteFunctions.py", line 94, in select_sqlite
+    IDs = search_sqlite(table)
+  File "/Users/beautiez/Documents/emergency-system/core_code/sqliteFunctions.py", line 75, in search_sqlite
+    option = options.get_option(
+  File "/Users/beautiez/Documents/emergency-system/core_code/options.py", line 25, in get_option
+    return Get.option_in_range(self.optionRange, hint)
+  File "/Users/beautiez/Documents/emergency-system/core_code/get.py", line 64, in option_in_range
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 00:48:23,988 — ERROR : You entered a non-numeric value.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/get.py", line 79, in option_in_list
+    option = int(input(hint))
+ValueError: invalid literal for int() with base 10: '#'
+2022-12-15 00:48:23,991 — ERROR : Please reenter a valid Number:
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/get.py", line 79, in option_in_list
+    option = int(input(hint))
+ValueError: invalid literal for int() with base 10: '#'
+2022-12-15 00:52:03,703 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 33, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 43, in sub_main
+    self.close_or_open_emergency_plan(select_sqlite('plan'))
+  File "/Users/beautiez/Documents/emergency-system/core_code/sqliteFunctions.py", line 91, in select_sqlite
+    ID = Get.option_in_list(
+  File "/Users/beautiez/Documents/emergency-system/core_code/get.py", line 79, in option_in_list
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 01:51:02,433 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 35, in sub_main
+    case 2:
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 44, in manage_account
+    print(menu())
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 102, in menu_choice_get
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 02:09:57,076 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 33, in sub_main
+    manage_emergency_plan = ManageEmergencyPlan()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 20, in sub_main
+    match menu_choice_get(self.menu.count('\n') + 1, "\n-->"):
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 102, in menu_choice_get
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 09:28:40,017 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 34, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 25, in sub_main
+    create = emergency_plan.Create_Emergency_Plan()
+  File "/Users/beautiez/Documents/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 78, in __init__
+    self.type = PlanInput.type()
+  File "/Users/beautiez/Documents/emergency-system/core_code/planInput.py", line 19, in type
+    option = options.get_option()
+  File "/Users/beautiez/Documents/emergency-system/core_code/options.py", line 25, in get_option
+    return Get.option_in_range(self.optionRange, hint)
+  File "/Users/beautiez/Documents/emergency-system/core_code/get.py", line 64, in option_in_range
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 09:34:55,001 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 34, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 20, in sub_main
+    match menu_choice_get(self.menu.count('\n') + 1, "\n-->"):
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 102, in menu_choice_get
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 09:37:54,804 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 34, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 20, in sub_main
+    match menu_choice_get(self.menu.count('\n') + 1, "\n-->"):
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 102, in menu_choice_get
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 10:11:56,218 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 34, in sub_main
+    manage_emergency_plan.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/manageEmergencyPlan.py", line 43, in sub_main
+    self.close_or_open_emergency_plan(select_sqlite('plan'))
+  File "/Users/beautiez/Documents/emergency-system/core_code/sqliteFunctions.py", line 91, in select_sqlite
+    IDs.append(0)
+  File "/Users/beautiez/Documents/emergency-system/core_code/get.py", line 79, in option_in_list
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 10:35:03,888 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 36, in sub_main
+    self.manage_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 45, in manage_account
+    match menu_choice_get(menu().count('\n') + 1, "\n-->"):
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 102, in menu_choice_get
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 10:35:10,724 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 50, in <module>
+    v_ID = utilities.volunteer_login()
+  File "/Users/beautiez/Documents/emergency-system/core_code/utilities.py", line 27, in volunteer_login
+    password = input( u"\U0001F539"+"Input the password of volunteer:")
+KeyboardInterrupt
+2022-12-15 10:36:00,611 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3803, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas/_libs/index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'accountStatus'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 111, in deactive_volunteer_account
+    sp_vol_df = vol_df.loc[vol_df["volunteerID"]==ID,"volunteerID":"accountStatus"]
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1067, in __getitem__
+    return self._getitem_tuple(key)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1256, in _getitem_tuple
+    return self._getitem_tuple_same_dim(tup)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 924, in _getitem_tuple_same_dim
+    retval = getattr(retval, self.name)._getitem_axis(key, axis=i)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1290, in _getitem_axis
+    return self._get_slice_axis(key, axis=axis)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1324, in _get_slice_axis
+    indexer = labels.slice_indexer(slice_obj.start, slice_obj.stop, slice_obj.step)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6600, in slice_indexer
+    start_slice, end_slice = self.slice_locs(start, end, step=step)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6814, in slice_locs
+    end_slice = self.get_slice_bound(end, "right")
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6727, in get_slice_bound
+    raise err
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6721, in get_slice_bound
+    slc = self.get_loc(label)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    raise KeyError(key) from err
+KeyError: 'accountStatus'
+2022-12-15 10:37:50,341 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 36, in sub_main
+    self.manage_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 51, in manage_account
+    back()
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
+    key = input('Input "Q/q" to go back:')
+KeyboardInterrupt
+2022-12-15 10:38:40,414 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3803, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas/_libs/index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'accountStatus'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 83, in reactive_volunteer_account
+    sp_vol_df = vol_df.loc[vol_df["volunteerID"]==ID,"volunteerID":"accountStatus"]
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1067, in __getitem__
+    return self._getitem_tuple(key)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1256, in _getitem_tuple
+    return self._getitem_tuple_same_dim(tup)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 924, in _getitem_tuple_same_dim
+    retval = getattr(retval, self.name)._getitem_axis(key, axis=i)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1290, in _getitem_axis
+    return self._get_slice_axis(key, axis=axis)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1324, in _get_slice_axis
+    indexer = labels.slice_indexer(slice_obj.start, slice_obj.stop, slice_obj.step)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6600, in slice_indexer
+    start_slice, end_slice = self.slice_locs(start, end, step=step)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6814, in slice_locs
+    end_slice = self.get_slice_bound(end, "right")
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6727, in get_slice_bound
+    raise err
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6721, in get_slice_bound
+    slc = self.get_loc(label)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    raise KeyError(key) from err
+KeyError: 'accountStatus'
+2022-12-15 10:40:04,097 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3803, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas/_libs/index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'accountStatus'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 113, in deactive_volunteer_account
+    sp_vol_df = vol_df.loc[vol_df["volunteerID"]==ID,"volunteerID":"accountStatus"]
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1067, in __getitem__
+    return self._getitem_tuple(key)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1256, in _getitem_tuple
+    return self._getitem_tuple_same_dim(tup)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 924, in _getitem_tuple_same_dim
+    retval = getattr(retval, self.name)._getitem_axis(key, axis=i)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1290, in _getitem_axis
+    return self._get_slice_axis(key, axis=axis)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1324, in _get_slice_axis
+    indexer = labels.slice_indexer(slice_obj.start, slice_obj.stop, slice_obj.step)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6600, in slice_indexer
+    start_slice, end_slice = self.slice_locs(start, end, step=step)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6814, in slice_locs
+    end_slice = self.get_slice_bound(end, "right")
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6727, in get_slice_bound
+    raise err
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6721, in get_slice_bound
+    slc = self.get_loc(label)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    raise KeyError(key) from err
+KeyError: 'accountStatus'
+2022-12-15 10:41:35,523 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 36, in sub_main
+    self.manage_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 51, in manage_account
+    back()
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
+    key = input('Input "Q/q" to go back:')
+KeyboardInterrupt
+2022-12-15 10:42:16,339 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3803, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas/_libs/index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'accountStatus'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 83, in reactive_volunteer_account
+    sp_vol_df = vol_df.loc[vol_df["volunteerID"]==ID,"volunteerID":"accountStatus"]
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1067, in __getitem__
+    return self._getitem_tuple(key)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1256, in _getitem_tuple
+    return self._getitem_tuple_same_dim(tup)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 924, in _getitem_tuple_same_dim
+    retval = getattr(retval, self.name)._getitem_axis(key, axis=i)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1290, in _getitem_axis
+    return self._get_slice_axis(key, axis=axis)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1324, in _get_slice_axis
+    indexer = labels.slice_indexer(slice_obj.start, slice_obj.stop, slice_obj.step)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6600, in slice_indexer
+    start_slice, end_slice = self.slice_locs(start, end, step=step)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6814, in slice_locs
+    end_slice = self.get_slice_bound(end, "right")
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6727, in get_slice_bound
+    raise err
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6721, in get_slice_bound
+    slc = self.get_loc(label)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    raise KeyError(key) from err
+KeyError: 'accountStatus'
+2022-12-15 10:43:52,452 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 36, in sub_main
+    self.manage_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 48, in manage_account
+    back()
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
+    key = input('Input "Q/q" to go back:')
+KeyboardInterrupt
+2022-12-15 10:44:34,479 — ERROR : Wrong connection to the database.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3803, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas/_libs/index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'accountStatus'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 115, in deactive_volunteer_account
+    sp_vol_df = vol_df.loc[vol_df["volunteerID"]==ID,"volunteerID":"accountStatus"]
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1067, in __getitem__
+    return self._getitem_tuple(key)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1256, in _getitem_tuple
+    return self._getitem_tuple_same_dim(tup)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 924, in _getitem_tuple_same_dim
+    retval = getattr(retval, self.name)._getitem_axis(key, axis=i)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1290, in _getitem_axis
+    return self._get_slice_axis(key, axis=axis)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexing.py", line 1324, in _get_slice_axis
+    indexer = labels.slice_indexer(slice_obj.start, slice_obj.stop, slice_obj.step)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6600, in slice_indexer
+    start_slice, end_slice = self.slice_locs(start, end, step=step)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6814, in slice_locs
+    end_slice = self.get_slice_bound(end, "right")
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6727, in get_slice_bound
+    raise err
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 6721, in get_slice_bound
+    slc = self.get_loc(label)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    raise KeyError(key) from err
+KeyError: 'accountStatus'
+2022-12-15 10:45:45,815 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 36, in sub_main
+    self.manage_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 51, in manage_account
+    back()
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
+    key = input('Input "Q/q" to go back:')
+KeyboardInterrupt
+2022-12-15 11:03:50,198 — ERROR : [91m5 is an invalid choice.
+Please reenter a number specified above.[00m
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/accountInput.py", line 145, in get_work_shift
+    raise InvalidChoiceError(work_shift)
+myError.InvalidChoiceError: [91m5 is an invalid choice.
+Please reenter a number specified above.[00m
+2022-12-15 11:12:28,915 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 36, in sub_main
+    self.manage_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 53, in manage_account
+    self.creat_a_volunteer_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 148, in creat_a_volunteer_account
+    workshift = AccountCreation.get_work_shift()
+  File "/Users/beautiez/Documents/emergency-system/core_code/accountInput.py", line 136, in get_work_shift
+    def get_work_shift():
+KeyboardInterrupt
+2022-12-15 11:15:42,447 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 36, in sub_main
+    self.manage_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 53, in manage_account
+    self.creat_a_volunteer_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 148, in creat_a_volunteer_account
+    workshift = AccountCreation.get_work_shift()
+  File "/Users/beautiez/Documents/emergency-system/core_code/accountInput.py", line 139, in get_work_shift
+    try:
+KeyboardInterrupt
+2022-12-15 11:18:30,879 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 36, in sub_main
+    self.manage_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 53, in manage_account
+    self.creat_a_volunteer_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 148, in creat_a_volunteer_account
+    workshift = AccountCreation.get_work_shift()
+  File "/Users/beautiez/Documents/emergency-system/core_code/accountInput.py", line 140, in get_work_shift
+    def get_work_shift():
+KeyboardInterrupt
+2022-12-15 11:25:49,335 — ERROR : Your input is invalid, please try again!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/accountInput.py", line 122, in get_week_preference
+    if int(input_str)>8 or int(input_str)<1:
+ValueError: invalid literal for int() with base 10: 'fdss'
+2022-12-15 11:26:12,131 — ERROR : You input is invalid. Please input a numerical value within a range 1 to 3.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/accountInput.py", line 157, in get_work_shift
+    raise InvalidChoiceError(work_shift)
+myError.InvalidChoiceError: [91mgfd is an invalid choice.
+Please reenter a number specified above.[00m
+2022-12-15 11:29:40,561 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 36, in sub_main
+    self.manage_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 54, in manage_account
+    back()
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
+    key = input('Input "Q/q" to go back:')
+KeyboardInterrupt
+2022-12-15 11:30:55,788 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 48, in <module>
+    admin.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 36, in sub_main
+    self.manage_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 53, in manage_account
+    self.creat_a_volunteer_account()
+  File "/Users/beautiez/Documents/emergency-system/core_code/admin.py", line 148, in creat_a_volunteer_account
+    workshift = AccountCreation.get_work_shift()
+  File "/Users/beautiez/Documents/emergency-system/core_code/accountInput.py", line 151, in get_work_shift
+    work_shift = input(u"\U0001F539"+"What will be a work shift for the volunteer? \n 1. Morning (06:00-14:00) \n "
+KeyboardInterrupt
+2022-12-15 11:31:41,810 — ERROR : You input is invalid. Please input a numerical value within a range 1 to 3.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/accountInput.py", line 160, in get_work_shift
+    raise InvalidChoiceError(work_shift)
+myError.InvalidChoiceError: [91m1,2 is an invalid choice.
+Please reenter a number specified above.[00m
+2022-12-15 11:45:03,248 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 56, in sub_main
+    case 1:
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 75, in manage_personal_information
+    case 1:
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 86, in edit_my_information
+    print(menu())
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 102, in menu_choice_get
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 11:46:36,881 — ERROR : Camp not existed
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/accountInput.py", line 22, in get_camp_id
+    camp_capacity = camp_existence[0][1]
+IndexError: list index out of range
+2022-12-15 11:57:34,334 — ERROR : Please enter a numerical value for your input.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 130, in refugee_validity_check_by_ID
+    opt = col_opt[int(input(u"\U0001F539"+'Please select how you want to search: '))]
+ValueError: invalid literal for int() with base 10: 'hjj'
+2022-12-15 11:57:37,555 — ERROR : list index out of range
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 130, in refugee_validity_check_by_ID
+    opt = col_opt[int(input(u"\U0001F539"+'Please select how you want to search: '))]
+IndexError: list index out of range
+2022-12-15 11:57:44,529 — ERROR : There is no search result, please change your keyword.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 134, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-15 11:58:17,306 — ERROR : There is no search result, please change your keyword.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 134, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-15 12:00:27,738 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 349, in manage_camp_file
+    prLightPurple("\t\t\tVIEW REFUGEE SCHEDULE\n")
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 418, in view_refugee_req_schedule
+    refugee_df = get_refugee_dataframe(conn)
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 130, in refugee_validity_check_by_ID
+    opt = col_opt[int(input(u"\U0001F539"+'Please select how you want to search: '))]
+KeyboardInterrupt
+2022-12-15 12:01:06,500 — ERROR : There is no search result, please change your keyword.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 134, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-15 12:01:17,867 — ERROR : There is no search result, please change your keyword.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 134, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-15 12:01:34,021 — ERROR : Please enter a numerical value for your input.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 130, in refugee_validity_check_by_ID
+    opt = col_opt[int(input(u"\U0001F539"+'Please select how you want to search: '))]
+ValueError: invalid literal for int() with base 10: 'Varon'
+2022-12-15 12:01:46,567 — ERROR : There is no search result, please change your keyword.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 134, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-15 12:03:35,106 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 350, in manage_camp_file
+    self.view_refugee_req_schedule()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 419, in view_refugee_req_schedule
+    ref_df_by_id = refugee_validity_check_by_ID("schedule", refugee_df, conn)
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 130, in refugee_validity_check_by_ID
+    opt = col_opt[int(input(u"\U0001F539"+'Please select how you want to search: '))]
+KeyboardInterrupt
+2022-12-15 12:05:18,304 — ERROR : There is no search result, please change your keyword.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 134, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-15 12:18:23,181 — ERROR : Your input camp ID is invalid in the database
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 106, in camp_capacity_check
+    raise exc.camp_id_out_of_range
+refugee_exception.camp_id_out_of_range
+2022-12-15 12:20:41,288 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 340, in manage_camp_file
+    self.create_emergency_refugee_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 385, in create_emergency_refugee_file
+    new_ref.refugee_registration_form()
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 378, in refugee_registration_form
+    self.assign_camp_ID()
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 73, in assign_camp_ID
+    self.assigned_camp = camp_capacity_check(self.conn)
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 104, in camp_capacity_check
+    camp = int(input(u"\U0001F539"+"Assign the camp ID to the refugee: "))
+KeyboardInterrupt
+2022-12-15 12:29:18,321 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 44, in <module>
+    match menu_choice_get(menu('Login').count('\n') + 1, "\n-->"):
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 102, in menu_choice_get
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 12:38:00,504 — ERROR : Your input number is invalid in our options. Please try again.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 173, in numerical_input_check
+    except InvalidChoiceError:
+myError.InvalidChoiceError: [91m6 is an invalid choice.
+Please reenter a number specified above.[00m
+2022-12-15 12:38:02,716 — ERROR : Please enter a numerical value for your selected options.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 172, in numerical_input_check
+    raise InvalidChoiceError(selected_opts)
+ValueError: invalid literal for int() with base 10: 'ert'
+2022-12-15 12:38:06,559 — ERROR : Please enter a numerical value for your selected options.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 172, in numerical_input_check
+    raise InvalidChoiceError(selected_opts)
+ValueError: invalid literal for int() with base 10: '$$'
+2022-12-15 12:38:11,058 — ERROR : Your input number is invalid in our options. Please try again.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 173, in numerical_input_check
+    except InvalidChoiceError:
+myError.InvalidChoiceError: [91m0 is an invalid choice.
+Please reenter a number specified above.[00m
+2022-12-15 12:38:12,969 — ERROR : Please enter a numerical value for your selected options.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 172, in numerical_input_check
+    raise InvalidChoiceError(selected_opts)
+ValueError: invalid literal for int() with base 10: 'ty'
+2022-12-15 12:38:20,193 — ERROR : Please input an email in a valid format e.g example@gmail.com
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 85, in email_format_check
+    raise exc.wrong_email_format
+refugee_exception.wrong_email_format
+2022-12-15 12:38:49,710 — ERROR : Please enter a numerical value for your selected options.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 172, in numerical_input_check
+    raise InvalidChoiceError(selected_opts)
+ValueError: invalid literal for int() with base 10: '--'
+2022-12-15 12:40:32,936 — ERROR : Your input is invalid. Please enter either 'Yes' or 'No'
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 229, in yn_valid
+    except exc.wrong_yn_input:
+refugee_exception.wrong_yn_input
+2022-12-15 13:10:17,684 — ERROR : 'datetime.date' object has no attribute 'split'
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 57, in date_format_check
+    ds, ms, ys = [int(x) for x in limit_start.split('-')]
+AttributeError: 'datetime.date' object has no attribute 'split'
+2022-12-15 13:13:57,737 — ERROR : Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 49, in date_format_check
+    raise exc.wrong_birthdate_format
+refugee_exception.wrong_birthdate_format
+2022-12-15 13:14:05,114 — ERROR : 'datetime.date' object has no attribute 'split'
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 57, in date_format_check
+    ds, ms, ys = [int(x) for x in limit_start.split('-')]
+AttributeError: 'datetime.date' object has no attribute 'split'
+2022-12-15 13:14:09,712 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 340, in manage_camp_file
+    self.create_emergency_refugee_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 385, in create_emergency_refugee_file
+    new_ref.refugee_registration_form()
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 409, in refugee_registration_form
+    req_list = self.ref_request("create")
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 210, in ref_request
+    self.req_date = date_format_check(
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 46, in date_format_check
+    input_date = input(u"\U0001F539"+f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
+KeyboardInterrupt
+2022-12-15 13:23:25,508 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 340, in manage_camp_file
+    self.create_emergency_refugee_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 385, in create_emergency_refugee_file
+    new_ref.refugee_registration_form()
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 409, in refugee_registration_form
+    # request: return array of requests
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 210, in ref_request
+    if i>= int(today_ind):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 46, in date_format_check
+    input_date = input(u"\U0001F539"+f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
+KeyboardInterrupt
+2022-12-15 13:24:22,066 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 340, in manage_camp_file
+    self.create_emergency_refugee_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 385, in create_emergency_refugee_file
+    new_ref.refugee_registration_form()
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 394, in refugee_registration_form
+    self.refugee_birthdate()
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 29, in refugee_birthdate
+    self.birthdate = date_format_check("birthdate")
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 46, in date_format_check
+    input_date = input(u"\U0001F539"+f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
+KeyboardInterrupt
+2022-12-15 13:25:42,585 — ERROR : Please enter a numerical value for your selected options.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 171, in numerical_input_check
+    if int(selected_opts) > options.count("\n")+1 or int(selected_opts)<=0:
+ValueError: invalid literal for int() with base 10: 'S'
+2022-12-15 13:28:54,972 — ERROR : You can only select the date from today till the last date of this week!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 62, in date_format_check
+    raise exc.date_not_available
+refugee_exception.date_not_available
+2022-12-15 13:37:16,523 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 340, in manage_camp_file
+    self.create_emergency_refugee_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 385, in create_emergency_refugee_file
+    new_ref.refugee_registration_form()
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 413, in refugee_registration_form
+    prCyan("\n--------------------------------------------------------------------------")
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 186, in ref_request
+    req_inpt = single_input_check(req_opt)
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 186, in single_input_check
+    selected_opts = input(options + "\n-->")
+KeyboardInterrupt
+2022-12-15 13:37:47,947 — ERROR : Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 49, in date_format_check
+    raise exc.wrong_birthdate_format
+refugee_exception.wrong_birthdate_format
+2022-12-15 13:37:52,153 — ERROR : Please input the day between 1 and 31
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 51, in date_format_check
+    raise exc.day_out_of_range
+refugee_exception.day_out_of_range
+2022-12-15 13:50:39,789 — ERROR : There is no search result, please change your keyword.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 141, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-15 13:53:56,152 — ERROR : Please enter either 'add' or 'edit' or 'clear'
+NoneType: None
+2022-12-15 14:06:04,804 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 345, in manage_camp_file
+    self.edit_emergency_refugee_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 403, in edit_emergency_refugee_file
+    edited_fields = refugee_info_edit(
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_info_edit.py", line 58, in refugee_info_edit
+    ref.ref_request(purpose, refugeeID)
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 328, in ref_request
+    for i in dates:
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 46, in date_format_check
+    input_date = input(u"\U0001F539"+f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
+KeyboardInterrupt
+2022-12-15 14:06:19,939 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 340, in manage_camp_file
+    self.create_emergency_refugee_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 385, in create_emergency_refugee_file
+    new_ref.refugee_registration_form()
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 395, in refugee_registration_form
+    self.assign_camp_ID()
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 73, in assign_camp_ID
+    self.assigned_camp = camp_capacity_check(self.conn)
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 104, in camp_capacity_check
+    camp = int(input(u"\U0001F539"+"Assign the camp ID to the refugee: "))
+KeyboardInterrupt
+2022-12-15 14:10:15,059 — ERROR : There is no search result, please change your keyword.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 134, in refugee_validity_check_by_ID
+    raise exc.refugee_id_out_of_range
+refugee_exception.refugee_id_out_of_range
+2022-12-15 14:10:23,941 — ERROR : Please enter a numerical value for your input.
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 130, in refugee_validity_check_by_ID
+    opt = col_opt[int(input(u"\U0001F539"+'Please select how you want to search: '))]
+ValueError: invalid literal for int() with base 10: 'wen'
+2022-12-15 14:17:57,489 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 345, in manage_camp_file
+    self.edit_emergency_refugee_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 403, in edit_emergency_refugee_file
+    edited_fields = refugee_info_edit(
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_info_edit.py", line 58, in refugee_info_edit
+    ref.ref_request(purpose, refugeeID)
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 333, in ref_request
+    print("\n"+u"\U0001F539"+"Please select the new request's date from options below: ")
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 46, in date_format_check
+    input_date = input(u"\U0001F539"+f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
+KeyboardInterrupt
+2022-12-15 14:22:06,053 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 345, in manage_camp_file
+    self.edit_emergency_refugee_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 403, in edit_emergency_refugee_file
+    edited_fields = refugee_info_edit(
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_info_edit.py", line 58, in refugee_info_edit
+    ref.ref_request(purpose, refugeeID)
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee.py", line 334, in ref_request
+    self.req_date = date_format_check(
+  File "/Users/beautiez/Documents/emergency-system/core_code/refugee_validation.py", line 46, in date_format_check
+    input_date = input(u"\U0001F539"+f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
+KeyboardInterrupt
+2022-12-15 14:48:53,457 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 63, in sub_main
+    self.manage_task()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 531, in manage_task
+    print(menu())
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 102, in menu_choice_get
+    option = int(input(hint))
+KeyboardInterrupt
+2022-12-15 14:51:57,005 — ERROR : 
+Force Quit!
+Traceback (most recent call last):
+  File "/Users/beautiez/Documents/emergency-system/core_code/main.py", line 54, in <module>
+    volunteer.sub_main()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 60, in sub_main
+    self.manage_camp_file()
+  File "/Users/beautiez/Documents/emergency-system/core_code/volunteer.py", line 351, in manage_camp_file
+    back()
+  File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
+    key = input('Input "Q/q" to go back:')
+KeyboardInterrupt

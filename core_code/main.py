@@ -1,8 +1,7 @@
 import os
 import sys
-
 import pandas as pd
-
+from system_log import *
 import utilities
 from admin import Admin
 from myfunctionlib import *
@@ -26,10 +25,21 @@ if __name__ == "__main__":
     utilities.check_plan()
     utilities.check_week()
     try:
-        while True:
-            print('Welcome to the emergency system designed by Team K:)\nPlease select the account type:')
+        while True: 
+            prCyan("""
+ ____      ____ ________ _____      ______   ___   ____    ____ ________  
+|_  _|    |_  _|_   __  |_   _|   .' ___  |.'   `.|_   \  /   _|_   __  | 
+  \ \  /\  / /   | |_ \_| | |    / .'   \_/  .-.  \ |   \/   |   | |_ \_| 
+   \ \/  \/ /    |  _| _  | |   _| |      | |   | | | |\  /| |   |  _| _  
+    \  /\  /    _| |__/ |_| |__/ \ `.___.'\  `-'  /_| |_\/_| |_ _| |__/ | 
+     \/  \/    |________|________|`.____ .'`.___.'|_____||_____|________| 
+                                                                          
+                                                   """)
+            print('\t\tto the Emergency System Designed By Team K:)\n')
+            print("--------------------------------------------------------------------------\n")
+            prYellow(u"\U0001F539"+"Please select the account type to login :\n")
             print(menu('Login'))
-            match menu_choice_get(menu('Login').count('\n') + 1):
+            match menu_choice_get(menu('Login').count('\n') + 1, "\n-->"):
                 case 1:
                     # utilities.admin_login()
                     admin = Admin()
@@ -43,7 +53,7 @@ if __name__ == "__main__":
                 case 0:
                     break
     except KeyboardInterrupt:
-        print('\nForce Quit!')
+        print_log('\nForce Quit!')
     except Exception as e:
         print('\nExit with unknown errors')
         print(e)

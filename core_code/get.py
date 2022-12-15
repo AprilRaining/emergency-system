@@ -1,5 +1,5 @@
 import datetime
-
+from system_log import *
 from myError import *
 
 
@@ -18,8 +18,8 @@ class Get:
                     if n <= 0:
                         raise InvalidInput(n)
             except ValueError:
-                print("You entered a non-numeric value.")
-                print("Please reenter a valid value.")
+                print_log("You entered a non-numeric value.")
+                print_log("Please reenter a valid value.")
             except InvalidInput as e:
                 print(e)
             else:
@@ -39,11 +39,11 @@ class Get:
                 return date
 
     @staticmethod
-    def list(start, end, hint=''):
+    def listing(start, end, hint=''):
         while True:
             try:
                 l = input(hint)
-                arr = l.split(' ')
+                arr = l.split(',')
                 for i in range(len(arr)):
                     arr[i] = int(arr[i])
                 for i in arr:
@@ -52,7 +52,7 @@ class Get:
             except InvalidInput as e:
                 print(e)
             except Exception as e:
-                print("unknown error")
+                print_log("Unknown error")
                 print(e)
             else:
                 return arr
@@ -65,8 +65,8 @@ class Get:
                 if option not in range(start, span):
                     raise InvalidChoiceError(option)
             except ValueError:
-                print("You entered a non-numeric value.")
-                print("Please reenter a valid Number:")
+                print_log("You entered a non-numeric value.")
+                print_log("Please reenter a valid Number:")
             except InvalidChoiceError as e:
                 print(e)
             else:
@@ -80,8 +80,8 @@ class Get:
                 if option not in li:
                     raise InvalidChoiceError(option)
             except ValueError:
-                print("You entered a non-numeric value.")
-                print("Please reenter a valid Number.")
+                print_log("You entered a non-numeric value.")
+                print_log("Please reenter a valid Number:")
             except InvalidChoiceError as e:
                 print(e)
             else:

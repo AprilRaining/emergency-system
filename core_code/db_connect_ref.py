@@ -25,7 +25,7 @@ def insert_refdb_row(conn, refugee_row):
     cur = conn.cursor()
     cur.execute(query, refugee_row)
     conn.commit()
-    time.sleep(4.0)
+    time.sleep(2.0)
     cur.close()
     return cur.lastrowid
 
@@ -62,7 +62,7 @@ def clear_request_schedule(conn,df_task_by_ref):
         cur = conn.cursor()
         cur.execute(vol_upd1)
         conn.commit()
-        time.sleep(4.0)
+        time.sleep(2.0)
 
 
 def get_refugee_dataframe(conn):
@@ -80,17 +80,35 @@ def select_task_by_ref_id(conn,refugeeID):
     time.sleep(1.0)
     return df_task_ref_id
 
-def get_volunteer_schedule_df(conn,campID=0,volunteer_ID = 0):
+def get_volunteer_schedule_df(conn,campID=0,volunteer_ID = 0, purpose=''):
      # select from volunteer table which match the camp of refugee
-    query = f'''SELECT volunteerID,fName,lName,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer WHERE campID = {campID}'''
-    if volunteer_ID != 0 and campID==0:
-        query =  f'''SELECT volunteerID,fName,lName,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer WHERE volunteerID={volunteer_ID}'''
+    col_names = []
+    query = ""
+    if purpose == "Display":
+        col_names = ["VolunteerID", "First Name", "Last Name",'CampID','Work Shift','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday', 'Sunday']
+        if campID == 0 and volunteer_ID != 0:
+            query =  f'''SELECT volunteerID,fName,lName,campID,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer WHERE volunteerID={volunteer_ID}''' 
+        elif campID != 0 and volunteer_ID == 0:
+            query =  f'''SELECT volunteerID,fName,lName,campID,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer WHERE campID={campID}'''
+        elif campID == 0 and volunteer_ID == 0:
+            query =  f'''SELECT volunteerID,fName,lName,campID,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer'''
+    else:
+        if volunteer_ID != 0 and campID==0:
+            query =  f'''SELECT volunteerID,fName,lName,campID,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer WHERE volunteerID={volunteer_ID}'''
+        else:
+            query = f'''SELECT volunteerID,fName,lName,campID,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer WHERE campID = {campID}'''
 
+        col_names = ['VolunteerID', 'First Name', 'Last Name','CampID','Work Shift','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday', 'Sunday']
+    
     pd_select = pd.read_sql_query(query,conn)
-    df_vol = pd.DataFrame(pd_select, columns=['volunteerID', 'fName', 'lName', 'workShift','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday', 'Sunday'])
+
+    # df_vol = pd.DataFrame(pd_select, columns=col_names)
     time.sleep(1.0)
-    df_vol_sch = df_vol.copy(deep=True)
-    col_list = list(df_vol_sch.columns[4:])
+    df_vol_sch = pd_select.copy(deep=True)
+    if purpose == "Display":
+        col_list = list(df_vol_sch.columns[5:])
+    else:
+        col_list = list(df_vol_sch.columns[5:])
     data_row = df_vol_sch.shape[0]
     for c in col_list:
         for ind in range(data_row):
