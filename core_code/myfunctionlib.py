@@ -5,7 +5,6 @@ import sqlite3
 from myError import *
 from system_log import *
 
-
 def menu(name=''):
     """
     This function used to store data about UI and return them as a string.

@@ -1,12 +1,14 @@
-from Emergency_Plan.emergency_plan_sql import emergency_plan
 import os
 import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from Emergency_Plan.emergency_plan_sql import emergency_plan
+import datetime
 from TableDisplayer import *
 from planInput import *
 
 from system_log import *
 # print(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 
 class ManageEmergencyPlan:
@@ -260,7 +262,7 @@ class ManageEmergencyPlan:
 
     @staticmethod
     def select_in_plan_from(planIDs):
-        if planIDs:
+        if not planIDs:
             return
         else:
             while True:
@@ -288,7 +290,8 @@ class ManageEmergencyPlan:
 
     @staticmethod
     def select_in_camp_from(campIDs):
-        if campIDs:
+        if not campIDs:
+            print("There are no camps in this plan.")
             return
         else:
             while True:

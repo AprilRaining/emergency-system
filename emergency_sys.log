@@ -983,3 +983,103 @@ Traceback (most recent call last):
   File "/Users/beautiez/Documents/emergency-system/core_code/myfunctionlib.py", line 132, in back
     key = input('Input "Q/q" to go back:')
 KeyboardInterrupt
+2022-12-15 18:36:29,043 — ERROR : Wrong connection to the database
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/core_code/admin.py", line 323, in display_all_account
+    prCyan(u"\U0001F538","---GENERAL INFORMATION---\n")
+TypeError: prCyan() takes 1 positional argument but 2 were given
+2022-12-15 19:07:46,845 — ERROR : 1 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 1 is an invalid input. Plese reenter your choice.
+2022-12-15 21:33:15,690 — ERROR : 11 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 11 is an invalid input. Plese reenter your choice.
+2022-12-15 21:36:35,026 — ERROR : 11 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 11 is an invalid input. Plese reenter your choice.
+2022-12-15 21:36:37,229 — ERROR : 1 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 1 is an invalid input. Plese reenter your choice.
+2022-12-15 21:36:37,368 — ERROR :  is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input:  is an invalid input. Plese reenter your choice.
+2022-12-15 21:36:38,357 — ERROR : 1 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 1 is an invalid input. Plese reenter your choice.
+2022-12-15 21:36:39,037 — ERROR : 1 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 1 is an invalid input. Plese reenter your choice.
+2022-12-15 21:36:39,383 — ERROR : 1 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 1 is an invalid input. Plese reenter your choice.
+2022-12-15 21:36:39,707 — ERROR : 1 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 1 is an invalid input. Plese reenter your choice.
+2022-12-15 21:36:39,935 — ERROR : 1 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 1 is an invalid input. Plese reenter your choice.
+2022-12-15 21:36:40,199 — ERROR : 11 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 11 is an invalid input. Plese reenter your choice.
+2022-12-15 21:36:40,523 — ERROR :  is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input:  is an invalid input. Plese reenter your choice.
+2022-12-15 21:39:48,288 — ERROR : 12 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 12 is an invalid input. Plese reenter your choice.
+2022-12-15 21:40:33,586 — ERROR : None
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 11 is an invalid input. Plese reenter your choice.
+2022-12-15 21:41:49,770 — ERROR : 11 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 11 is an invalid input. Plese reenter your choice.
+2022-12-15 21:42:59,076 — ERROR : 11 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 96, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 11 is an invalid input. Plese reenter your choice.
+2022-12-15 21:54:10,902 — ERROR : 1 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 97, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 1 is an invalid input. Plese reenter your choice.
+2022-12-15 21:54:14,133 — ERROR : 2022-11-11 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 93, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 2022-11-11 is an invalid input. Plese reenter your choice.
+2022-12-15 21:54:21,254 — ERROR : 2022-12-1 is an invalid input. Plese reenter your choice.
+Traceback (most recent call last):
+  File "/home/lingpeng/emergency_plan/emergency-system/Emergency_Plan/emergency_plan_sql.py", line 93, in __init__
+    raise Invalid_input(date_format)
+Emergency_Plan.emergency_plan_sql.Invalid_input: 2022-12-1 is an invalid input. Plese reenter your choice.

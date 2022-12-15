@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from datetime import datetime
+import datetime
 from system_log import *
 import refugee_exception as exc
 
@@ -47,7 +47,7 @@ def volunteer_login():
 
 
 def check_week():
-    current_week = datetime.isocalendar(datetime.now())[1]
+    current_week = datetime.datetime.isocalendar(datetime.datetime.now())[1]
     try:
         with open("conf.json") as f:
             json_file = json.load(f)
