@@ -2,6 +2,8 @@ import sqlite3 as db
 from get import *
 from myError import *
 import re
+from options import *
+from system_log import *
 
 
 class AccountCreation:
@@ -10,7 +12,7 @@ class AccountCreation:
     def get_camp_id():
         while True:
             try:
-                campID = Get.int('Enter the campID:')
+                campID = Get.int(u"\U0001F539"+'Enter the camp ID:')
                 camp_id = (campID,)
 
                 with db.connect('info_files/emergency_system.db') as conn:
@@ -31,7 +33,7 @@ class AccountCreation:
                         raise CampCapacityError(campID)
                 break
             except IndexError:
-                print("Camp not existed")
+                print_log("Camp not existed")
             except CampCapacityError as e:
                 print(e)
 
@@ -41,7 +43,7 @@ class AccountCreation:
     def get_username():
         while True:
             try:
-                username = input('Enter the username:')
+                username = input(u"\U0001F539"+'Enter the username:')
                 if username == "":
                     print("The username can not be empty, Please input again:")
                     continue
@@ -54,7 +56,7 @@ class AccountCreation:
                     raise IndexError
                 break
             except IndexError:
-                print("User name already existed")
+                print_log("User name already existed")
         return username
 
     @staticmethod
@@ -74,7 +76,7 @@ class AccountCreation:
     def get_work_day(day):
         while True:
             try:
-                work_or_not = input("Will this volunteer work on {}? (Enter 'Y/y' as yes, 'N/n' as no) \n".format(day))
+                work_or_not = input(u"\U0001F539"+"Will this volunteer work on {}? (Enter 'Y/y' as yes, 'N/n' as no) \n".format(day))
                 if work_or_not == 'Y' or work_or_not == 'y':
                     choice = 1
                 elif work_or_not == 'N' or work_or_not == 'n':
@@ -98,30 +100,56 @@ class AccountCreation:
                       }
         weekday_list = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         while True:
-            input_str = input("Please input the number of day you are available in a week(from 1 to 7).\n"
-                              "For example, 6 means Saturday is available. \n"
-                              "If there is no day are available, just press enter:\n")
-            input_str = input_str.replace(" ", "")
-            if input_str == "":
-                return preference
-            match_result = re.match(re.compile("^[1-7]*$"), input_str)
-            if match_result:
-                for i in match_result.group():
-                    preference[weekday_list[int(i)-1]] = 0
-                print("According your input, you are available in these day(s): ")
-                for day, flag in preference.items():
-                    if flag == 0:
-                        print(day)
-                return preference
+            try:
+                print(u"\U0001F4C6","Working Day Options")
+                opt_second = Options([
+                        'Monday',
+                        'Tuesday',
+                        'Wednesday',
+                        'Thursday',
+                        'Friday',
+                        'Saturday',
+                        'Sunday',
+                        'Not available this week'
+                    ])
+                print(opt_second)
+                input_str = input(u"\U0001F539"+"Please input the day(s) this volunteer is available in a week(from 1 to 7).\n"
+                              "For example, 6,7 means Saturday and Sunday are available. \n"
+                              "If there is no available day, just press 8: \n--> ")
+                if input_str == '8':
+                    return preference
+                if "," not in input_str:
+                    if int(input_str)>8 or int(input_str)<1:
+                        warn("Wrong input, check your input please!\n")
+                        raise InvalidChoiceError
+                else:
+                    for d in input_str.split(","):
+                        if int(d)>8 or int(d)<1:
+                            warn("Wrong input, check your input please!\n")
+                            raise InvalidChoiceError
+                        else:
+                            match_result = re.match(re.compile("^[1-7]*$"), d)
+                            if match_result:
+                                for i in match_result.group():
+                                    preference[weekday_list[int(i)-1]] = 0
+                            else:
+                                warn("Wrong input, check your input please!\n")
+                                raise InvalidChoiceError
+            except ValueError as e:
+                print_log("Your input is invalid, please try again!")
+            except InvalidChoiceError as e:
+                print_log("You input is invalid. Please input a numerical value within a range 1 to 8.")
             else:
-                print("Wrong input, check your input please!\n")
+                print("\nAccording your input, you are available in these day(s):", [day for day, flag in preference.items() if flag == 0])
+                return preference
+            
 
     @staticmethod
     def get_work_shift():
         while True:
             try:
-                work_shift = input("What will be the shift for the volunteer? \n 1. Morning (06:00-14:00) \n "
-                                   "2. Afternoon (14:00-22:00) \n 3. Night (22:00-06:00) \n")
+                work_shift = input("\n"+u"\U0001F539"+"What will be a work shift for the volunteer? \n 1. Morning (06:00-14:00) \n "
+                                   "2. Afternoon (14:00-22:00) \n 3. Night (22:00-06:00) \n--> ")
                 if work_shift == '1':
                     shift = 'Morning'
                 elif work_shift == '2':
@@ -131,6 +159,7 @@ class AccountCreation:
                 else:
                     raise InvalidChoiceError(work_shift)
             except InvalidChoiceError as e:
+                print_log("You input is invalid. Please input a numerical value within a range 1 to 3.")
                 print(e)
             else:
                 return shift
@@ -140,7 +169,7 @@ class AccountCreation:
     def confirm_deletion():
         while True:
             try:
-                work_or_not = input("Do you confirm to delete this account? (Enter 'Y/y' as yes, 'N/n' as no) \n")
+                work_or_not = input("\n"+u"\U0001F539"+"Do you confirm to delete this account? (Enter 'Y/y' as yes, 'N/n' as no): ")
                 if work_or_not == 'Y' or work_or_not == 'y':
                     choice = 1
                 elif work_or_not == 'N' or work_or_not == 'n':
@@ -148,6 +177,7 @@ class AccountCreation:
                 else:
                     raise InvalidInput(work_or_not)
             except InvalidInput as e:
+                print_log("You input is invalid. Please try again!.")
                 print(e)
             else:
                 return choice

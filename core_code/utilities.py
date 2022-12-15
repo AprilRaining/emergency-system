@@ -1,40 +1,49 @@
 import sqlite3
 import json
 from datetime import datetime
+from system_log import *
+import refugee_exception as exc
 
 def admin_login():
     while True:
-        password = input("Input the password of admin:")
+        print("--------------------------------------------------------------------------")
+        prYellow("\t\t\t\tADMIN LOGIN\n")
+        password = input(u"\U0001F539"+"Input the password of admin:")
         if str(password) == "12345":
-            print(f'\nWelcome to the system, Admin.')
+            print("\n",u'\u2705','Welcome to the system, Admin!.')
+            print("Please select your options below: \n")
             return
         else:
-            print("Wrong password! Check your input please.")
+            warn("Wrong password! Check your input please.")
 
 
 def volunteer_login():
+    print("--------------------------------------------------------------------------")
+    prYellow("\t\t\t\tVOLUNTEER LOGIN\n")
     with sqlite3.connect('info_files/emergency_system.db') as conn:
         c = conn.cursor()
         while True:
-            name = input("Input your username:")
-            password = input("Input the password of volunteer:")
+            name = input(u"\U0001F539"+"Input your username:")
+            password = input( u"\U0001F539"+"Input the password of volunteer:")
 
             result = c.execute(f"select volunteerID, accountStatus from volunteer where username = '{name}' "
                                f"and password = '{password}'").fetchall()
             if len(result) > 0:
                 if result[0][1] == 0:
-                    print("Your account has been deactivated, contact the administrator.\n")
+                    warn("Your account has been deactivated, contact the administrator.\n")
                     return -1
                 else:
+                    print("\n",u'\u2705','Welcome to the system, Volunteer!.')
+                    print("Please select your options below: \n")
                     return result[0][0]
             else:
                 vol_res = c.execute(f"select * from deleted_vol_account where username = '{name}' "
                                     f"and password = '{password}'").fetchall()
                 if len(vol_res) > 0:
-                    print("Account doesn't exist.")
+                    warn("Account doesn't exist.")
                     return -1
                 else:
-                    print("Wrong username or password! Check your input please.")
+                    warn("Wrong username or password! Check your input please.")
 
 
 def check_week():
@@ -75,7 +84,7 @@ def check_week():
                 json.dump(json_file, f)
 
     except FileNotFoundError:
-        print("The conf file is not exist, please create it now and restart the system!")
+        print_log("The conf file is not exist, please create it now and restart the system!")
         exit()
     except Exception as e:
         exit(e)
@@ -88,5 +97,18 @@ def check_plan():
             c.execute("update plan set status = 1 where startDate >= DATE()")
             conn.commit()
     except Exception as e:
-        print("Wrong connection to the database.")
+        print_log("Wrong connection to the database.")
         print(e)
+
+def yn_valid(question):
+    while True:
+        try:
+            user_input = input(f"{question}")
+            if user_input != 'Yes' and user_input != 'No':
+                raise exc.wrong_yn_input
+        except exc.wrong_yn_input:
+            print_log("Your input is invalid. Please enter either 'Yes' or 'No'")
+        except Exception as e:
+            print(e)
+        else:
+            return user_input

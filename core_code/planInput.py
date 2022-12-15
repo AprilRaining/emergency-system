@@ -1,10 +1,11 @@
 from options import *
+from system_log import *
 
 
 class PlanInput:
     @staticmethod
     def type():
-        print('Type: ')
+        print('Type of Natural Disaster: ')
         options = Options([
             'Wildfire',
             'Earthquakes',
@@ -19,15 +20,15 @@ class PlanInput:
         if option != 0:
             return options.values[option - 1]
         else:
-            return input('Please input the type of the emergency plan: ')
+            return input(u"\U0001F539" + 'Please input the type of the emergency plan: ')
 
     @staticmethod
     def description():
-        return input('Please input the description of the emergency plan: ')
+        return input(u"\U0001F539" + 'Please input the description of the emergency plan: ')
 
     @staticmethod
     def area():
-        print('Area: ')
+        print('Geographical Area Affected: ')
         options = Options([
             'Asia',
             'Europe',
@@ -56,11 +57,11 @@ class PlanInput:
             case 0:
                 while True:
                     date = Get.data(
-                        'Please input the start date of the emergency plan in the format of yyyy-mm-dd: ')
+                        u"\U0001F539"+ 'Please input the start date of the emergency plan in the format of yyyy-mm-dd: ')
                     if date > datetime.date.today():
                         return date
                     else:
-                        print('Please input a data later then today.')
+                        warn('Please input a data later than today.')
 
     @staticmethod
     def end_date(startDate):
@@ -80,24 +81,24 @@ class PlanInput:
                         if startDate < datetime.date.today():
                             return datetime.date.today().strftime('%Y-%m-%d')
                         else:
-                            print(
-                                '*End date is equal or earlier than start date please input a valid date*')
+                            warn(
+                                '*End date is equal or earlier than the start date, please input a valid date.*')
                             break
                 case 2:
                     return None
                 case 0:
                     while True:
                         endDate = Get.data(
-                            'Please input the close date of the emergency plan in the format of yyyy-mm-dd: ')
+                            u"\U0001F539"+ 'Please input the close date of the emergency plan in the format of yyyy-mm-dd: ')
                         if startDate < endDate:
                             return endDate.strftime('%Y-%m-%d')
                         else:
-                            print(
-                                '*close date is equal or earlier than start date please input a valid date*')
+                            warn(
+                                '*Close date is equal or earlier than the start date, please input a valid date.*')
 
     @staticmethod
     def number_of_camps():
-        return Get.int('Please input the number of camps: ')
+        return Get.int(u"\U0001F539" + 'Please input the number of camps: ')
 
     @staticmethod
     def status():

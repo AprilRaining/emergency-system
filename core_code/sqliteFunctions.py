@@ -2,6 +2,7 @@ import pandas as pd
 
 from myfunctionlib import *
 from options import *
+from print_table import *
 
 
 def list_to_sqlite_string(indexList):
@@ -42,9 +43,14 @@ def delete_by_IDs(table, IDs):
 
 def display_by_IDs(table, IDs):
     if IDs:
-        print(pd_read_by_IDs(table, IDs).to_string(index=False))
+        table_df = pd_read_by_IDs(table, IDs)
+        col_width = ()
+        if table == 'plan':
+            col_width = (8, 20, 30, 16, 20, 20, 14, 8)
+        print("\n")
+        print_table(table_df.columns, table_df.to_numpy().tolist(), col_width)
     else:
-        print('No Result!')
+        warn('\nNo Result!')
 
 
 def get_linked_IDs(subTable, superTable, TableIDs):
@@ -68,8 +74,9 @@ def search_sqlite(table):
         options = Options(columns, limited=True)
         print(options)
         option = options.get_option(
-            'Please choose which one you want to search by: ')
-        keyword = input('Please input the keyword:')
+            u"\U0001F539" + 'Please choose which one you want to search by: ')
+        keyword = input("\n"+u"\U0001F531"+'Please input the search keyword: ')
+        print("\n")
         IDs = search(table, options.values[option], keyword)
         return IDs
 
@@ -79,12 +86,12 @@ def select_sqlite(table):
     while True:
         display_by_IDs(table, IDs)
         if not IDs:
-            hint = "Please input 0 to search again."
-        else:
-            print('Input 0 to search')
-            hint = f'Please input the {table}ID to choose a {table}: '
+            IDs = get_all_IDs(table)
+        print("\n", u"\U0001F531" +
+              '[Hint]Input 0 to search by other keys e.g area, status')
         IDs.append(0)
-        ID = Get.option_in_list(IDs, hint)
+        ID = Get.option_in_list(
+            IDs, u"\U0001F539" + f'Please input the {table}ID to choose a {table}: ')
         if ID == 0:
             IDs = search_sqlite(table)
         else:

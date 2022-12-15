@@ -10,8 +10,6 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
     request = str(
     refugee_df.loc[refugee_df["refugeeID"] == refugeeID, "request"].values[0])
     match choice:
-            case 0:
-                sys.exit()
             case 1:
                 ref.refugee_name()
             case 2:
@@ -29,9 +27,9 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                     # allow only when the request schedule is empty
                     ref.assign_camp_ID()
                 else:
-                    warn("Warning: The refugee is not allowed to change the camp because she/he has scheduled a request with volunteer.")
+                    warn("The refugee is not allowed to change the camp because she/he has scheduled a request with volunteer.")
                     print("We recommend clearing out all request schedules before moving to a new camp.")
-                sys.exit()
+                back()
             case 8:
                 ref.refugee_illnesses()
             case 9:
@@ -43,15 +41,15 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
             case 12:
                 while True:
                     print("\n------------REFUGEE'S REQUEST SYSTEM------------")
-                    purpose = input("Specify your purpose of accessing refugee's request system? (add or edit or clear): ")
+                    purpose = input(u"\U0001F539"+"Specify your purpose of accessing refugee's request system? (add or edit or clear): ")
                     if purpose != "add" and purpose != "edit" and purpose != "clear":
                         print_log("Please enter either 'add' or 'edit' or 'clear'")
                     else:
                         if purpose!="clear":
                             if request == "0" and purpose =="edit":
-                                print_log("You don't have any request in your schedule.")
-                                print_log("We recommend changing your purpose to 'add'.")
-                                cont = yn_valid("Would you like to abort your request edition? (Yes/No): ")
+                                warn("You don't have any request in your schedule.")
+                                warn("We recommend changing your purpose to 'add'.")
+                                cont = yn_valid(u"\U0001F539"+"Would you like to abort your request edition? (Yes/No): ")
                                 if cont == "Yes":
                                     ref.ref_row.append(0)
                                     break
@@ -64,8 +62,8 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                             df_task_by_ref = select_task_by_ref_id(conn, refugeeID)
                             print(df_task_by_ref)
                             if df_task_by_ref.empty:
-                                print_log("The request is already empty. There is nothing to clear out.")
-                                cont = yn_valid("Would you like to continue with request edition? (Yes/No): ")
+                                warn("The request is already empty. There is nothing to clear out.")
+                                cont = yn_valid(u"\U0001F539"+"Would you like to continue with request edition? (Yes/No): ")
                                 if cont == "No":
                                     ref.ref_row.append(0)
                                     break
@@ -74,9 +72,11 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                                 clear_request_schedule(conn, df_task_by_ref)
                                 # refugee
                                 update_refdb_attr(conn, refugeeID, "request", "0")
-                                print("The request schedule related to volunteer and refugee are successfully cleared out.")
+                                print(u"\U0001F539"+"The request schedule related to volunteer and refugee are successfully cleared out.")
                                 ref.ref_row.append(0)
                                 break
+            case 13:
+                sys.exit()
           
     # return refugee information list (array) based on selected field
     return ref.ref_row

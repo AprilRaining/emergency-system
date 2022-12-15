@@ -1,14 +1,25 @@
+import datetime
 import numpy as np
 import pandas as pd
-import datetime
 import sqlite3 as db
 
 conn = db.connect('info_files/emergency_system.db')
 c = conn.cursor()
+import re
+from core_code.sqliteFunctions import get_linked_IDs, list_to_sqlite_string
+from core_code.planInput import *
+from core_code.print_table import *
+from core_code.utilities import *
+from core_code.system_log import *
+
+# To do 
+# Fix exceptions, Add stop button (while loop)
+# change delete functions to include planid and status of the plan
 
 
 def validate(date_text):
     try:
+        import datetime
         res = bool(datetime.datetime.strptime(date_text, "%Y-%m-%d"))
         return res
     except ValueError:
@@ -32,8 +43,8 @@ class emergency_plan:
         print("2. Display Emergency Plan.")
         print("3. Edit Emergency Plan.")
         print("4. Delete Emergency Plan.")
-        self.user = input('Please enter your choice: ')
-        loop = True
+        self.user = input(u"\U0001F539" + 'Please enter your choice: ')
+        loop = True 
         while loop == True:
             try:
                 if self.user == '0':
@@ -57,19 +68,20 @@ class emergency_plan:
                 else:
                     raise Invalid_input(self.user)
             except Invalid_input as e:
-                print(e)
-                self.user = input('Please enter your choice: ')
+                print_log(e)
+                self.user = input(u"\U0001F539" + 'Please enter your choice: ')
+                
+        
 
     class Create_Emergency_Plan:
         def __init__(self):
-            self.type = input('Please enter the type of Emgergency: ')
-            self.desc = input('Please enter the description of the emergency plan: ')
-            self.area = input('Please enter the geographical area affected by the natural diaster: ')
-            loop = True
+            self.type = PlanInput.type()
+            self.desc = PlanInput.description()
+            self.area = input(u"\U0001F539" + 'Please input the geographical area affected by the natural disaster: ')
+            loop = True 
             while loop:
                 try:
-                    date_format = input(
-                        'Please enter the start date of the emergency plan in the format of yyyy-mm-dd: ')
+                    date_format = input(u"\U0001F539" + 'Please enter the start date of the emergency plan in the format of yyyy-mm-dd: ') 
                     if validate(date_format) == True:
                         date = date_format.split('-')
                         # Only allow date after the Year of 2000
@@ -86,23 +98,25 @@ class emergency_plan:
                             else:
                                 raise Invalid_input(date_format)
                         except Invalid_input as e:
-                            print(e)
+                            print_log(e)
                     else:
                         raise Invalid_input(date_format)
                 except Invalid_input as e:
-                    print(e)
-            loop = True
+                    print_log(e)
+            loop = True 
             while loop:
                 try:
-                    camp = input('Please enter the number of camps required: ')
+                    camp = input(u"\U0001F539" + 'Please enter the number of camps required: ')
                     if camp.isdigit():
-                        self.camp = camp
-                        loop = False
+                        self.camp = camp 
+                        print("\n")
+                        loop = False 
                     else:
                         raise Invalid_input(camp)
                 except Invalid_input as e:
-                    print(e)
-
+                    print_log(e)
+            
+        
         def add(self):
             c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='plan'")
             if len(c.fetchall()) == 0:

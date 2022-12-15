@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import datetime
 import os.path 
+from core_code.system_log import *
 
 # To do 
 # Fix exceptions, Add stop button 
@@ -13,7 +14,7 @@ class Invalid_input(Exception):
         Exception.__init__(self)
         self.input = input
     def __str__(self): 
-        return f'{self.input} is an invalid choice. Plese reenter a number specified above.'
+        return f"\033[91m Camp {self.input} is an invalid choice.\nPlease reenter a number specified above.\033[00m"
 
 
 class emergency_plan: 
@@ -22,7 +23,7 @@ class emergency_plan:
         print("2. Display Emergency Plan.")
         print("3. Edit Emergency Plan.")
         print("4. Delete Emergency Plan.")
-        self.user = input('Please enter your choice: ')
+        self.user = input(u'\U0001F539' +'Please enter your choice: ')
         loop = True 
         while loop == True:
             try:
@@ -46,18 +47,19 @@ class emergency_plan:
                     raise Invalid_input(self.user)
             except Invalid_input as e:
                 print(e)
-                self.user = input('Please enter your choice: ')
+                self.user = input(u"\U0001F539" + 'Please enter your choice: ')
                 
         
 
     class Create_Emergency_Plan:
         def __init__(self):
-            self.type = input('Please enter the type of Emgergency: ')
-            self.desc = input('Please etner the description of the emergency plan: ')
-            self.area = input('Please enter the geographical area affected by the natural diaster: ')
+            self.type = input(u"\U0001F539" + 'Please enter the type of Emgergency: ')
+            self.desc = input(u"\U0001F539" + 'Please etner the description of the emergency plan: ')
+            self.area = input(u"\U0001F539" + 'Please enter the geographical area affected by the natural diaster: ')
             try:
-               date_format = input('Please enter the start date of the emergency plan in the format of yyyy-mm-dd: ') 
+               date_format = input(u"\U0001F539" + 'Please enter the start date of the emergency plan in the format of yyyy-mm-dd: ') 
                date = date_format.split('-')
+               print("date",date)
                # Only allow date after the Year of 2000  
                if (2000 <= int(date[0])) and (1 <= int(date[1]) <= 12) and (1 <= int(date[2]) <= 31):
                 self.date= datetime.date(int(date[0]), int(date[1]), int(date[2]))
@@ -66,7 +68,7 @@ class emergency_plan:
             except Invalid_input as e:
                 print(e)
             try:
-                refugee = input('Please enter the number of refugees at the camp: ')
+                refugee = input(u"\U0001F539" + 'Please enter the number of refugees at the camp: ')
                 if refugee.isdigit():
                     self.refugee = refugee
                 else:
@@ -74,7 +76,7 @@ class emergency_plan:
             except Invalid_input as e:
                 print(e)
             try:
-                volunteer = input('Please enter the number of volunteers required at the camp: ')
+                volunteer = input(u"\U0001F539" + 'Please enter the number of volunteers required at the camp: ')
                 if volunteer.isdigit():
                     self.volunteer = volunteer
                 else:
@@ -116,14 +118,14 @@ class emergency_plan:
 
     class Display_Emergency_Plan:
         def __init__(self):
-            self.type = input('Please choose which emergency plan to be displayed: ')
+            self.type = input(u"\U0001F539" + 'Please choose which emergency plan to be displayed: ')
             
  
     class Delete_Emergency_Plan:
          def __init__(self):
             print('Do you want to delete the emergencey plan now: ')
             print('1. Now')
-            self.when = input('Please enter your choice: ')
+            self.when = input(u"\U0001F539" + 'Please enter your choice: ')
             loop = True
             while loop == True: 
                 try:
@@ -134,14 +136,14 @@ class emergency_plan:
                         raise Invalid_input(self.when)
                 except Invalid_input as e:
                     print(e)
-                    self.when = input('Please enter your choice: ')
+                    self.when = input(u"\U0001F539" + 'Please enter your choice: ')
                 
         #Delete Plan Now
          def delete_now(self):
             print('1. Delete by viewing the type of the emergency plan.')
             print('2. Delete by viewing the start date of the emergency plan.')
             print('3. Delete by viewing the geographical area of the emergency plan.')
-            self.choice = input('Please enter your choice: ')
+            self.choice = input(u"\U0001F539" + 'Please enter your choice: ')
             loop = True
             while loop == True: 
                 try:
@@ -149,7 +151,8 @@ class emergency_plan:
                         loop = False
                         typeframe = pd.read_csv('emergency_plan_1.csv')
                         print(f'The choices of type are: {set(typeframe.Type.values)}.')
-                        self.type = input('Please enter which type of emergency plan you want to view and then delete: ')
+                        
+                        self.type = input(u"\U0001F539" + 'Please enter which type of emergency plan you want to view and then delete: ')
                         loop1 = True
                         while loop1 == True:
                             try:
@@ -158,8 +161,8 @@ class emergency_plan:
                                     finalframe = typeframe[typeframe['Type'] == self.type]
                                     finalframe = finalframe.reset_index(drop = True)
                                     print(finalframe)
-                                    self.row = input('Please choose which row above you want to delete: ')
-                                    date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
+                                    self.row = input(u"\U0001F539" + 'Please choose which row above you want to delete: ')
+                                    date_format = input(u"\U0001F539" + 'Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                     date = date_format.split('-')
                                     loop2 = True
                                     loop3 = True
@@ -212,24 +215,24 @@ class emergency_plan:
                                                              raise Invalid_input(self.row)
                                                     except Invalid_input as e:
                                                             print(e)
-                                                            self.row = input('Please enter your choice: ')
+                                                            self.row = input(u"\U0001F539" + 'Please enter your choice: ')
                                             else: 
                                                 raise Invalid_input(date_format)
                                         except Invalid_input as e:
                                             print(e)
-                                            date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
+                                            date_format = input(u"\U0001F539" + 'Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                             date = date_format.split('-')
                                 else: 
                                     raise Invalid_input(self.type)
                             except Invalid_input as e:
                                  print(e)
-                                 self.type = input('Please enter your choice: ')
+                                 self.type = input(u"\U0001F539" + 'Please enter your choice: ')
                         
                  elif self.choice == '2':
                         loop = False
                         typeframe = pd.read_csv('emergency_plan_1.csv')
                         print(set(typeframe['Start Date']))
-                        self.date = input('Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
+                        self.date = input(u"\U0001F539" + 'Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
                         start_date_entered = self.date.split('-')
                         loop1 = True
                         while loop1 == True:
@@ -239,8 +242,8 @@ class emergency_plan:
                                     finalframe = typeframe[typeframe['Start Date'] == self.date]
                                     finalframe = finalframe.reset_index(drop = True)
                                     print(finalframe)
-                                    self.row = input('Please choose which row above you want to delete: ')
-                                    date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
+                                    self.row = input(u"\U0001F539" + 'Please choose which row above you want to delete: ')
+                                    date_format = input(u"\U0001F539" + 'Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                     date = date_format.split('-')
                                     loop2 = True
                                     loop3 = True
@@ -293,23 +296,23 @@ class emergency_plan:
                                                              raise Invalid_input(self.row)
                                                     except Invalid_input as e:
                                                             print(e)
-                                                            self.row = input('Please enter your choice: ')
+                                                            self.row = input(u"\U0001F539" + 'Please enter your choice: ')
                                             else: 
                                                 raise Invalid_input(date_format)
                                         except Invalid_input as e:
                                             print(e)
-                                            date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
+                                            date_format = input(u"\U0001F539" + 'Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                             date = date_format.split('-')
                                 else: 
                                     raise Invalid_input(self.date)
                             except Invalid_input as e:
                                  print(e)
-                                 self.date = input('Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
+                                 self.date = input(u"\U0001F539" + 'Please enter the start date of the emergency plan you want to view and then delete in the format of yyyy-mm-dd: ')
                  elif self.choice == '3':
                     loop = False
                     typeframe = pd.read_csv('emergency_plan_1.csv')
                     print(f'The choices of type are: {set(typeframe.Area.values)}.')
-                    self.area = input('Please enter the area of the emergency plan you want to view and then delete: ')
+                    self.area = input(u"\U0001F539" + 'Please enter the area of the emergency plan you want to view and then delete: ')
                     loop1 = True
                     while loop1 == True:
                             try:
@@ -318,8 +321,8 @@ class emergency_plan:
                                     finalframe = typeframe[typeframe['Area'] == self.area]
                                     finalframe = finalframe.reset_index(drop = True)
                                     print(finalframe)
-                                    self.row = input('Please choose which row above you want to delete: ')
-                                    date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
+                                    self.row = input(u"\U0001F539" + 'Please choose which row above you want to delete: ')
+                                    date_format = input(u"\U0001F539" + 'Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                     date = date_format.split('-')
                                     loop2 = True
                                     loop3 = True
@@ -372,23 +375,23 @@ class emergency_plan:
                                                              raise Invalid_input(self.row)
                                                     except Invalid_input as e:
                                                             print(e)
-                                                            self.row = input('Please enter your choice: ')
+                                                            self.row = input(u"\U0001F539" + 'Please enter your choice: ')
                                             else: 
                                                 raise Invalid_input(date_format)
                                         except Invalid_input as e:
                                             print(e)
-                                            date_format = input('Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
+                                            date_format = input(u"\U0001F539" + 'Please enter the close date of the emergency plan in the format of yyyy-mm-dd: ') 
                                             date = date_format.split('-')
                                 else: 
                                     raise Invalid_input(self.area)
                             except Invalid_input as e:
                                  print(e)
-                                 self.area = input('Please enter the area of the emergency plan you want to view and then delete: ')
+                                 self.area = input(u"\U0001F539" + 'Please enter the area of the emergency plan you want to view and then delete: ')
                  else: 
                         raise Invalid_input(self.choice)
                 except Invalid_input as e:
                     print(e)
-                    self.choice = input('Please enter your choice: ')
+                    self.choice = input(u"\U0001F539" + 'Please enter your choice: ')
 
 
          
@@ -400,7 +403,7 @@ class emergency_plan:
 
     class Edit_Emergency_Plan:
          def __init__(self):
-            self.type = input('Please choose which emergency plan to be edited: ')
+            self.type = input(u"\U0001F539" + 'Please choose which emergency plan to be edited: ')
         
 
 
