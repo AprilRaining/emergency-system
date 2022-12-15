@@ -74,15 +74,17 @@ def search_sqlite(table):
         return IDs
 
 
-def select_sqlite(table):
-    IDs = get_all_IDs(table)
+def select_sqlite(table, IDs):
+    IDsBackUp = IDs
     while True:
         display_by_IDs(table, IDs)
         if not IDs:
-            hint = "Please input 0 to search again."
+            IDs = IDsBackUp
+            display_by_IDs(table, IDs)
+            print("Input 0 to try search again.")
         else:
             print('Input 0 to search')
-            hint = f'Please input the {table}ID to choose a {table}: '
+        hint = f'Please input the {table}ID to choose a {table}: '
         IDs.append(0)
         ID = Get.option_in_list(IDs, hint)
         if ID == 0:

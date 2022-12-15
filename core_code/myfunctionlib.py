@@ -1,8 +1,8 @@
+import datetime
 import inspect
 import sqlite3
 
 from myError import *
-from system_log import *
 
 
 def menu(name=''):
@@ -152,5 +152,9 @@ def list_to_sqlite_string(indexList):
     elif type(indexList) == int:
         return '({})'.format(indexList)
 
-    
 
+def to_date(date):
+    if type(date) == str:
+        return datetime.datetime.strptime(date, '%Y-%m-%d').date()
+    else:
+        return date

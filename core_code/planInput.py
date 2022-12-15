@@ -1,5 +1,5 @@
 from options import *
-
+from myfunctionlib import *
 
 class PlanInput:
     @staticmethod
@@ -54,20 +54,12 @@ class PlanInput:
             case 1:
                 return datetime.date.today()
             case 0:
-                while True:
-                    date = Get.data(
-                        'Please input the start date of the emergency plan in the format of yyyy-mm-dd: ')
-                    if date > datetime.date.today():
-                        return date
-                    else:
-                        print('Please input a data later then today.')
+                return PlanInput.start_date_manual_input()
+
 
     @staticmethod
     def end_date(startDate):
         print('End Date:')
-        if type(startDate) == str:
-            startDate = datetime.datetime.strptime(
-                startDate, '%Y-%m-%d').date()
         options = Options([
             'Input later'
         ])
@@ -93,12 +85,12 @@ class PlanInput:
         print(options)
         return options.get_option()
 
+    def start_date_update():
+        return PlanInput.start_date_manual_input()
+
     @staticmethod
     def end_date_update(startDate):
-        if type(startDate) == str:
-            startDate = datetime.datetime.strptime(
-                startDate, '%Y-%m-%d').date()
-        PlanInput.end_date_manual_input(startDate)
+        return PlanInput.end_date_manual_input(startDate)
 
     @staticmethod
     def end_date_manual_input(startDate):
@@ -110,3 +102,13 @@ class PlanInput:
             else:
                 print(
                     '*End date is equal or earlier than start date please input a valid date*')
+
+    @staticmethod
+    def start_date_manual_input():
+        while True:
+            date = Get.data(
+                'Please input the start date of the emergency plan in the format of yyyy-mm-dd: ')
+            if date > datetime.date.today():
+                return date
+            else:
+                print('Please input a data later then today.')
