@@ -43,7 +43,7 @@ def refugee_existence_check(conn):
 def date_format_check(purpose,limit_start = '',limit_end = ''):
     while True: 
         try:
-            input_date = input(u"\U0001F539"+f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
+            input_date = input(f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
             bd_val = (input_date).split("-")
             if len(bd_val) != 3:
                 raise exc.wrong_birthdate_format
@@ -90,24 +90,26 @@ def email_format_check():
         else:
             return email
 
-def camp_capacity_check(conn):
+def camp_capacity_check(conn,purpose,old_camp_id):
     # check if the camp is full or can accept more refugee
     while True:
         try:
-            camp_query = '''SELECT camp.campID, COUNT(refugeeID) as no_of_refugees,capacity FROM camp 
-                            LEFT JOIN refugee ON camp.campID = refugee.campID GROUP BY camp.campID'''
-            pd_camp = pd.read_sql_query(camp_query, conn)
-            camp_df = pd.DataFrame(pd_camp, columns=['campID', 'no_of_refugees', 'capacity'])
-            camp_df = camp_df.drop(camp_df[camp_df['campID'] == 0].index)
-            print_table(camp_df.columns,camp_df.to_numpy().tolist(),(25,40,40))
-            print("-------------------------------\n")
-            camp = int(input(u"\U0001F539"+"Assign the camp ID to the refugee: "))
+            camp_df = display_open_camp_option(conn)
+            camp_df_cop = camp_df.copy()
+            print_table(camp_df_cop.columns,camp_df_cop.to_numpy().tolist(),(25,25,70,70,70,40))
+            print("--------------------------------------------------------------------\n")
+            camp = int(input(u"\U0001F539"+f"Assign the camp ID to the refugee: "))
             if camp > int(camp_df["campID"].iloc[-1]) or camp < int(camp_df["campID"].iloc[0]):
                 raise exc.camp_id_out_of_range
             for ind in camp_df.index:
                 if ind+1 == camp:
                     if camp_df["no_of_refugees"][ind] == camp_df["capacity"][ind]:
                         raise exc.camp_capacity_full
+            if purpose == "edit":
+                new_plan_id = camp_df[camp_df["campID"] == int(camp) ]["planID"].values[0]
+                old_plan_id = camp_df[camp_df["campID"] == int(old_camp_id) ]["planID"].values[0]
+                if str(old_plan_id) != str(new_plan_id):
+                    raise exc.move_to_others_plan
         except exc.camp_capacity_full:
             print_log("This camp cannot accept more refugees since it has no more capacity.")
             print("Please re-assign the camp for the refugee")
@@ -115,10 +117,13 @@ def camp_capacity_check(conn):
             print_log("Your input camp ID is invalid in the database")
         except ValueError:
             print_log("Please enter a numerical value for the camp ID.")
+        except exc.move_to_others_plan:
+            print_log("Refugee cannot be assigned to any camp in different emergency plans.")
         except Exception as e:
             print_log(str(e))
         else:
-            return camp
+            selected_camp_info = camp_df.loc[camp_df["campID"]==camp,:]
+            return (camp,selected_camp_info)
 
 def refugee_validity_check_by_ID(cond,refugee_df, conn):
         while True:
@@ -189,7 +194,7 @@ def single_input_check(options):
                 raise ValueError
             else:
                 if int(selected_opts) > options.count("\n")+1 or int(selected_opts)<=0:
-                    raise InvalidChoiceError
+                    raise InvalidChoiceError(selected_opts)
         except InvalidChoiceError:
             print_log("Your input number is invalid in our options. Please try again.")
         except ValueError:

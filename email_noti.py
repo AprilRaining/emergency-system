@@ -2,7 +2,7 @@ import smtplib
 from syslog import *
 
 
-def notify_new_request(receiver_email,task_info,req_date,work_shift,ref_ID,vol_ID,receiver):
+def email_noti(receiver_name='',receiver_email='',request_list='',ref_ID=0,purpose=''):
 
     if receiver_email == "" or '@' not in receiver_email:
         return
@@ -14,26 +14,39 @@ def notify_new_request(receiver_email,task_info,req_date,work_shift,ref_ID,vol_I
     to = [receiver_email]
     subject = 'New Request Created'
     body = ""
-    if receiver == "volunteer":
-        body = f"""
-        Dear Volunteer ID: [{vol_ID}],
+    if purpose == "add_req":
+        req_coll = []
+        for ind,val in enumerate(request_list):
+            req_coll.append(f"{ind+1}. "+f"{val['task']} with volunteer ID {val['volunteer']} on {val['date']} during {val['workshift']} period")
+        req_statement = "\n".join(req_coll)
 
-        You have received a new task request({task_info}) from a refugee ID: [{ref_ID}] 
-        on {req_date} for your {work_shift} work shift. 
+        body = f"""
+        Dear {receiver_name},
         
+        Refugee ID: [{ref_ID}]
+
+        You have created new request(s) to the volunteer(s). 
+        Please see the details of your request(s) below:
+
+        {req_statement}
+
         This will be a part of your schedule for this week.
 
         Best Regards,
         Emergency System Team K
         """
-    elif receiver == "refugee":
+    elif purpose == "register":
         body = f"""
-        Dear Refugee ID: [{ref_ID}],
+        Dear {receiver_name},
 
-        You have created a new request({task_info}) to a volunteer ID: [{vol_ID}] 
-        on {req_date} during the {work_shift} shift.
+        You are successfully registered to our emergency system.
+        
+        Your ID is {ref_ID}. 
+        
+        Note: Please use this ID to inform our volunteers when you would 
+        like to make change to your information or make request(s).
 
-        This will be a part of your schedule for this week.
+        Hope we could be your best companion during the hardest time.
 
         Best Regards,
         Emergency System Team K
@@ -54,6 +67,7 @@ def notify_new_request(receiver_email,task_info,req_date,work_shift,ref_ID,vol_I
         smtp_server.login(gmail_user, gmail_password)
         smtp_server.sendmail(sent_from, to, email_text)
         smtp_server.close()
-        print ("Email sent successfully!")
+        print(u"\U0001F4E7"+"Confirmation Email sent successfully!")
     except Exception as ex:
-        print ("Something went wrong….",ex)
+        print("Refugee email address not found.")
+        # print ("Something went wrong….",ex)

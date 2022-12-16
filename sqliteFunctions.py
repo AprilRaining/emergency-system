@@ -42,7 +42,18 @@ def delete_by_IDs(table, IDs):
 def display_by_IDs(table, IDs):
     if IDs:
         table_df = pd_read_by_IDs(table, IDs)
-        print(table_df.to_string(index=False))
+        col_width = ()
+        if table == 'plan':
+            col_width = (8, 20, 30, 16, 20, 20, 14, 8)
+        elif table == 'volunteer':
+            col_width = (18,25,25,25,25,20,16,20,30,30,30,30,30,30,30,200)
+        elif table == 'refugee':
+            col_width = (18,16,25,25,30,25,32,70,60,70,70,60,30,30,30,25)
+
+        print("\n")
+        print_table(table_df.columns, table_df.to_numpy().tolist(), col_width)
+        # if table == 'plan':
+        #     print("\n"+u"\u2757"+"Note: status 0 = unopened plan, 1 = opened plan, 2 = closed plan\n")
     else:
         warn('\nNo Result!')
 

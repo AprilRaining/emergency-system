@@ -61,13 +61,13 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             ins_task_query = f'''INSERT INTO task(refugeeID,volunteerID,taskInfo,week,requestDate,workShift,status) VALUES {task_insert}'''
             cur.execute(ins_task_query)
             conn.commit()
-            time.sleep(4.0)
+            time.sleep(2.8)
             task_id.append(cur.lastrowid)
             # update volunteer available day by task_ID
             upd_vol_query = f'''UPDATE volunteer SET "{req["day"]}" = {cur.lastrowid} WHERE volunteerID = {req["volunteer"]}'''
             cur.execute(upd_vol_query)
             conn.commit()
-            time.sleep(2.0)
+            time.sleep(1.4)
             pb.progress_bar(ind+1,len(req_list),"")
 
         # update request column in refugee table: insert ex. 1,2,3
@@ -87,7 +87,10 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             req_id_mul = ','.join([str(i) for i in task_id])
             upd_ref_query = f''' UPDATE refugee SET request = "{req_id_mul}" WHERE refugeeID = {refugeeID}'''
             cur.execute(upd_ref_query)
-            time.sleep(3.0)
+            time.sleep(1.2)
             conn.commit()
             cur.close()
+        print("\n\n",u'\u2705'+"New volunteer request is added to the schedule!\n")
+
+
     return req_id_mul
