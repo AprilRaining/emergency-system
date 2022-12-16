@@ -1,4 +1,3 @@
-from print_table import *
 from sqliteFunctions import *
 
 
@@ -27,8 +26,7 @@ class TableDisplayer():
         df['numberOfVolunteers'] = numberOfVolunteers
         df['numberOfRefugees'] = numberOfRefugees
         df['status'] = df.apply(lambda a: TableDisplayer.to_string_plan_status(a), axis=1)
-        print("\n")
-        print_table(df.columns,df.to_numpy().tolist(),(30,50,80,60,60,60,70,40,80,80))
+        print_table(df.columns, df.to_numpy().tolist(), (30, 50, 80, 60, 60, 60, 70, 40, 80, 80))
 
     @staticmethod
     def camp(campIDs):
@@ -43,8 +41,24 @@ class TableDisplayer():
             numberOfRefugees.append(len(refugeeIDs))
         df['numberOfVolunteers'] = numberOfVolunteers
         df['numberOfRefugees'] = numberOfRefugees
-        # print(df.to_string(index=False))
-        print_table(df.columns,df.to_numpy().tolist(),(30,30,30,70,70))
+        print_table(df.columns, df.to_numpy().tolist(), (30, 30, 30, 70, 70))
+
+    @staticmethod
+    def volunteers(volunteerIDs):
+        volunteerIDs = TableDisplayer.unifiy_type(volunteerIDs)
+        df = pd_read_by_IDs('volunteer', volunteerIDs)
+        df['accountStatus'] = df['accountStatus'].map({0: 'Inactive', 1: 'Active'})
+        workdayDict = {-1: u"\U0000274C", 0: u"\U00002705"}
+        df['Monday'] = df['Monday'].map(workdayDict)
+        df['Tuesday'] = df['Tuesday'].map(workdayDict)
+        df['Wednesday'] = df['Wednesday'].map(workdayDict)
+        df['Thursday'] = df['Thursday'].map(workdayDict)
+        df['Friday'] = df['Friday'].map(workdayDict)
+        df['Saturday'] = df['Saturday'].map(workdayDict)
+        df['Sunday'] = df['Sunday'].map(workdayDict)
+        del df['preference']
+        print_table(df.columns, df.to_numpy().tolist(), (18, 25, 25, 25, 25, 20, 16, 20,
+                                                         30, 30, 30, 30, 30, 30, 30))
 
     @staticmethod
     def to_string_plan_status(df):

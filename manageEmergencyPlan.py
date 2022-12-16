@@ -41,8 +41,6 @@ class ManageEmergencyPlan:
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tVIEW EMERGENCY PLANS SUMMARY\n")
                     self.view_plans(get_all_IDs('plan'))
-
-                    back()
                 case 4:
                     print(
                         "--------------------------------------------------------------------------")
@@ -54,9 +52,6 @@ class ManageEmergencyPlan:
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDELETE EMERGENCY PLAN\n")
-
-                    self.delete_emergency_plan(
-                        select_sqlite('plan', get_all_IDs('plan')))
                     # self.delete_emergency_plan(select_sqlite('plan', get_all_IDs('plan')))
                     delete = emergency_plan.Delete_Emergency_Plan()
                     delete.delete_now()
@@ -150,7 +145,7 @@ class ManageEmergencyPlan:
         print(u"\U0001F538"+"Please see emergency plan summary below: \n")
         TableDisplayer.plan(planIDs)
         print("\n")
-        self.select_in_camp_from(self.select_in_plan_from(planIDs))
+        self.select_info_from_camp(self.select_camps_from_plan(planIDs))
 
     def close_or_open_emergency_plan(self, planID):
         df = pd_read_by_IDs('plan', planID)
@@ -297,7 +292,7 @@ class ManageEmergencyPlan:
                             if volunteerIDs:
                                 print("\n"+u"\U0001F538" +
                                       f"Volunteers in the camp ID {option}:")
-                                display_by_IDs('volunteer', volunteerIDs)
+                                TableDisplayer.volunteers(volunteerIDs)
                                 print('')
                             else:
                                 print("\n"+'No volunteer in this camp ' +
@@ -309,6 +304,7 @@ class ManageEmergencyPlan:
                                 print('')
                             else:
                                 print('No refugee in this camp '+u"\u203C")
+                            back()
                             return
                 else:
                     return

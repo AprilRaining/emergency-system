@@ -129,7 +129,7 @@ def confirm(hint=''):
 def back(hint=''):
     print(hint)
     while True:
-        key = input('Input "Q/q" to go back:')
+        key = input('Input "Q/q" to quit:')
         if key == 'Q' or key == 'q':
             return
 
