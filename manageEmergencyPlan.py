@@ -1,14 +1,13 @@
+from system_log import *
+from planInput import *
+from TableDisplayer import *
+import datetime
+from Emergency_Plan.emergency_plan_sql import emergency_plan
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from Emergency_Plan.emergency_plan_sql import emergency_plan
-import datetime
-from TableDisplayer import *
-from planInput import *
 
-from system_log import *
 # print(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 
 
 class ManageEmergencyPlan:
@@ -53,7 +52,7 @@ class ManageEmergencyPlan:
                 case 4:
                     print(
                         "--------------------------------------------------------------------------")
-                    prLightPurple("\t\t\tCLOSE or REOPEN EMERGENCY PLAN\n")
+                    prLightPurple("\t\t\tCLOSE or OPEN EMERGENCY PLAN\n")
                     self.close_or_open_emergency_plan(
                         select_sqlite('plan', get_all_IDs('plan')))
                     back()
