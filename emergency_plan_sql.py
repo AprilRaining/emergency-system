@@ -154,12 +154,12 @@ class emergency_plan:
                 else:
                     newdataframe.to_sql('plan', conn, index=False, if_exists="append")
                     updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                    # campframe = pd.read_sql_query('SELECT * FROM camp', conn)
-                    # campID = int(campframe['campID'].iloc[-1]) + 1
-                    # for i in range(int(self.camp)):
-                    #     c.execute("INSERT INTO camp (campID, capacity, planID) VALUES (?, ?, ?)",
-                    #               (campID + i, 20, self.planID))
-                    #     conn.commit()
+                    campframe = pd.read_sql_query('SELECT * FROM camp', conn)
+                    campID = int(campframe['campID'].iloc[-1]) + 1
+                    for i in range(int(self.camp)):
+                        c.execute("INSERT INTO camp (campID, capacity, planID) VALUES (?, ?, ?)",
+                                  (campID + i, 20, self.planID))
+                        conn.commit()
                     # print(updatedframe.to_string(index=False))
                     print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18))
             conn.close()
