@@ -9,6 +9,8 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
     ref = Refugee("Edit",conn)
     request = str(
     refugee_df.loc[refugee_df["refugeeID"] == refugeeID, "request"].values[0])
+    orig_camp = str(
+    refugee_df.loc[refugee_df["refugeeID"] == refugeeID, "campID"].values[0])
     match choice:
             case 1:
                 ref.refugee_name()
@@ -25,11 +27,12 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
             case 7:
                 if request == "0":
                     # allow only when the request schedule is empty
-                    ref.assign_camp_ID()
+                    ref.assign_camp_ID("edit",orig_camp)
                 else:
+                    print("\n------------REFUGEE'S CAMP CHANGE------------")
                     warn("The refugee is not allowed to change the camp because she/he has scheduled a request with volunteer.")
                     print("We recommend clearing out all request schedules before moving to a new camp.")
-                back()
+                    ref.ref_row.append(int(request))
             case 8:
                 ref.refugee_illnesses()
             case 9:
@@ -60,7 +63,6 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                         else:
                             # clear volunteer schedule
                             df_task_by_ref = select_task_by_ref_id(conn, refugeeID)
-                            print(df_task_by_ref)
                             if df_task_by_ref.empty:
                                 warn("The request is already empty. There is nothing to clear out.")
                                 cont = yn_valid(u"\U0001F539"+"Would you like to continue with request edition? (Yes/No): ")
@@ -68,6 +70,8 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                                     ref.ref_row.append(0)
                                     break
                             else:
+                                print("Please see the task schedule below: \n")
+                                print_table(df_task_by_ref.columns,df_task_by_ref.to_numpy().tolist(),(18,22,30,40,14,40,40,30))
                                 # volunteer schedule clear
                                 clear_request_schedule(conn, df_task_by_ref)
                                 # refugee

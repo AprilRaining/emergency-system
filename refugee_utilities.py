@@ -90,4 +90,5 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             time.sleep(3.0)
             conn.commit()
             cur.close()
+        print("\n\n",u'\u2705'+"New volunteer request is added to the schedule!\n")
     return req_id_mul

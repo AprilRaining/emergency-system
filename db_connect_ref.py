@@ -25,7 +25,7 @@ def insert_refdb_row(conn, refugee_row):
     cur = conn.cursor()
     cur.execute(query, refugee_row)
     conn.commit()
-    time.sleep(2.0)
+    time.sleep(1.2)
     cur.close()
     return cur.lastrowid
 
