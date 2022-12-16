@@ -4,13 +4,14 @@ import datetime
 from system_log import *
 import refugee_exception as exc
 
+
 def admin_login():
     while True:
         print("--------------------------------------------------------------------------")
         prYellow("\t\t\t\tADMIN LOGIN\n")
         password = input(u"\U0001F539"+"Input the password of admin:")
         if str(password) == "12345":
-            print("\n",u'\u2705','Welcome to the system, Admin!.')
+            print("\n", u'\u2705', 'Welcome to the system, Admin!.')
             print("Please select your options below: \n")
             return
         else:
@@ -20,20 +21,21 @@ def admin_login():
 def volunteer_login():
     print("--------------------------------------------------------------------------")
     prYellow("\t\t\t\tVOLUNTEER LOGIN\n")
-    with sqlite3.connect('info_files/emergency_system.db') as conn:
+    with sqlite3.connect('emergency_system.db') as conn:
         c = conn.cursor()
         while True:
             name = input(u"\U0001F539"+"Input your username:")
-            password = input( u"\U0001F539"+"Input the password of volunteer:")
+            password = input(u"\U0001F539"+"Input the password of volunteer:")
 
             result = c.execute(f"select volunteerID, accountStatus from volunteer where username = '{name}' "
                                f"and password = '{password}'").fetchall()
             if len(result) > 0:
                 if result[0][1] == 0:
-                    warn("Your account has been deactivated, contact the administrator.\n")
+                    warn(
+                        "Your account has been deactivated, contact the administrator.\n")
                     return -1
                 else:
-                    print("\n",u'\u2705','Welcome to the system, Volunteer!.')
+                    print("\n", u'\u2705', 'Welcome to the system, Volunteer!.')
                     print("Please select your options below: \n")
                     return result[0][0]
             else:
@@ -52,16 +54,18 @@ def check_week():
         with open("conf.json") as f:
             json_file = json.load(f)
         if (json_file["LastLoginWeek"] != 0) and (json_file["LastLoginWeek"] != current_week):
-            with sqlite3.connect('info_files/emergency_system.db') as conn:
+            with sqlite3.connect('emergency_system.db') as conn:
                 c = conn.cursor()
-                vol_res = c.execute("select volunteerID, preference from volunteer").fetchall()
+                vol_res = c.execute(
+                    "select volunteerID, preference from volunteer").fetchall()
                 volunteer_list = {x[0]: json.loads(x[1]) for x in vol_res}
                 # print(volunteer_list)
                 for v, pre in volunteer_list.items():
                     tem_sql = "UPDATE volunteer SET "
                     for col, val in pre.items():
                         if col == "workShift":
-                            tem_sql += (f"{col} = '" + str(val.split()[0]) + "' ,")
+                            tem_sql += (f"{col} = '" +
+                                        str(val.split()[0]) + "' ,")
                         else:
                             tem_sql += f"{col} = {val},"
                     tem_sql = tem_sql[:-1]
@@ -70,11 +74,12 @@ def check_week():
                     c.execute(tem_sql)
                     conn.commit()
 
-            with sqlite3.connect('info_files/emergency_system.db') as conn:
+            with sqlite3.connect('emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute("update refugee set request = 0")
                 conn.commit()
-                c.execute("update task set status = 'inactive' where status = 'active'")
+                c.execute(
+                    "update task set status = 'inactive' where status = 'active'")
                 conn.commit()
             print("The data of volunteers' schedule has been updated.")
 
@@ -84,7 +89,8 @@ def check_week():
                 json.dump(json_file, f)
 
     except FileNotFoundError:
-        print_log("The conf file is not exist, please create it now and restart the system!")
+        print_log(
+            "The conf file is not exist, please create it now and restart the system!")
         exit()
     except Exception as e:
         exit(e)
@@ -92,13 +98,14 @@ def check_week():
 
 def check_plan():
     try:
-        with sqlite3.connect('info_files/emergency_system.db') as conn:
+        with sqlite3.connect('emergency_system.db') as conn:
             c = conn.cursor()
             c.execute("update plan set status = 1 where startDate >= DATE()")
             conn.commit()
     except Exception as e:
         print_log("Wrong connection to the database.")
         print(e)
+
 
 def yn_valid(question):
     while True:

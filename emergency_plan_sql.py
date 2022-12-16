@@ -114,7 +114,7 @@ class emergency_plan:
                     print_log(str(e))
 
         def add(self):
-            conn = db.connect('info_files/emergency_system.db')
+            conn = db.connect('emergency_system.db')
             c = conn.cursor()
             c.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='plan'")
@@ -172,7 +172,7 @@ class emergency_plan:
 
         # Delete Plan Now
         def delete_now(self):
-            conn = db.connect('info_files/emergency_system.db')
+            conn = db.connect('emergency_system.db')
             c = conn.cursor()
             print('1. Delete by viewing the type of the emergency plan.')
             print('2. Delete by viewing the start date of the emergency plan.')
@@ -623,7 +623,7 @@ def check_camp(planID):
 def move_vol(planID):
     campIDs = get_linked_IDs('camp', 'plan', planID)
     volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
-    with db.connect('info_files/emergency_system.db') as conn:
+    with db.connect('emergency_system.db') as conn:
         c = conn.cursor()
         c.execute(
             f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')

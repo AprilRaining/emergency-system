@@ -138,7 +138,7 @@ def search(table, column, keyword):
     result = []
     if type(keyword) == str:
         keyword = "'%{}%'".format(keyword)
-    with sqlite3.connect('info_files/emergency_system.db') as conn:
+    with sqlite3.connect('emergency_system.db') as conn:
         c = conn.cursor()
         for i in c.execute('select {}Id from {} where {} like {}'.format(
                 table, table, column, keyword)).fetchall():

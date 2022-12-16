@@ -15,7 +15,7 @@ class AccountCreation:
                 campID = Get.int(u"\U0001F539"+'Enter the camp ID:')
                 camp_id = (campID,)
 
-                with db.connect('info_files/emergency_system.db') as conn:
+                with db.connect('emergency_system.db') as conn:
                     c = conn.cursor()
                     c.execute(f'''SELECT * FROM camp WHERE campID = (?)''', camp_id)
                     camp_existence = c.fetchall()
@@ -23,7 +23,7 @@ class AccountCreation:
                 if len(camp_existence) == 0:
                     raise IndexError
                 else:
-                    with db.connect('info_files/emergency_system.db') as conn:
+                    with db.connect('emergency_system.db') as conn:
                         c = conn.cursor()
                         c.execute(f'''SELECT * FROM volunteer WHERE campID = (?)''', camp_id)
                         camp_current = c.fetchall()
@@ -48,7 +48,7 @@ class AccountCreation:
                     print("The username can not be empty, Please input again:")
                     continue
                 user_name = (username,)
-                with db.connect('info_files/emergency_system.db') as conn:
+                with db.connect('emergency_system.db') as conn:
                     c = conn.cursor()
                     c.execute(f'''SELECT * FROM volunteer WHERE username = (?)''', user_name)
                     user_exist = c.fetchall()

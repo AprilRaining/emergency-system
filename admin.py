@@ -66,7 +66,7 @@ class Admin:
         prLightPurple("\t\t\tREACTIVATE VOLUNTEER ACCOUNT\n")
         ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
         try:
-            with db.connect('info_files/emergency_system.db') as conn:
+            with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute(
                     f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID, ))
@@ -96,7 +96,7 @@ class Admin:
         prLightPurple("\t\t\tDEACTIVATE VOLUNTEER ACCOUNT\n")
         ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
         try:
-            with db.connect('info_files/emergency_system.db') as conn:
+            with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute(
                     f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID,))
@@ -223,7 +223,7 @@ class Admin:
         for i in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "workShift"]:
             new_volunteer.append(preference[i])
 
-        with db.connect('info_files/emergency_system.db') as conn:
+        with db.connect('emergency_system.db') as conn:
             c = conn.cursor()
             sql = '''INSERT INTO volunteer 
             (fName, lName, username, password, campID, preference, accountStatus, 
@@ -263,7 +263,7 @@ class Admin:
         ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
         try:
             sch = ""
-            with db.connect('info_files/emergency_system.db') as conn:
+            with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
                 sch = get_volunteer_schedule_df(conn,campID=0,volunteer_ID=ID,purpose ="Display")
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
@@ -286,7 +286,7 @@ class Admin:
         ID = Get.int(u"\U0001F539"+'Enter the Camp ID:')
         try:
             sch = []
-            with db.connect('info_files/emergency_system.db') as conn:
+            with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
                 sch = get_volunteer_schedule_df(conn,campID=ID,volunteer_ID=0,purpose ="Display")
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
@@ -308,7 +308,7 @@ class Admin:
     def display_all_account(self):
         try:
             sch = []
-            with db.connect('info_files/emergency_system.db') as conn:
+            with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
                 sch = get_volunteer_schedule_df(conn,campID=0,volunteer_ID=0,purpose ="Display")
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
@@ -335,7 +335,7 @@ class Admin:
         ID = input(u"\U0001F539"+'Enter the volunteer ID you would like to delete:')
         print("\n")
         try:
-            with db.connect('info_files/emergency_system.db') as conn:
+            with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus, password FROM volunteer 
                             WHERE volunteerID = (?)''', (ID,))

@@ -12,7 +12,7 @@ def connect_db():
     """
     conn = None
     try:
-        conn = sqlite3.connect("info_files/emergency_system.db", timeout=1000.0)
+        conn = sqlite3.connect("emergency_system.db", timeout=1000.0)
     except Exception as e:
         print_log(str(e))
 

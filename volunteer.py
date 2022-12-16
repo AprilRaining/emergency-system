@@ -98,7 +98,7 @@ class Volunteer:
     def edit_volunteers_name(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tEDIT VOLUNTEER NAME\n")
-        conn = connection_database("info_files/emergency_system.db")
+        conn = connection_database("emergency_system.db")
         cur = conn.cursor()
         while True:
             volunteer_input_id = self.volunteerID
@@ -126,7 +126,7 @@ class Volunteer:
     def edit_password(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tEDIT VOLUNTEER PASSWORD\n")
-        conn = connection_database("info_files/emergency_system.db")
+        conn = connection_database("emergency_system.db")
         cur = conn.cursor()
         while True:
             volunteer_input_id = self.volunteerID
@@ -152,7 +152,7 @@ class Volunteer:
     def edit_working_perference(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tEDIT VOLUNTEER WORKING TIME\n")
-        conn = connection_database("info_files/emergency_system.db")
+        conn = connection_database("emergency_system.db")
         cur = conn.cursor()
 
         preference = {'Monday': -1,
@@ -233,7 +233,7 @@ class Volunteer:
     def edit_campid(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tEDIT VOLUNTEER CAMP ID\n")
-        conn = connection_database("info_files/emergency_system.db")
+        conn = connection_database("emergency_system.db")
         cur = conn.cursor()
 
         while True:
@@ -279,7 +279,7 @@ class Volunteer:
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tSHOW VOLUNTEER INFO\n")
         try:
-            with db.connect('info_files/emergency_system.db') as conn:
+            with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus,  
                               Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, workShift, 
@@ -560,7 +560,7 @@ class Volunteer:
 
         def display_schedule(volunteer, day, date):
             try:
-                with db.connect('info_files/emergency_system.db') as conn:
+                with db.connect('emergency_system.db') as conn:
                     c = conn.cursor()
                     c.execute(f'''SELECT * FROM task WHERE volunteerID = (?) and requestDate = (?)''',
                               (volunteer, date))
