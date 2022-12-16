@@ -377,13 +377,10 @@ class Volunteer:
 
     def create_emergency_refugee_file(self):
         conn = connect_db()
-        while True:
-            # create instance of refugee
-            new_ref = Refugee("Register", conn)
-            # register new refugee
-            new_ref.refugee_registration_form()
-            if self.system_exit_check():
-                return
+        # create instance of refugee
+        new_ref = Refugee("Register", conn)
+        # register new refugee
+        new_ref.refugee_registration_form()
 
 
     def edit_emergency_refugee_file(self):

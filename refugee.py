@@ -7,6 +7,7 @@ from db_connect_ref import *
 from refugee_utilities import *
 from system_log import *
 from print_table import *
+from email_noti import *
 
 
 class Refugee:
@@ -184,7 +185,7 @@ class Refugee:
                 while True:
                     # select task
                     req_opt = refugee_input_option("Task Request")
-                    print(
+                    print("\n"+
                         u"\U0001F539"+"Select 1 special request that a refugee would like to receive from a volunteer.\n")
                     req_inpt = single_input_check(req_opt)
                     req_dict = input_matching("Task Request")
@@ -204,7 +205,7 @@ class Refugee:
                         return
                     else:
                         print_table(df_vol_sch.columns,df_vol_sch.to_numpy().tolist(),(18,25,25,16,20,30,30,30,30,30,30,30))
-                    print("---------------------------------------------------------------------------")
+                    print("---------------------------------------------------------------------------\n")
                     # select date
                     dates = get_date_list()
                     c = 1
@@ -226,11 +227,11 @@ class Refugee:
                         if purpose == "add":
                             warn("You cannot add more requests because the volunteer schedule cannot accommodate more requests.\n Note: If you have just added new requests prior to this, they will be lost. Please start again!")
                         else:
-                            warn("You cannot make a request because there is no available volunteers from today to the end of this week.\nPlease try again next week!")
+                            warn("You cannot make this request because there is no available volunteers from today to the end of this week.\nPlease try again next week!")
+                            print("\n Note: If you have just added new requests prior to this, they will be lost. Please start again!")
                         self.ref_row.append("0")
                         return
-                    print(
-                        "\n"+"Select your request's day for this week from options above\n")
+                    print(u"\U0001F539"+"Select your request's day for this week from options above")
                     self.req_date = date_format_check(
                         "request", today_date, dates[-1])
                     d = pd.Timestamp(self.req_date)
@@ -290,6 +291,12 @@ class Refugee:
                                     req_ids = task_ref_vol_db(
                                         self.conn, self.req_form_coll, req_edit_id, refugee_df, "add")
                                     self.ref_row.append(req_ids)
+                                    # send email notification only if there's a request
+                                    ref_name = str(refugee_df.loc[refugee_df["refugeeID"] == req_edit_id, "fName"].values[0])
+                                    ref_email = str(refugee_df.loc[refugee_df["refugeeID"] == req_edit_id, "email"].values[0])
+                                    if self.req_form_coll != [] and "@" in ref_email:
+                                        prLightGray("\n..........Sending request confirmation email..........")
+                                        email_noti(receiver_name=ref_name,receiver_email = ref_email,request_list=self.req_form_coll,ref_ID=req_edit_id,purpose="add_req")
                                 return self.req_form_coll
 
         elif purpose == "edit":
@@ -406,6 +413,10 @@ class Refugee:
         # insert new refugee to db
         prGreen("..........Adding new refugee to the system............\n")
         refugee_id = insert_refdb_row(self.conn, self.ref_row_new)
+        # send email to confirm (only if email is valid)
+        if "@" in self.email:
+            prLightGray("..........Sending confirmation email..........")
+            email_noti(receiver_name = self.fname+" "+self.lastname,receiver_email = self.email,ref_ID=refugee_id,purpose="register")
         return refugee_id
 
     # FINAL: Registration form
@@ -458,3 +469,8 @@ class Refugee:
         # CREATE case: update refugee, task, and volunteer table: can handle multiple req.
         req_id = task_ref_vol_db(
             self.conn, req_list, refugeeID, refugee_df, "create")
+        # send email notification only if there's a request
+        if req_list != [] and "@" in self.email:
+            prLightGray("\n..........Sending request confirmation email..........")
+            email_noti(receiver_name = self.fname+" "+self.lastname,receiver_email = self.email,request_list=req_list,ref_ID=refugeeID,purpose="add_req")
+
