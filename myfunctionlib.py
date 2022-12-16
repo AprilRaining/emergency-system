@@ -30,7 +30,7 @@ def menu(name=''):
             return (
                 '[ 1.] Manage Personal Information.\n'
                 '[ 2.] Manage Refugees and Camp File.\n'
-                '[ 3.] Manage Tasks (Refugee Request).\n'
+                '[ 3.] View This Week Schedule.\n'
                 '[ 0.] Exit'
             )
         case 'ManageEmergencyPlan':
