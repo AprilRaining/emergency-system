@@ -99,7 +99,8 @@ def check_plan():
     try:
         with sqlite3.connect('emergency_system.db') as conn:
             c = conn.cursor()
-            c.execute("update plan set status = 1 where startDate >= DATE()")
+            c.execute("update plan set status = 1 where planID in "
+                      "(select planID from plan where startDate >= DATE() and status = 0)")
             conn.commit()
     except Exception as e:
         print_log("Wrong connection to the database.")
