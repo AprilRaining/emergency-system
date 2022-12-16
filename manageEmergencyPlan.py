@@ -22,9 +22,9 @@ class ManageEmergencyPlan:
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tCREATE EMERGENCY PLAN\n")
-                    self.create_emergency_plan()
-                    # create = emergency_plan.Create_Emergency_Plan()
-                    # create.add()
+                    # self.create_emergency_plan()
+                    create = emergency_plan.Create_Emergency_Plan()
+                    create.add()
                     print("\n", u'\u2705',
                           'New emergency plan is successfully created.')
                     back()

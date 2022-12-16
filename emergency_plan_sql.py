@@ -69,8 +69,7 @@ class emergency_plan:
         def __init__(self):
             self.type = PlanInput.type()
             self.desc = PlanInput.description()
-            self.area = input(
-                u"\U0001F539" + 'Please input the geographical area affected by the natural disaster: ')
+            self.area = PlanInput.area()
             loop = True
             while loop:
                 try:
@@ -103,8 +102,9 @@ class emergency_plan:
             loop = True
             while loop:
                 try:
-                    camp = 0
-                    if camp.isdigit():
+                    camp = input(
+                u"\U0001F539" + 'Please input the number of camps in this plan: ')
+                    if camp.isdigit() and int(camp) > 0:
                         self.camp = camp
                         print("\n")
                         loop = False
@@ -116,52 +116,52 @@ class emergency_plan:
         def add(self):
             conn = db.connect('emergency_system.db')
             c = conn.cursor()
-            c.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='plan'")
-            if len(c.fetchall()) == 0:
-                newdataframe = pd.DataFrame({'planID': [1], 'type': [self.type], 'description': [self.desc],
-                                             'area': [self.area], 'startDate': [self.date],
-                                             'numberOfCamps': [self.camp], 'status': [self.status]})
-                newdataframe.to_sql('plan', conn, index=False)
-                # print(newdataframe.to_string(index=False))
-                print(u"\U0001F538"+"Please see the emergency plan database update below:\n")
-                print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18))
-                print("\n"+u"\U0001F538"+f"New Plan ID: [{self.planID}]")
-                c.execute(
-                    "CREATE TABLE camp (campID INTEGER PRIMARY KEY AUTOINCREMENT, capacity INTEGER, planID INTEGER)")
-                conn.commit()
-                for _ in range(int(self.camp)):
-                    c.execute(
-                        "INSERT INTO camp (capacity, planID) VALUES (?, ?)", (20, 1))
-                    conn.commit()
+            # c.execute(
+            #     "SELECT name FROM sqlite_master WHERE type='table' AND name='plan'")
+            # if len(c.fetchall()) == 0:
+            #     newdataframe = pd.DataFrame({'planID': [1], 'type': [self.type], 'description': [self.desc],
+            #                                  'area': [self.area], 'startDate': [self.date],
+            #                                  'numberOfCamps': [self.camp], 'status': [self.status]})
+            #     newdataframe.to_sql('plan', conn, index=False)
+            #     # print(newdataframe.to_string(index=False))
+            #     print(u"\U0001F538"+"Please see the emergency plan database update below:\n")
+            #     print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18))
+            #     print("\n"+u"\U0001F538"+f"New Plan ID: [{self.planID}]")
+            #     c.execute(
+            #         "CREATE TABLE camp (campID INTEGER PRIMARY KEY AUTOINCREMENT, capacity INTEGER, planID INTEGER)")
+            #     conn.commit()
+            #     for _ in range(int(self.camp)):
+            #         c.execute(
+            #             "INSERT INTO camp (capacity, planID) VALUES (?, ?)", (20, 1))
+            #         conn.commit()
 
-            else:
-                dataframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                self.planID = int(
-                    c.execute("select max(planID) from plan").fetchall()[0][0]) + 1
-                # print(self.planID, type(self.planID))
-                newdataframe = pd.DataFrame(
-                    {'planID': [self.planID], 'type': [self.type], 'description': [self.desc],
-                     'area': [self.area], 'startDate': [self.date], 'numberOfCamps': [self.camp],
-                     'status': [self.status]})
-                if ((self.type in dataframe['type'].values)
-                        & (self.desc in dataframe['description'].values)
-                        & (self.area in dataframe['area'].values)
-                        & (str(self.date) in dataframe['startDate'].values)
-                        & (self.camp in list(dataframe['numberOfCamps'].values))):
-                    # print(dataframe.to_string(index=False))
-                    print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18))
-                else:
-                    newdataframe.to_sql('plan', conn, index=False, if_exists="append")
-                    updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
-                    campframe = pd.read_sql_query('SELECT * FROM camp', conn)
-                    campID = int(campframe['campID'].iloc[-1]) + 1
-                    for i in range(int(self.camp)):
-                        c.execute("INSERT INTO camp (campID, capacity, planID) VALUES (?, ?, ?)",
-                                  (campID + i, 20, self.planID))
-                        conn.commit()
-                    # print(updatedframe.to_string(index=False))
-                    print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18))
+            dataframe = pd.read_sql_query('SELECT * FROM plan', conn)
+            self.planID = int(
+                c.execute("select max(planID) from plan").fetchall()[0][0]) + 1
+            # print(self.planID, type(self.planID))
+            newdataframe = pd.DataFrame(
+                {'planID': [self.planID], 'type': [self.type], 'description': [self.desc],
+                 'area': [self.area], 'startDate': [self.date], 'numberOfCamps': [self.camp],
+                 'status': [self.status]})
+            # if ((self.type in dataframe['type'].values)
+            #         & (self.desc in dataframe['description'].values)
+            #         & (self.area in dataframe['area'].values)
+            #         & (str(self.date) in dataframe['startDate'].values)
+            #         & (self.camp in list(dataframe['numberOfCamps'].values))):
+                # print(dataframe.to_string(index=False))
+                # print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18))
+            # else:
+            newdataframe.to_sql('plan', conn, index=False, if_exists="append")
+            updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
+            campframe = pd.read_sql_query('SELECT * FROM camp', conn)
+            campID = int(campframe['campID'].iloc[-1]) + 1
+            for i in range(int(self.camp)):
+                c.execute("INSERT INTO camp (campID, capacity, planID) VALUES (?, ?, ?)",
+                          (campID + i, 20, self.planID))
+                conn.commit()
+            # print(updatedframe.to_string(index=False))
+            print(u"\U0001F539" + 'These are current plans: ')
+            print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18,18))
             conn.close()
 
     class Display_Emergency_Plan:
