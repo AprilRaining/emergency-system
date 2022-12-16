@@ -51,7 +51,7 @@ class TableDisplayer():
     def to_string_plan_status(df):
         match df['status']:
             case 0:
-                return 'Not opened'
+                return 'Unopened'
             case 1:
                 return 'Opened'
             case 2:

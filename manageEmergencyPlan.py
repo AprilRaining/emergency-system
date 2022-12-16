@@ -1,9 +1,8 @@
+import sys
 
 from planInput import *
 from utilities import *
-import datetime
-import os
-import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
@@ -54,7 +53,7 @@ class ManageEmergencyPlan:
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDELETE EMERGENCY PLAN\n")
-                    self.delete_emergency_plan(select_sqlite('plan'))
+                    self.delete_emergency_plan(select_sqlite('plan', get_all_IDs('plan')))
                     # delete = emergency_plan.Delete_Emergency_Plan()
                     # delete.delete_now()
                     back()
@@ -68,6 +67,7 @@ class ManageEmergencyPlan:
         plan['area'] = PlanInput.area()
         plan['startDate'] = PlanInput.start_date()
         plan['endDate'] = PlanInput.end_date(to_date(plan['startDate']))
+        plan['numberOfCamps'] = PlanInput.number_of_camps()
         plan['status'] = 0 if plan['startDate'] > datetime.date.today() else 1
         self.insert_one_plan(plan)
 
@@ -87,7 +87,7 @@ class ManageEmergencyPlan:
                     'numberOfCamps',
                 ], limited=True)
                 print(
-                    "\n"+'This plan has not been opened yet. You could edit the properties below:\n')
+                    "\n" + 'This plan has not been opened yet. You could edit the properties below:\n')
             case 1:
                 options = Options([
                     'description',
@@ -129,16 +129,14 @@ class ManageEmergencyPlan:
             case 'numberOfCamps':
                 return PlanInput.number_of_camps()
 
-    @staticmethod
-    def update_new_value(planID, column, newValue):
+    def update_new_value(self, planID, column, newValue):
         with sqlite3.connect('emergency_system.db') as conn:
             c = conn.cursor()
             match column:
                 case 'numberOfCamps':
                     campIDs = get_linked_IDs('camp', 'plan', planID)
-                    oldValue = len(campIDs)
-                    if (newValue < oldValue):
-                        pass
+                    delete_by_IDs('camp', campIDs)
+                    self.assign_campIDs_to_plan(planID, newValue)
             c.execute("update plan set {} = '{}' where planID = {}"
                       .format(column, newValue, planID))
             conn.commit()
@@ -153,7 +151,7 @@ class ManageEmergencyPlan:
             case 0:
                 if confirm('This plan is unopened.\n'
                            u"\U0001F539" + 'Do you want to open it now?\n'
-                           u"\u2757"+'Note: The start date will be set to today if you want to open it.'):
+                                           u"\u2757" + 'Note: The start date will be set to today if you want to open it.'):
                     numberOfCamps = PlanInput.number_of_camps()
                     self.update_new_value(
                         planID, 'numberOfCamps', numberOfCamps)
@@ -183,8 +181,8 @@ class ManageEmergencyPlan:
                                 f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
                             conn.commit()
                 if confirm(u'\u2705' + 'This plan is opened\n'
-                           u"\U0001F539" + 'Do you want to close it now?\n'
-                           u"\u2757"+'Note: The end date of this plan will be set to today date.'):
+                                       u"\U0001F539" + 'Do you want to close it now?\n'
+                                                       u"\u2757" + 'Note: The end date of this plan will be set to today date.'):
                     delete_by_IDs('camp', campIDs)
                     self.update_new_value(planID, 'status', 2)
                     self.update_new_value(
@@ -220,8 +218,7 @@ class ManageEmergencyPlan:
                 delete_by_IDs('plan', planID)
             print('Succeed!')
 
-    @staticmethod
-    def insert_one_plan(plan):
+    def insert_one_plan(self, plan):
         with sqlite3.connect('emergency_system.db') as conn:
             c = conn.cursor()
             maxPlanID = c.execute('select max(planID) from plan').fetchone()[0]
@@ -234,7 +231,7 @@ class ManageEmergencyPlan:
                     f'''insert into
                     plan (type, description, area, startDate,
                           endDate, numberOfCamps, status)
-                    values ('{plan['type']}','{plan['description']}','{plan['area']}','{plan['startDate']}',null,null,'{plan['status']}')'''
+                    values ('{plan['type']}','{plan['description']}','{plan['area']}','{plan['startDate']}',null,{plan['numberOfCamps']},'{plan['status']}')'''
                 )
                 conn.commit()
             else:
@@ -242,7 +239,7 @@ class ManageEmergencyPlan:
                     f'''insert into
                     plan (type, description, area, startDate,
                           endDate, numberOfCamps, status)
-                    values ('{plan['type']}','{plan['description']}','{plan['area']}','{plan['startDate']}','{plan['endDate']}',null,'{plan['status']}')'''
+                    values ('{plan['type']}','{plan['description']}','{plan['area']}','{plan['startDate']}','{plan['endDate']}',{plan['numberOfCamps']},'{plan['status']}')'''
                 )
                 conn.commit()
             maxCampID = c.execute('select max(campID) from camp').fetchone()[0]
@@ -250,6 +247,7 @@ class ManageEmergencyPlan:
             c.execute(
                 "update sqlite_sequence set seq = {} where name = 'camp'".format(seqCamp))
             conn.commit()
+            self.assign_campIDs_to_plan(seqPlan + 1, plan['numberOfCamps'])
             return seqPlan + 1
 
     @staticmethod
@@ -317,7 +315,6 @@ class ManageEmergencyPlan:
                             return
                 else:
                     return
-
 
     @staticmethod
     def assign_campIDs_to_plan(planID, numberOfCamps):

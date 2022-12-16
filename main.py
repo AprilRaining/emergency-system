@@ -22,7 +22,7 @@ if __name__ == "__main__":
     """
 
     # For Log in
-    utilities.check_plan()
+    # utilities.check_plan()
     utilities.check_week()
 
     while True:
