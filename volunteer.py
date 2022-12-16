@@ -305,7 +305,7 @@ class Volunteer:
             print_table(pre_df.columns, pre_df.to_numpy().tolist(), (20, 20, 20, 20, 20, 20, 20, 20))
             print(
                 "\n" + u"\u2757" + "Note: These tables don't display your task for this week.\n"
-                                   "To see your task, please go to the 'Manage Task' menu")
+                                   "To see your task, please go to the 'View This Week Schedule' menu")
         except:
             print_log("Wrong connection to the database.")
         pass
