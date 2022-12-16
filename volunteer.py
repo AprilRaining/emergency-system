@@ -371,20 +371,18 @@ class Volunteer:
 
     def create_emergency_refugee_file(self):
         conn = connect_db()
-        while True:
-            # create instance of refugee
-            new_ref = Refugee("Register", conn)
-            # register new refugee
-            new_ref.refugee_registration_form()
-            if self.system_exit_check():
-                return
+        # create instance of refugee
+        new_ref = Refugee("Register", conn)
+        # register new refugee
+        new_ref.refugee_registration_form()
 
     def edit_emergency_refugee_file(self):
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df, conn)
         print("--------------------------------------------------------------------------")
-        print(u"\U0001F539" + "Select a database field that you would like to edit: ")
+        print("\n"+u"\U0001F539"+"Select an information field that you would like to edit: ")
+        # print(u"\u2757"+"Note: Allow multiple selections in a comma-separated format e.g. 1,3,5")
         edit_opt = refugee_input_option("Edit")
         edit_arr = numerical_input_check(edit_opt)
         # print("arr",edit_arr)
@@ -402,8 +400,9 @@ class Volunteer:
                                   col_name_arr[i], edited_fields[i])
 
         print("--------------------------------------------------------------------------")
-        print(u'\u2705' + "The refugee's information is successfully updated.\n")
-        self.system_exit_check()
+        print(u'\u2705'+"The refugee's information edition is ended.\n")
+        # if self.system_exit_check():
+        #     return
 
     def view_refugee_req_schedule(self):
         conn = connect_db()
@@ -464,9 +463,10 @@ class Volunteer:
             update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
             update_refdb_attr(conn, ref_df_by_id, "request", "0")
             print("--------------------------------------------------------------------------")
-            print(u'\u2705' + "The refugee's information is successfully deactivated.\n")
-            print("\n" + u"\u2757" + "Note: You can activate this account anytime.")
-        self.system_exit_check()
+            print(u'\u2705'+"The refugee's information is successfully deactivated.\n")
+            print("\n"+u"\u2757"+"Note: You can activate this account anytime.")
+        # if self.system_exit_check():
+        #     return
 
     def reopen_emergency_refugee_file(self):
         print("Welcome to refugee information system")
@@ -482,8 +482,9 @@ class Volunteer:
             # update datebase: refugee[status] to active
             update_refdb_attr(conn, ref_df_by_id, "status", "active")
             print("--------------------------------------------------------------------------")
-            print(u'\u2705' + "The refugee's information is successfully activated.\n")
-        self.system_exit_check()
+            print(u'\u2705'+"The refugee's information is successfully activated.\n")
+        # if self.system_exit_check():
+        #     return
 
     def delete_emergency_refugee_file(self):
         conn = connect_db()
@@ -515,8 +516,10 @@ class Volunteer:
             # delete refugee
             delete_ref_by_id(conn, ref_df_by_id)
             print("--------------------------------------------------------------------------")
-            print(u'\u2705' + f"The refugee with ID {ref_df_by_id}'s information is successfully deleted.\n")
-        self.system_exit_check()
+            print(u'\u2705'+f"The refugee with ID {ref_df_by_id}'s information is successfully deleted.\n")
+        # if self.system_exit_check():
+        #     return
+
 
     def manage_task(self):
         print("--------------------------------------------------------------------------")
@@ -553,6 +556,7 @@ class Volunteer:
                    datetime.datetime.strftime(sunday, "%Y-%m-%d")
 
         day_schedule = []
+        valid_vol = False
 
         def display_schedule(volunteer, day, date):
             try:
@@ -560,7 +564,10 @@ class Volunteer:
                     c = conn.cursor()
                     c.execute(f'''SELECT * FROM task WHERE volunteerID = (?) and requestDate = (?)''',
                               (volunteer, date))
+                    nonlocal valid_vol
                     task = c.fetchall()
+                    if task != []:
+                        valid_vol = True
 
                     task_sch = []
                     display_info = []
@@ -599,14 +606,19 @@ class Volunteer:
         d.append(display_schedule(ID, 'Saturday', date_saturday))
         d.append(display_schedule(ID, 'Sunday', date_sunday))
 
-        print("{:<15} {:<15} {:<15} {:<15}".format('Day', 'Morning(06:00 - 14:00)',
+        if valid_vol == False:
+            warn("Volunteer ID input doesn't exist in our database. Please enter a valid ID.\n")
+        else:
+            print("{:<15} {:<15} {:<15} {:<15}".format('Day', 'Morning(06:00 - 14:00)',
                                                    'Afternoon(14:00 - 22:00)', 'Night(22:00 - 06:00)'))
+            for v in d:
+                day, morning, afternoon, night = v
+                print("{:<15} {:<22} {:<24} {:<15}".format(day, morning, afternoon, night))
 
-        for v in d:
-            day, morning, afternoon, night = v
-            print("{:<15} {:<22} {:<24} {:<15}".format(day, morning, afternoon, night))
+            print("\n"+u"\u2757"+"Note: "+u"\u2716"+" = No task\n")
 
-        print("\n" + u"\u2757" + "Note: " + u"\u2716" + " = No task\n")
+
+
 
 # v1 = Volunteer()
 # v1.create_emergency_refugee_file()

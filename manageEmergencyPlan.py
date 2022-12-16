@@ -35,14 +35,14 @@ class ManageEmergencyPlan:
                     prLightPurple("\t\t\tEDIT EMERGENCY PLAN\n")
                     self.edit_emergency_plan(
                         select_sqlite('plan', get_all_IDs('plan')))
-                    print("\n", u'\u2705',
-                          'The emergency plan is successfully updated.')
                     back()
                 case 3:
                     print(
                         "--------------------------------------------------------------------------")
-                    prLightPurple("\t\t\tDISPLAY EMERGENCY PLAN\n")
+                    prLightPurple("\t\t\tVIEW EMERGENCY PLANS SUMMARY\n")
                     self.view_plans(get_all_IDs('plan'))
+
+                    back()
                 case 4:
                     print(
                         "--------------------------------------------------------------------------")
@@ -101,7 +101,7 @@ class ManageEmergencyPlan:
                 warn('This plan has been closed. You are not allowed edit it!')
                 return
         print(options)
-        option = options.get_option(
+        option = options.get_option("\n"+
             u"\U0001F539" + 'Please choose one of properties above that you want to edit: ')
         newValue = self.get_new_value(planID, options.values[option])
         self.update_new_value(
@@ -111,6 +111,7 @@ class ManageEmergencyPlan:
                 self.update_new_value(
                     planID=planID, column='status', newValue=1)
         print('Succeed!')
+        print("\n", u'\u2705','The emergency plan is successfully updated.')
 
     @staticmethod
     def get_new_value(planID, column):
@@ -143,14 +144,16 @@ class ManageEmergencyPlan:
             conn.commit()
 
     def view_plans(self, planIDs):
+        print(u"\U0001F538"+"Please see emergency plan summary below: \n")
         TableDisplayer.plan(planIDs)
-        self.select_info_from_camp(self.select_camps_from_plan(planIDs))
+        print("\n")
+        self.select_in_camp_from(self.select_in_plan_from(planIDs))
 
     def close_or_open_emergency_plan(self, planID):
         df = pd_read_by_IDs('plan', planID)
         match df.loc[0, 'status']:
             case 0:
-                if confirm('This plan is unopened.\n'
+                if confirm('This plan is an unopened plan.\n'
                            u"\U0001F539" + 'Do you want to open it now?\n'
                                            u"\u2757" + 'Note: The start date will be set to today if you want to open it.'):
                     numberOfCamps = PlanInput.number_of_camps()
@@ -161,7 +164,7 @@ class ManageEmergencyPlan:
                     self.update_new_value(
                         planID, 'startDate', datetime.date.today())
                     print('\nSucceed!')
-                    print(u"\U0001F4C6" +
+                    print(u'\u2705' +
                           'This emergency plan is successfully openned.')
                     return
             case 1:
@@ -170,7 +173,7 @@ class ManageEmergencyPlan:
                 refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
                 if refugeeIDs:
                     warn('There are refugees in this plan\n'
-                         'Please make sure no refugees in the plan before close it.')
+                         'Please make sure no refugees in the plan before closing it.')
                     return
                 else:
                     if volunteerIDs:
@@ -181,9 +184,9 @@ class ManageEmergencyPlan:
                             c.execute(
                                 f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
                             conn.commit()
-                if confirm(u'\u2705' + 'This plan is opened\n'
-                                       u"\U0001F539" + 'Do you want to close it now?\n'
-                                                       u"\u2757" + 'Note: The end date of this plan will be set to today date.'):
+                if confirm('* This plan is an opened plan.\n'
+                           u"\U0001F539" + 'Do you want to close it now?\n'
+                           u"\u2757"+'Note: The end date of this plan will be set to today date.'):
                     delete_by_IDs('camp', campIDs)
                     self.update_new_value(planID, 'status', 2)
                     self.update_new_value(
@@ -247,16 +250,17 @@ class ManageEmergencyPlan:
             return
         else:
             while True:
-                option = input(
-                    f"Input a plan ID to view more detail or 'q' to quit:")
-                if option != 'q':
+                option = input("\n"+
+                    u"\U0001F539"+f"Input a plan ID to view more details or 'Q/q' to quit:")
+                print("\n")
+                if option != 'q' and option != 'Q':
                     try:
                         option = int(option)
                     except ValueError:
-                        print("Please reenter a valid value.")
+                        print_log("Please reenter a valid value.")
                     else:
                         if option not in planIDs:
-                            print(
+                            print_log(
                                 f'{option} is not a valid input. Please try again.')
                         else:
                             campIDs = get_linked_IDs('camp', 'plan', option)
@@ -264,7 +268,7 @@ class ManageEmergencyPlan:
                                 TableDisplayer.camp(campIDs)
                                 return campIDs
                             else:
-                                print('No camps under this plan.')
+                                print('No camps under this plan '+u"\u203C")
                                 return False
                 else:
                     return False
@@ -275,13 +279,13 @@ class ManageEmergencyPlan:
             return
         else:
             while True:
-                option = input(
-                    f"Input a camp ID to view more detail or 'q' to quit:")
-                if option != 'q':
+                option = input("\n"
+                    u"\U0001F539"+f"Input a camp ID to view more details or 'Q/q' to quit:")
+                if option != 'q' and option != 'Q':
                     try:
                         option = int(option)
                     except ValueError:
-                        print("Please reenter a valid value.")
+                        print_log("Please reenter a valid value.")
                     else:
                         if option not in campIDs:
                             print(
@@ -292,26 +296,31 @@ class ManageEmergencyPlan:
                             refugeeIDs = get_linked_IDs(
                                 'refugee', 'camp', option)
                             if volunteerIDs:
-                                print("Volunteers in this camps:")
+                                print("\n"+u"\U0001F538"+f"Volunteers in the camp ID {option}:")
                                 display_by_IDs('volunteer', volunteerIDs)
                                 print('')
                             else:
-                                print('No volunteer in this camp')
+                                print("\n"+'No volunteer in this camp '+u"\u203C"+"\n")
                             if refugeeIDs:
-                                print("Refugees in this camps:")
+                                print("\n"+u"\U0001F538"+f"Refugees in the camp ID {option}:")
                                 display_by_IDs('refugee', refugeeIDs)
                                 print('')
                             else:
-                                print('No refugee in this camp')
+                                print('No refugee in this camp '+u"\u203C")
                             return
                 else:
                     return
 
     @staticmethod
     def assign_campIDs_to_plan(planID, numberOfCamps):
+        new_campID = []
         with sqlite3.connect('emergency_system.db') as conn:
             c = conn.cursor()
+            campframe = pd.read_sql_query('SELECT * FROM camp', conn)
+            campID_latest = int(campframe['campID'].iloc[-1])+1
             for i in range(numberOfCamps):
+                new_campID.append(campID_latest+i+1)
                 c.execute(
                     f'insert into camp (capacity, planID) values (20, {planID})')
                 conn.commit()
+        print("\n"+u"\U0001F538"+ f"New Camp ID associated with newly opened plan ID: {new_campID}")

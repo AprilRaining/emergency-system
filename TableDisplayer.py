@@ -26,11 +26,9 @@ class TableDisplayer():
             numberOfRefugees.append(len(refugeeIDs))
         df['numberOfVolunteers'] = numberOfVolunteers
         df['numberOfRefugees'] = numberOfRefugees
-        df['status'] = df.apply(
-            lambda a: TableDisplayer.to_string_plan_status(a), axis=1)
-        col_width = (8, 20, 30, 16, 20, 20, 14, 8, 20, 20)
+        df['status'] = df.apply(lambda a: TableDisplayer.to_string_plan_status(a), axis=1)
         print("\n")
-        print_table(df.columns, df.to_numpy().tolist(), col_width)
+        print_table(df.columns,df.to_numpy().tolist(),(30,50,80,60,60,60,70,40,80,80))
 
     @staticmethod
     def camp(campIDs):
@@ -45,7 +43,8 @@ class TableDisplayer():
             numberOfRefugees.append(len(refugeeIDs))
         df['numberOfVolunteers'] = numberOfVolunteers
         df['numberOfRefugees'] = numberOfRefugees
-        print(df.to_string(index=False))
+        # print(df.to_string(index=False))
+        print_table(df.columns,df.to_numpy().tolist(),(30,30,30,70,70))
 
     @staticmethod
     def to_string_plan_status(df):

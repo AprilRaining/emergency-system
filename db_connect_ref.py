@@ -25,7 +25,7 @@ def insert_refdb_row(conn, refugee_row):
     cur = conn.cursor()
     cur.execute(query, refugee_row)
     conn.commit()
-    time.sleep(2.0)
+    time.sleep(1.2)
     cur.close()
     return cur.lastrowid
 
@@ -64,6 +64,14 @@ def clear_request_schedule(conn,df_task_by_ref):
         conn.commit()
         time.sleep(2.0)
 
+def display_open_camp_option(conn):
+    camp_query = '''SELECT camp.planID,camp.campID,type,area,COUNT(refugeeID) as no_of_refugees,capacity FROM camp
+                            LEFT JOIN refugee ON camp.campID = refugee.campID JOIN plan ON camp.planID=plan.planID WHERE plan.status=1
+                            GROUP BY camp.campID'''
+    pd_camp = pd.read_sql_query(camp_query, conn)
+    camp_df = pd.DataFrame(pd_camp, columns=['planID','campID','type','area','no_of_refugees', 'capacity'])
+    camp_df = camp_df.drop(camp_df[camp_df['campID'] == 0].index)
+    return camp_df
 
 def get_refugee_dataframe(conn):
     # select from refugee table

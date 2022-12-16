@@ -10,8 +10,8 @@ def admin_login():
         prYellow("\t\t\t\tADMIN LOGIN\n")
         password = input(u"\U0001F539" + "Input the password of admin:")
         if str(password) == "12345":
-            print("\n", u'\u2705', 'Welcome to the system, Admin!.')
-            print("Please select your options below: \n")
+            print("\n",u'\u2705','Welcome to the system, Admin!.')
+            prYellow("\nPlease select your options below: \n")
             return
         else:
             warn("Wrong password! Check your input please.")
@@ -34,8 +34,8 @@ def volunteer_login():
                         "Your account has been deactivated, contact the administrator.\n")
                     return -1
                 else:
-                    print("\n", u'\u2705', 'Welcome to the system, Volunteer!.')
-                    print("Please select your options below: \n")
+                    print("\n",u'\u2705','Welcome to the system, Volunteer!.')
+                    prYellow("\nPlease select your options below: \n")
                     return result[0][0]
             else:
                 vol_res = c.execute(f"select * from deleted_vol_account where username = '{name}' "
