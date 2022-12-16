@@ -197,23 +197,13 @@ class ManageEmergencyPlan:
 
     @staticmethod
     def delete_emergency_plan(planID):
-        campIDs = get_linked_IDs('camp', 'plan', planID)
-        volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
-        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
-        if refugeeIDs:
-            print('There are refugees in this plan\n'
-                  'Please make sure no refugees in the plan before remove it.')
-            return
+        df = pd_read_by_IDs('plan', planID)
+        if df.loc[0, 'status'] != 2:
+            print("You can only close a closed plan.")
+            print("Please close this plan first, before deleting it!")
         else:
+            campIDs = get_linked_IDs('camp', 'plan', planID)
             if confirm('Once you delete this plan you can not find it anymore.'):
-                if volunteerIDs:
-                    print(
-                        'There are volunteers in this plan, close it will move away those volunteers.')
-                    with sqlite3.connect('emergency_system.db') as conn:
-                        c = conn.cursor()
-                        c.execute(
-                            f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
-                        conn.commit()
                 delete_by_IDs('camp', campIDs)
                 delete_by_IDs('plan', planID)
             print('Succeed!')

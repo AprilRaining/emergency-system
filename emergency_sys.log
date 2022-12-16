@@ -38,3 +38,13 @@ Traceback (most recent call last):
   File "/Users/junfeng/Documents/WorkSpace/Python/IntroProgramming/emergency-system/myfunctionlib.py", line 102, in menu_choice_get
     option = int(input(hint))
 ValueError: invalid literal for int() with base 10: 'q'
+2022-12-16 13:17:40,736 — ERROR : You entered a non-numeric value.
+Traceback (most recent call last):
+  File "/Users/junfeng/Documents/WorkSpace/Python/IntroProgramming/emergency-system/get.py", line 16, in int
+    n = int(input(hint))
+ValueError: invalid literal for int() with base 10: '???'
+2022-12-16 13:17:40,738 — ERROR : Please reenter a valid value.
+Traceback (most recent call last):
+  File "/Users/junfeng/Documents/WorkSpace/Python/IntroProgramming/emergency-system/get.py", line 16, in int
+    n = int(input(hint))
+ValueError: invalid literal for int() with base 10: '???'
