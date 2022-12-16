@@ -39,11 +39,11 @@ class Get:
                 return date
 
     @staticmethod
-    def listing(start, end, hint=''):
+    def listing(start, end, hint='', spliter=','):
         while True:
             try:
                 l = input(hint)
-                arr = l.split(',')
+                arr = l.split(spliter)
                 for i in range(len(arr)):
                     arr[i] = int(arr[i])
                 for i in arr:

@@ -324,9 +324,9 @@ class Admin:
                 print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
                 prCyan("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
                 print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
-                
-        except:
-            print_log("Wrong connection to the database")
+
+        except Exception as e:
+            print_log(e)
 
 
     def delete_account(self):
