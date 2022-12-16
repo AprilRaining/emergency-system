@@ -53,7 +53,8 @@ class ManageEmergencyPlan:
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDELETE EMERGENCY PLAN\n")
-                    self.delete_emergency_plan(select_sqlite('plan', get_all_IDs('plan')))
+                    self.delete_emergency_plan(
+                        select_sqlite('plan', get_all_IDs('plan')))
                     # delete = emergency_plan.Delete_Emergency_Plan()
                     # delete.delete_now()
                     back()
@@ -152,10 +153,6 @@ class ManageEmergencyPlan:
                 if confirm('This plan is unopened.\n'
                            u"\U0001F539" + 'Do you want to open it now?\n'
                                            u"\u2757" + 'Note: The start date will be set to today if you want to open it.'):
-                    numberOfCamps = PlanInput.number_of_camps()
-                    self.update_new_value(
-                        planID, 'numberOfCamps', numberOfCamps)
-                    self.assign_campIDs_to_plan(planID, numberOfCamps)
                     self.update_new_value(planID, 'status', 1)
                     self.update_new_value(
                         planID, 'startDate', datetime.date.today())
