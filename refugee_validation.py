@@ -99,7 +99,8 @@ def camp_capacity_check(conn,purpose,old_camp_id):
             print_table(camp_df_cop.columns,camp_df_cop.to_numpy().tolist(),(25,25,70,70,70,40))
             print("--------------------------------------------------------------------\n")
             camp = int(input(u"\U0001F539"+f"Assign the camp ID to the refugee: "))
-            if camp > int(camp_df["campID"].iloc[-1]) or camp < int(camp_df["campID"].iloc[0]):
+            campID_list = list(camp_df.loc[:, "campID"].values)
+            if camp not in campID_list:
                 raise exc.camp_id_out_of_range
             for ind in camp_df.index:
                 if ind+1 == camp:

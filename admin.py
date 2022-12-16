@@ -273,9 +273,9 @@ class Admin:
                 warn(f"\nThere is no account based on the volunteerID: {ID}")
             else:
                 print(f"\nPlease see the information about volunteer with ID {ID} below: \n")
-                prCyan(u"\U0001F538","---GENERAL INFORMATION---\n")
+                prCyan(u"\U0001F538"+"---GENERAL INFORMATION---\n")
                 print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                prCyan("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                prCyan("\n"+u"\U0001F538"+"---VOLUNTEER AVAILABILITY SCHEDULE---\n")
                 print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
         except IndexError:
             print_log("{} is an invalid ID".format(ID))
@@ -298,9 +298,9 @@ class Admin:
                 print(f"There is no account based in the camp {ID}.")
             else:
                 print(f"Please see the information about volunteers in camp ID {ID} below: \n")
-                prCyan(u"\U0001F538","---GENERAL INFORMATION---\n")
+                prCyan(u"\U0001F538"+"---GENERAL INFORMATION---\n")
                 print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                prCyan("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                prCyan("\n"+u"\U0001F538"+"---VOLUNTEER AVAILABILITY SCHEDULE---\n")
                 print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
         except:
             print_log("Wrong connection to the database.")
@@ -320,9 +320,9 @@ class Admin:
                 print(f"There is no volunteer account in the system! Recruit some volunteers please.")
             else:
                 print("Please see all volunteers information below: \n")
-                prCyan(u"\U0001F538","---GENERAL INFORMATION---\n")
+                prCyan(u"\U0001F538"+"---GENERAL INFORMATION---\n")
                 print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                prCyan("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                prCyan("\n"+u"\U0001F538"+"---VOLUNTEER AVAILABILITY SCHEDULE---\n")
                 print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
                 
         except:

@@ -457,8 +457,9 @@ class Volunteer:
                 # task
                 df_task_ref_id = select_task_by_ref_id(conn, ref_df_by_id)
                 # clear out volunteer schedule related to this refugee req
-                print("..............Deactivating refugee account................")
-                clear_request_schedule(conn, df_task_ref_id)
+                prGreen("\n..............Deactivating refugee account................")
+                print(u"\u2757"+"Note: All requests with volunteers will be cleared out from the schedule.\n")
+                clear_request_schedule(conn,df_task_ref_id)
 
             update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
             update_refdb_attr(conn, ref_df_by_id, "request", "0")
@@ -469,8 +470,6 @@ class Volunteer:
         #     return
 
     def reopen_emergency_refugee_file(self):
-        print("Welcome to refugee information system")
-        print("-------------------------------------------")
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("activate", refugee_df, conn)
@@ -497,15 +496,16 @@ class Volunteer:
         # get req id
         ref_req = refugee_df.loc[refugee_df["refugeeID"]
                                  == ref_df_by_id, "request"].values[0]
-        confirm_del = yn_valid("\n" +
-                               u"\U0001F539" + "Are you sure you want to delete this refugee from the system?(Yes/No): ")
+        print("\n"+u"\u2757"+"Note: All requests with volunteers will be cleared out from the schedule.")
+        confirm_del = yn_valid(
+            u"\U0001F539"+"Are you sure you want to delete this refugee from the system?(Yes/No): ")
         if confirm_del == "Yes":
             if ref_req != "0":
                 # task
                 df_task_ref_id = select_task_by_ref_id(conn, ref_df_by_id)
                 # clear out volunteer schedule related to this refugee req
-                print(".............Deleting refugee information..............")
-                clear_request_schedule(conn, df_task_ref_id)
+                prGreen(".............Deleting refugee information..............")
+                clear_request_schedule(conn,df_task_ref_id)
                 # delete related task
                 del_task = f'''DELETE FROM task WHERE refugeeID = {ref_df_by_id}'''
                 cur = conn.cursor()

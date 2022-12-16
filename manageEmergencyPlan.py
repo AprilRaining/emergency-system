@@ -93,7 +93,7 @@ class ManageEmergencyPlan:
                     'endDate',
                 ], limited=True)
                 print(
-                    "\n", u'\u2705', 'This plan has already been opened. You can only edit the properties below: \n')
+                    "\n",'This plan has already been opened. You can only edit the properties below: \n')
                 print("\n")
             case 2:
                 warn('This plan has been closed. You are not allowed edit it!')
@@ -236,6 +236,7 @@ class ManageEmergencyPlan:
                 "update sqlite_sequence set seq = {} where name = 'camp'".format(seqCamp))
             conn.commit()
             self.assign_campIDs_to_plan(seqPlan + 1, plan['numberOfCamps'])
+            print(u"\U0001F538"+f"New Plan ID: {seqPlan + 1}")
             return seqPlan + 1
 
     @staticmethod
@@ -294,6 +295,7 @@ class ManageEmergencyPlan:
                                       f"Volunteers in the camp ID {option}:")
                                 TableDisplayer.volunteers(volunteerIDs)
                                 print('')
+                                print(u"\u2757"+"Note: From Monday to Sunday Columns, 0 = Available, -1 = Unavailable\n")
                             else:
                                 print("\n"+'No volunteer in this camp ' +
                                       u"\u203C"+"\n")
@@ -317,9 +319,8 @@ class ManageEmergencyPlan:
             campframe = pd.read_sql_query('SELECT * FROM camp', conn)
             campID_latest = int(campframe['campID'].iloc[-1])+1
             for i in range(numberOfCamps):
-                new_campID.append(campID_latest+i+1)
+                new_campID.append(campID_latest+i)
                 c.execute(
                     f'insert into camp (capacity, planID) values (20, {planID})')
                 conn.commit()
-        print("\n"+u"\U0001F538" +
-              f"New Camp ID associated with newly opened plan ID: {new_campID}")
+        print("\n"+u"\U0001F538"+ f"New Camp ID associated with new plan ID: {new_campID}")
