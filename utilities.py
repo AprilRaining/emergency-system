@@ -1,15 +1,14 @@
-import sqlite3
 import json
-import datetime
-from system_log import *
+
 import refugee_exception as exc
+from TableDisplayer import *
 
 
 def admin_login():
     while True:
         print("--------------------------------------------------------------------------")
         prYellow("\t\t\t\tADMIN LOGIN\n")
-        password = input(u"\U0001F539"+"Input the password of admin:")
+        password = input(u"\U0001F539" + "Input the password of admin:")
         if str(password) == "12345":
             print("\n", u'\u2705', 'Welcome to the system, Admin!.')
             print("Please select your options below: \n")
@@ -24,8 +23,8 @@ def volunteer_login():
     with sqlite3.connect('emergency_system.db') as conn:
         c = conn.cursor()
         while True:
-            name = input(u"\U0001F539"+"Input your username:")
-            password = input(u"\U0001F539"+"Input the password of volunteer:")
+            name = input(u"\U0001F539" + "Input your username:")
+            password = input(u"\U0001F539" + "Input the password of volunteer:")
 
             result = c.execute(f"select volunteerID, accountStatus from volunteer where username = '{name}' "
                                f"and password = '{password}'").fetchall()
@@ -100,7 +99,9 @@ def check_plan():
     try:
         with sqlite3.connect('emergency_system.db') as conn:
             c = conn.cursor()
+            print("Here")
             c.execute("update plan set status = 1 where startDate >= DATE()")
+            print("Done")
             conn.commit()
     except Exception as e:
         print_log("Wrong connection to the database.")
@@ -119,3 +120,21 @@ def yn_valid(question):
             print(e)
         else:
             return user_input
+
+
+def select_sqlite(table, IDs):
+    IDsBackUp = IDs
+    while True:
+        TableDisplayer.match(table)(IDs)
+        if not IDs:
+            IDs = IDsBackUp
+            TableDisplayer.match(table)(IDs)
+        print("\n", u"\U0001F531" +
+              '[Hint]Input 0 to search by other keys e.g area, status')
+        IDs.append(0)
+        ID = Get.option_in_list(
+            IDs, u"\U0001F539" + f'Please input the {table}ID to choose a {table}: ')
+        if ID == 0:
+            IDs = search_sqlite(table)
+        else:
+            return ID

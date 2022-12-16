@@ -1,13 +1,10 @@
-from system_log import *
+
 from planInput import *
-from TableDisplayer import *
+from utilities import *
 import datetime
-from emergency_plan_sql import emergency_plan
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# print(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 class ManageEmergencyPlan:
@@ -22,12 +19,12 @@ class ManageEmergencyPlan:
             print(self.menu)
             match menu_choice_get(self.menu.count('\n') + 1, "\n-->"):
                 case 1:
-                    # self.create_emergency_plan()
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tCREATE EMERGENCY PLAN\n")
-                    create = emergency_plan.Create_Emergency_Plan()
-                    create.add()
+                    self.create_emergency_plan()
+                    # create = emergency_plan.Create_Emergency_Plan()
+                    # create.add()
                     print("\n", u'\u2705',
                           'New emergency plan is successfully created.')
                     back()
@@ -42,13 +39,10 @@ class ManageEmergencyPlan:
                           'The emergency plan is successfully updated.')
                     back()
                 case 3:
-                    self.view_plans(get_all_IDs('plan'))
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDISPLAY EMERGENCY PLAN\n")
-                    display_by_IDs('plan', get_all_IDs('plan'))
-
-                    back()
+                    self.view_plans(get_all_IDs('plan'))
                 case 4:
                     print(
                         "--------------------------------------------------------------------------")
@@ -57,12 +51,12 @@ class ManageEmergencyPlan:
                         select_sqlite('plan', get_all_IDs('plan')))
                     back()
                 case 5:
-                    # self.delete_emergency_plan(select_sqlite('plan'))
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDELETE EMERGENCY PLAN\n")
-                    delete = emergency_plan.Delete_Emergency_Plan()
-                    delete.delete_now()
+                    self.delete_emergency_plan(select_sqlite('plan'))
+                    # delete = emergency_plan.Delete_Emergency_Plan()
+                    # delete.delete_now()
                     back()
                 case 0:
                     return
@@ -80,7 +74,7 @@ class ManageEmergencyPlan:
     def edit_emergency_plan(self, planID):
         print("Please see the current emergency plan database below:\n")
         df = pd_read_by_IDs('plan', planID)
-        display_by_IDs('plan', planID)
+        TableDisplayer.plan(planID)
         options = []
         match df.loc[0, 'status']:
             case 0:
@@ -151,7 +145,7 @@ class ManageEmergencyPlan:
 
     def view_plans(self, planIDs):
         TableDisplayer.plan(planIDs)
-        self.select_in_camp_from(self.select_in_plan_from(planIDs))
+        self.select_info_from_camp(self.select_camps_from_plan(planIDs))
 
     def close_or_open_emergency_plan(self, planID):
         df = pd_read_by_IDs('plan', planID)
@@ -259,7 +253,7 @@ class ManageEmergencyPlan:
             return seqPlan + 1
 
     @staticmethod
-    def select_in_plan_from(planIDs):
+    def select_camps_from_plan(planIDs):
         if not planIDs:
             return
         else:
@@ -287,9 +281,8 @@ class ManageEmergencyPlan:
                     return False
 
     @staticmethod
-    def select_in_camp_from(campIDs):
+    def select_info_from_camp(campIDs):
         if not campIDs:
-            print("There are no camps in this plan.")
             return
         else:
             while True:
@@ -324,6 +317,7 @@ class ManageEmergencyPlan:
                             return
                 else:
                     return
+
 
     @staticmethod
     def assign_campIDs_to_plan(planID, numberOfCamps):

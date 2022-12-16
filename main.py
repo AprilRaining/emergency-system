@@ -25,8 +25,6 @@ if __name__ == "__main__":
     utilities.check_plan()
     utilities.check_week()
 
-
-
     while True:
         prCyan("""
  ____      ____ ________ _____      ______   ___   ____    ____ ________  
@@ -38,12 +36,13 @@ if __name__ == "__main__":
 
                                                    """)
         print('\t\tto the Emergency System Designed By Team K:)\n')
-        print("--------------------------------------------------------------------------\n")
+        print(
+            "--------------------------------------------------------------------------\n")
         prYellow(u"\U0001F539" + "Please select the account type to login :\n")
         print(menu('Login'))
         match menu_choice_get(menu('Login').count('\n') + 1, "\n-->"):
             case 1:
-                utilities.admin_login()
+                # utilities.admin_login()
                 admin = Admin()
                 admin.sub_main()
             case 2:
@@ -54,8 +53,6 @@ if __name__ == "__main__":
                 volunteer.sub_main()
             case 0:
                 break
-
-
 
 
 #     try:

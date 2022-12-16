@@ -1,8 +1,6 @@
-import pandas as pd
-
-from myfunctionlib import *
 from options import *
-from print_table import *
+import pandas as pd
+from myfunctionlib import *
 
 
 def list_to_sqlite_string(indexList):
@@ -44,11 +42,7 @@ def delete_by_IDs(table, IDs):
 def display_by_IDs(table, IDs):
     if IDs:
         table_df = pd_read_by_IDs(table, IDs)
-        col_width = ()
-        if table == 'plan':
-            col_width = (8, 20, 30, 16, 20, 20, 14, 8)
-        print("\n")
-        print_table(table_df.columns, table_df.to_numpy().tolist(), col_width)
+        print(table_df.to_string(index=False))
     else:
         warn('\nNo Result!')
 
@@ -79,21 +73,3 @@ def search_sqlite(table):
         print("\n")
         IDs = search(table, options.values[option], keyword)
         return IDs
-
-
-def select_sqlite(table, IDs):
-    IDsBackUp = IDs
-    while True:
-        display_by_IDs(table, IDs)
-        if not IDs:
-            IDs = IDsBackUp
-            display_by_IDs(table, IDs)
-        print("\n", u"\U0001F531" +
-              '[Hint]Input 0 to search by other keys e.g area, status')
-        IDs.append(0)
-        ID = Get.option_in_list(
-            IDs, u"\U0001F539" + f'Please input the {table}ID to choose a {table}: ')
-        if ID == 0:
-            IDs = search_sqlite(table)
-        else:
-            return ID
