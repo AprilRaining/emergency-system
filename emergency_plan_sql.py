@@ -185,18 +185,19 @@ class emergency_plan:
                     if self.choice == '1':
                         loop = False
                         typeframe = pd.read_sql_query(
-                            'SELECT * FROM plan where status = 2', conn)
+                            'SELECT * FROM plan', conn)
+                        tt_df = pd.read_sql_query('SELECT * FROM plan where status = 2', conn)
+                        typeset = set(tt_df.type.values)
                         print(
-                            f'The choices of type are: {set(typeframe.type.values)}.')
+                            f'The choices of type are: {typeset}.')
                         self.type = input(
                             'Please enter which type of emergency plan you want to view and then delete: ')
                         loop1 = True
                         while loop1 == True:
                             try:
-                                if self.type in typeframe.type.values:
+                                if self.type in tt_df.type.values:
                                     loop1 = False
-                                    finalframe = typeframe[typeframe['type']
-                                                           == self.type]
+                                    finalframe = tt_df[tt_df['type'] == self.type]
                                     finalframe = finalframe.reset_index(
                                         drop=True)
                                     print(finalframe)
@@ -255,7 +256,7 @@ class emergency_plan:
                                                                 "SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
                                                             if len(c.fetchall()) == 0:
                                                                 newdataframe = pd.DataFrame(
-                                                                    {'planID': [planID], 'type': [type],
+                                                                    { 'type': [type],
                                                                      'description': [desc],
                                                                      'area': [area], 'startDate': [start_date],
                                                                      'numberOfCamps': [camp]})
@@ -264,7 +265,7 @@ class emergency_plan:
 
                                                             else:
                                                                 newdataframe = pd.DataFrame(
-                                                                    {'planID': [planID], 'type': [type],
+                                                                    { 'type': [type],
                                                                      'description': [desc],
                                                                      'area': [area], 'startDate': [start_date],
                                                                      'numberOfCamps': [camp]})
@@ -322,8 +323,9 @@ class emergency_plan:
                     elif self.choice == '2':
                         loop = False
                         typeframe = pd.read_sql_query(
-                            'SELECT * FROM plan where status = 2', conn)
-                        print(set(typeframe['startDate']))
+                            'SELECT * FROM plan', conn)
+                        tt_df = pd.read_sql_query('SELECT * FROM plan where status = 2', conn)
+                        print("Choose from these start dates: ", set(tt_df['startDate']))
                         while True:
                             self.date = input('Please enter the start date of the emergency plan you want to '
                                               'view and then delete in the format of yyyy-mm-dd: ')
@@ -341,9 +343,9 @@ class emergency_plan:
                                 if (2000 <= int(start_date_entered[0])) and (
                                         1 <= int(start_date_entered[1]) <= 12) and (
                                         1 <= int(start_date_entered[2]) <= 31) and self.date in set(
-                                        typeframe['startDate']):
+                                        tt_df['startDate']):
                                     loop1 = False
-                                    finalframe = typeframe[typeframe['startDate']
+                                    finalframe = tt_df[tt_df['startDate']
                                                            == self.date]
 
                                     finalframe = finalframe.reset_index(
@@ -399,7 +401,7 @@ class emergency_plan:
                                                                 "SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
                                                             if len(c.fetchall()) == 0:
                                                                 newdataframe = pd.DataFrame(
-                                                                    {'planID': [planID], 'type': [type],
+                                                                    {'type': [type],
                                                                      'description': [desc],
                                                                      'area': [area], 'startDate': [start_date],
                                                                      'numberOfCamps': [camp]})
@@ -408,7 +410,7 @@ class emergency_plan:
 
                                                             else:
                                                                 newdataframe = pd.DataFrame(
-                                                                    {'planID': [planID], 'type': [type],
+                                                                    {'type': [type],
                                                                      'description': [desc],
                                                                      'area': [area], 'startDate': [start_date],
                                                                      'numberOfCamps': [camp]})
@@ -464,17 +466,19 @@ class emergency_plan:
                     elif self.choice == '3':
                         loop = False
                         typeframe = pd.read_sql_query(
-                            'SELECT * FROM plan where status = 2', conn)
+                            'SELECT * FROM plan', conn)
+                        tt_df = pd.read_sql_query('SELECT * FROM plan where status = 2', conn)
+                        typeset = set(tt_df.area.values)
                         print(
-                            f'The choices of type are: {set(typeframe.area.values)}.')
+                            f'The choices of type are: {typeset}.')
                         self.area = input(
                             'Please enter the area of the emergency plan you want to view and then delete: ')
                         loop1 = True
                         while loop1 == True:
                             try:
-                                if self.area in typeframe.area.values:
+                                if self.area in tt_df.area.values:
                                     loop1 = False
-                                    finalframe = typeframe[typeframe['area']
+                                    finalframe = tt_df[tt_df['area']
                                                            == self.area]
                                     finalframe = finalframe.reset_index(
                                         drop=True)
@@ -528,7 +532,7 @@ class emergency_plan:
                                                                 "SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
                                                             if len(c.fetchall()) == 0:
                                                                 newdataframe = pd.DataFrame(
-                                                                    {'planID': [planID], 'type': [type],
+                                                                    {'type': [type],
                                                                      'description': [desc],
                                                                      'area': [area], 'startDate': [start_date],
                                                                      'numberOfCamps': [camp],
@@ -538,7 +542,7 @@ class emergency_plan:
 
                                                             else:
                                                                 newdataframe = pd.DataFrame(
-                                                                    {'planID': [planID], 'type': [type],
+                                                                    {'type': [type],
                                                                      'description': [desc],
                                                                      'area': [area], 'startDate': [start_date],
                                                                      'numberOfCamps': [camp],

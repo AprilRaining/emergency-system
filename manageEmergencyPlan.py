@@ -1,4 +1,5 @@
 import sys
+from emergency_plan_sql import emergency_plan
 
 from planInput import *
 from utilities import *
@@ -53,9 +54,9 @@ class ManageEmergencyPlan:
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDELETE EMERGENCY PLAN\n")
-                    self.delete_emergency_plan(select_sqlite('plan', get_all_IDs('plan')))
-                    # delete = emergency_plan.Delete_Emergency_Plan()
-                    # delete.delete_now()
+                    # self.delete_emergency_plan(select_sqlite('plan', get_all_IDs('plan')))
+                    delete = emergency_plan.Delete_Emergency_Plan()
+                    delete.delete_now()
                     back()
                 case 0:
                     return
