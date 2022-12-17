@@ -385,6 +385,9 @@ class Volunteer:
         refugee_df = get_refugee_dataframe(conn)
         campIDs = get_linked_IDs('camp', 'plan', self.planID)
         refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        if not refugeeIDs:
+            warn("No refugees in this plan!!!")
+            return
         print("\n" + u"\U0001F538" +
               f"Refugees in this plan:")
         ref_df_by_id = select_sqlite('refugee', refugeeIDs)
