@@ -52,8 +52,7 @@ class ManageEmergencyPlan:
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDELETE EMERGENCY PLAN\n")
-                    self.delete_emergency_plan(
-                        select_sqlite('plan', get_all_IDs('plan')))
+                    self.delete_emergency_plan(select_sqlite('plan', get_all_IDs('plan')))
                     # delete = emergency_plan.Delete_Emergency_Plan()
                     # delete.delete_now()
                     back()
@@ -198,21 +197,23 @@ class ManageEmergencyPlan:
         df = pd_read_by_IDs('plan', planID)
         match df.loc[0, 'status']:
             case 0:
-                print('This plan have not opened yet.')
-                if confirm('Once you delete this plan you can not find it anymore.'):
+                print('This plan has not been opened yet.')
+                if confirm('Once you delete this plan, you will not be able to find it anymore.'):
                     campIDs = get_linked_IDs('camp', 'plan', planID)
                     delete_by_IDs('camp', campIDs)
                     delete_by_IDs('plan', planID)
                     print('Succeed!')
+                    print(u'\u2705'+f"The emergency plan ID: {planID} is successfully deleted.")
             case 1:
-                print('This plan is opened. You can not delete it.')
+                warn('This plan is currently opened. You can not delete it!')
                 print("You can only delete a closed plan.")
                 print("Please close this plan first, before deleting it!")
             case 2:
-                print('This plan have not closed. You can delete it.')
-                if confirm('Once you delete this plan you can not find it anymore.'):
+                print('This plan is originally closed. You can delete it.')
+                if confirm('Once you delete this plan, you will not be able to find it anymore.'):
                     delete_by_IDs('plan', planID)
                     print('Succeed!')
+                    print(u'\u2705'+f"The emergency plan ID: {planID} is successfully deleted.")
 
     def insert_one_plan(self, plan):
         with sqlite3.connect('emergency_system.db') as conn:
@@ -259,5 +260,4 @@ class ManageEmergencyPlan:
                 c.execute(
                     f'insert into camp (capacity, planID) values (20, {planID})')
                 conn.commit()
-        print("\n" + u"\U0001F538" +
-              f"New Camp ID associated with new plan ID: {new_campID}")
+        print("\n" + u"\U0001F538" + f"New Camp ID associated with new plan ID: {new_campID}")

@@ -299,12 +299,8 @@ class Volunteer:
                     schedule[weekday[day]] = f"taskID:{flag}"
             schedule["work_period"] = info[-2]
             info_df = pd.DataFrame(schedule, index=[0])
-            print("\n", u"\U0001F538",
-                  f"Your current availability for this week is:  \n")
-            print_table(info_df.columns, info_df.to_numpy().tolist(),
-                        (20, 20, 20, 20, 20, 20, 20, 20))
-            print("\nNote:"+u"\U00002705"+" = Free, " +
-                  u"\U0000274C"+" = Unavailable\n")
+            print("\n", u"\U0001F538", f"Your current availability for this week is:  \n")
+            print_table(info_df.columns, info_df.to_numpy().tolist(), (30, 30, 30, 30, 30, 30, 30, 30))
 
             preference = {}
             for day, flag in json.loads(info[-1]).items():
@@ -317,12 +313,8 @@ class Volunteer:
                 else:
                     preference[weekday[day]] = f"taskID:{flag}"
             pre_df = pd.DataFrame(preference, index=[0])
-            print("\n" + u"\U0001F539" +
-                  f"Your default availability is: \n")
-            print_table(pre_df.columns, pre_df.to_numpy().tolist(),
-                        (20, 20, 20, 20, 20, 20, 20, 20))
-            print("\nNote:"+u"\U00002705"+" = Free, " +
-                  u"\U0000274C"+" = Unavailable\n")
+            print("\n" + u"\U0001F539" + f"Your default availability when first registered is: \n")
+            print_table(pre_df.columns, pre_df.to_numpy().tolist(), (30, 30, 30, 30, 30, 30, 30, 30))
         except:
             print_log("Wrong connection to the database.")
         pass
@@ -385,58 +377,44 @@ class Volunteer:
     def create_emergency_refugee_file(self):
         conn = connect_db()
         # create instance of refugee
-        new_ref = Refugee("Register", conn, planID=self.planID)
+        new_ref = Refugee("Register", conn)
         # register new refugee
-        new_ref.refugee_registration_form(self.campID)
+        new_ref.refugee_registration_form()
 
     def edit_emergency_refugee_file(self):
+
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        campIDs = get_linked_IDs('camp', 'plan', self.planID)
-        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
-        if not refugeeIDs:
-            warn("No refugees in this plan!!!")
-            return
-        print("\n" + u"\U0001F538" +
-              f"Refugees in this plan:")
-        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
+        ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df, conn)
         print("--------------------------------------------------------------------------")
-        # print("\n" + u"\U0001F539" +
-        #       "Select an refugee that you would like to edit by refugeeID: ")
-        edit_opt = refugee_input_option("Edit")
+        print(u"\U0001F539"+"Select a database field that you would like to edit: ")
+        edit_opt = refugee_input_option("Edit")      
         edit_selected = single_input_check(edit_opt)
-        if edit_selected != '13':
-            prCyan(
+        # if edit_selected != '13':
+        prCyan(
                 "\n-------------------------------INFO EDITION-------------------------------\n")
-            edited_dict = input_matching("Edit")
-            # allow single selection
-            edited_fields = refugee_info_edit(
+        edited_dict = input_matching("Edit")
+        # allow single selection
+        edited_fields = refugee_info_edit(
                 int(edit_selected), ref_df_by_id, refugee_df, conn)
-            if edited_fields == 0:
-                print("The refugee's information edition is ended.\n")
-            else:
-                col_name = edited_dict[int(edit_selected)]
-                # print("field", edited_fields,"col", col_name_arr)
-                for i in range(len(col_name)):
-                    # update info in database
-                    update_refdb_attr(conn, ref_df_by_id,
+        if edited_fields == 0:
+            print("--------------------------------------------------------------------------")
+            print("The refugee's information edition is ended.\n")
+        else:
+            col_name = edited_dict[int(edit_selected)]
+            # print("field", edited_fields,"col", col_name_arr)
+            for i in range(len(col_name)):
+                # update info in database
+                update_refdb_attr(conn, ref_df_by_id,
                                       col_name[i], edited_fields[i])
-        print("--------------------------------------------------------------------------")
-        print(u'\u2705' + "The refugee's information edition has ended.\n")
+            print("--------------------------------------------------------------------------")
+            print(u'\u2705' + "The refugee's information edition has ended.\n")
 
     def view_refugee_req_schedule(self):
         conn = connect_db()
-        # refugee_df = get_refugee_dataframe(conn)
-        campIDs = get_linked_IDs('camp', 'plan', self.planID)
-        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
-        if not refugeeIDs:
-            warn("No refugees in this plan!!!")
-            return
-        print("\n" + u"\U0001F538" +
-              f"Refugees in this plan:")
-        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
-        # ref_df_by_id = refugee_validity_check_by_ID(
-        #     "schedule", refugee_df, conn)
+        refugee_df = get_refugee_dataframe(conn)
+        ref_df_by_id = refugee_validity_check_by_ID(
+            "view", refugee_df, conn)
         day_index = {"Monday": 1, "Tuesday": 2, "Wednesday": 3,
                      "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7}
         data_sch = {
@@ -470,14 +448,8 @@ class Volunteer:
     def close_emergency_refugee_file(self):
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        campIDs = get_linked_IDs('camp', 'plan', self.planID)
-        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
-        if not refugeeIDs:
-            warn("No refugees in this plan!!!")
-            return
-        print("\n" + u"\U0001F538" +
-              f"Refugees in this plan:")
-        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
+        ref_df_by_id = refugee_validity_check_by_ID(
+            "deactivate", refugee_df, conn)
         print("\nPlease see refugee details below.\n")
         df_id = refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id]
         print_table(df_id.columns, df_id.to_numpy().tolist(),
@@ -491,6 +463,7 @@ class Volunteer:
         if ref_status == "inactive":
             warn("Refugee's status is currently inactive. There's no need to deactivate an account again!")
         else:
+            prLightGray("\n"+u"\u2757"+"Note: Once you deactivate, all requests with volunteers will be cleared out from the schedule.")
             confirm_del = yn_valid(
                 u"\U0001F539"+"Are you sure you want to deactivate this refugee account?(Yes/No): ")
             if confirm_del == "Yes":
@@ -500,8 +473,6 @@ class Volunteer:
                     # clear out volunteer schedule related to this refugee req
                     prGreen(
                         "\n..............Deactivating refugee account................")
-                    prLightGray(
-                        u"\u2757"+"Note: All requests with volunteers will be cleared out from the schedule.\n")
                     clear_request_schedule(conn, df_task_ref_id)
 
                 update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
@@ -520,14 +491,8 @@ class Volunteer:
     def reopen_emergency_refugee_file(self):
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        campIDs = get_linked_IDs('camp', 'plan', 0)
-        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
-        if not refugeeIDs:
-            warn("No Inactive Refugee Account!!!")
-            return
-        print("\n" + u"\U0001F538" +
-              f"Inactive Refugees")
-        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
+        ref_df_by_id = refugee_validity_check_by_ID(
+            "activate", refugee_df, conn)
         ref_status = str(
             refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id, "status"].values[0])
         if ref_status == "active":
@@ -539,8 +504,7 @@ class Volunteer:
 
             # ask to assign camp
             ref_open = Refugee("Open", conn)
-            new_camp_ID = ref_open.assign_camp_ID(
-                "reopen", self.campID)
+            new_camp_ID = ref_open.assign_camp_ID("reopen", 0)
             update_refdb_attr(conn, ref_df_by_id, "campID", new_camp_ID)
             print(
                 "--------------------------------------------------------------------------")
@@ -552,14 +516,7 @@ class Volunteer:
     def delete_emergency_refugee_file(self):
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        campIDs = get_linked_IDs('camp', 'plan', self.planID)
-        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
-        if not refugeeIDs:
-            warn("No refugees in this plan!!!")
-            return
-        print("\n" + u"\U0001F538" +
-              f"Refugees in this plan:")
-        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
+        ref_df_by_id = refugee_validity_check_by_ID("delete", refugee_df, conn)
         print("\nPlease see refugee details below before deleting.\n")
         df_id = refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id]
         print_table(df_id.columns, df_id.to_numpy().tolist(),
@@ -568,7 +525,7 @@ class Volunteer:
         ref_req = refugee_df.loc[refugee_df["refugeeID"]
                                  == ref_df_by_id, "request"].values[0]
         prLightGray(
-            "\n"+u"\u2757"+"Note: All requests with volunteers will be cleared out from the schedule.")
+            "\n"+u"\u2757"+"Note: Once you deactivate, all requests with volunteers will be cleared out from the schedule.")
         confirm_del = yn_valid(
             u"\U0001F539"+"Are you sure you want to delete this refugee from the system?(Yes/No): ")
         if confirm_del == "Yes":

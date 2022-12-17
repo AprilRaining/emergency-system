@@ -10,6 +10,7 @@
     sizes:  A list or tuple of integers specifying maximum column width for each column. Must provide a value for each column.
             columns will automatically be shrunk to fit the size of the widest data in the column if smaller than max width.
 """
+# This function is obtained from an open source library!!!
 import os
 DEFAULT_WIDTH = 80
 from system_log import *
