@@ -38,7 +38,7 @@ def volunteer_login():
                 else:
                     result = list(result[0])
                     result.append(
-                        c.execute(f'select planID from camp where campID = {result[0]}').fetchall()[0][0])
+                        c.execute(f'select planID from camp where campID = {result[2]}').fetchall()[0][0])
                     print("\n", u'\u2705', 'Welcome to the system, Volunteer!.')
                     prYellow("\nPlease select your options below: \n")
                     return result
