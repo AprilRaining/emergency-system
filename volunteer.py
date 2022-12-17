@@ -296,12 +296,8 @@ class Volunteer:
                     schedule[weekday[day]] = f"taskID:{flag}"
             schedule["work_period"] = info[-2]
             info_df = pd.DataFrame(schedule, index=[0])
-            print("\n", u"\U0001F538",
-                  f"Your current availability for this week is:  \n")
-            print_table(info_df.columns, info_df.to_numpy().tolist(),
-                        (20, 20, 20, 20, 20, 20, 20, 20))
-            print("\nNote:"+u"\U00002705"+" = Free, " +
-                  u"\U0000274C"+" = Unavailable\n")
+            print("\n", u"\U0001F538", f"Your current availability for this week is:  \n")
+            print_table(info_df.columns, info_df.to_numpy().tolist(), (30, 30, 30, 30, 30, 30, 30, 30))
 
             preference = {}
             for day, flag in json.loads(info[-1]).items():
@@ -314,12 +310,8 @@ class Volunteer:
                 else:
                     preference[weekday[day]] = f"taskID:{flag}"
             pre_df = pd.DataFrame(preference, index=[0])
-            print("\n" + u"\U0001F539" +
-                  f"Your default availability is: \n")
-            print_table(pre_df.columns, pre_df.to_numpy().tolist(),
-                        (20, 20, 20, 20, 20, 20, 20, 20))
-            print("\nNote:"+u"\U00002705"+" = Free, " +
-                  u"\U0000274C"+" = Unavailable\n")
+            print("\n" + u"\U0001F539" + f"Your default availability when first registered is: \n")
+            print_table(pre_df.columns, pre_df.to_numpy().tolist(), (30, 30, 30, 30, 30, 30, 30, 30))
         except:
             print_log("Wrong connection to the database.")
         pass
@@ -398,8 +390,8 @@ class Volunteer:
               f"Refugees in this plan:")
         ref_df_by_id = select_sqlite('refugee', refugeeIDs)
         print("--------------------------------------------------------------------------")
-        # print("\n" + u"\U0001F539" +
-        #       "Select an refugee that you would like to edit by refugeeID: ")
+        print("\n"+u"\U0001F539"+"Select an information field that you would like to edit: ")
+
         edit_opt = refugee_input_option("Edit")
         edit_selected = single_input_check(edit_opt)
         if edit_selected != '13':

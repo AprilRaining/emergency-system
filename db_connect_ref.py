@@ -2,6 +2,7 @@ import sqlite3
 import time
 import pandas as pd
 from system_log import *
+import json
 
 
 def connect_db():
@@ -57,12 +58,17 @@ def clear_request_schedule(conn,df_task_by_ref):
         str(df_task_by_ref.loc[df_task_by_ref["taskID"] == tid, "requestDate"].values[0]))
         dn = date.day_name()
         # set volunteer related to refugee schedule to 0
+        cur = conn.cursor()
         vol_id = df_task_by_ref.loc[df_task_by_ref["taskID"]== tid, "volunteerID"].values[0]
         vol_upd1 = f'''UPDATE volunteer SET {dn} = 0 WHERE volunteerID = {vol_id}'''
-        cur = conn.cursor()
         cur.execute(vol_upd1)
         conn.commit()
-        time.sleep(1.5)
+        time.sleep(0.8)          
+        # set task to inactive
+        task_upd = f'''UPDATE task SET status = "inactive" WHERE volunteerID = {vol_id}'''
+        cur.execute(task_upd)
+        conn.commit()
+        time.sleep(0.8)
 
 # def clear_vol_ref_schedule(conn,vol_ID):
 #     clear_query = f'''SELECT task.refugeeID,task.taskID,task.volunteerID,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer JOIN task ON volunteer.volunteerID = task.volunteerID WHERE volunteer.volunteerID={vol_ID}'''
@@ -88,17 +94,21 @@ def clear_request_schedule(conn,df_task_by_ref):
 #                     if ref_df.loc[i,"request"] == clear_ref.loc[j,"taskID"]:
 #                         # set request to 0
 #                         update_refdb_attr(conn,clear_ref.loc[j,"refugeeID"],"request","0")
-#     # clear volunteer schedule
-#     vol_upd= f'''UPDATE volunteer SET Monday=0,Tuesday=0,Wednesday=0,Thursday=0,Friday=0,Saturday=0,Sunday=0 WHERE volunteerID = {vol_ID}'''
-#     cur = conn.cursor()
-#     cur.execute(vol_upd)
-#     conn.commit()
-#     time.sleep(1.2)
-#     cur.close()
 
 
-def display_open_camp_option(conn):
-    camp_query = '''SELECT camp.planID,camp.campID,type,area,COUNT(refugeeID) as no_of_refugees,capacity FROM camp
+def display_open_camp_option(conn,condition):
+    # refugee can only be assigned to the same plan as volunteer
+    camp_query = ''
+    if condition == "refugee":
+        with open("user_session.json") as f:
+            vol_login = json.load(f)
+        vol_planID = vol_login["planID"]
+        camp_query = f'''SELECT camp.planID,camp.campID,type,area,COUNT(refugeeID) as no_of_refugees,capacity FROM camp
+                            LEFT JOIN refugee ON camp.campID = refugee.campID JOIN plan ON camp.planID=plan.planID WHERE plan.status=1
+                            AND plan.planID = {vol_planID} GROUP BY camp.campID'''
+    else:
+        # volunteer
+        camp_query = f'''SELECT camp.planID,camp.campID,type,area,COUNT(refugeeID) as no_of_refugees,capacity FROM camp
                             LEFT JOIN refugee ON camp.campID = refugee.campID JOIN plan ON camp.planID=plan.planID WHERE plan.status=1
                             GROUP BY camp.campID'''
     pd_camp = pd.read_sql_query(camp_query, conn)
