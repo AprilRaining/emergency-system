@@ -58,6 +58,7 @@ class Volunteer:
                     self.edit_my_information()
                 case 2:
                     self.show_my_information()
+                    back()
                 case 0:
                     return
 
@@ -69,12 +70,16 @@ class Volunteer:
             match menu_choice_get(menu('edit_my_information').count('\n') + 1, "\n-->"):
                 case 1:
                     self.edit_volunteers_name()
+                    back()
                 case 2:
                     self.edit_password()
+                    back()
                 case 3:
                     self.edit_working_perference()
+                    back()
                 case 4:
                     self.edit_campid()
+                    back()
                 case 0:
                     return
 
@@ -241,7 +246,6 @@ class Volunteer:
         now = datetime.datetime.now()
         the_day = now.weekday()
         day_name = now.strftime("%A")
-        print("Today is a weekday: " + day_name)
 
         for the_day in range(the_day, 6):
             flag = weekday[0][the_day]
@@ -250,13 +254,15 @@ class Volunteer:
                     "You cannot change your campID because you still have unfinished work")
                 break
         else:
-            new_campid = AccountCreation.get_camp_id()
+            new_campid = AccountCreation.update_campID(self.planID)
             query_camp = f'''UPDATE volunteer SET campID='{new_campid}' WHERE volunteerID = {volunteer_input_id}'''
             self.campID = new_campid
             cur.execute(query_camp)
             conn.commit()
             cur.close()
             print("\n", u'\u2705' + "You have changed your campID successfully!\n")
+            print("\n", u'\u2705' +
+                  f"You have changed your campID is {new_campid}")
 
     def show_my_information(self):
         print("--------------------------------------------------------------------------")
