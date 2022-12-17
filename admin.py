@@ -82,6 +82,10 @@ class Admin:
                 c.execute(
                     f'''UPDATE volunteer SET accountStatus = 1 WHERE volunteerID = (?)''', (ID,))
                 conn.commit()
+                newCampID = AccountCreation.get_camp_id()
+                c.execute(
+                    f'''UPDATE volunteer SET campID = {newCampID} WHERE volunteerID = {ID}''')
+                conn.commit()
                 print("\n" +
                       u'\u2705', "Volunteer with ID {}'s account is now reactivated.".format(ID))
         except IndexError:
