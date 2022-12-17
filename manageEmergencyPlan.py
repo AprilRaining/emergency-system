@@ -1,6 +1,6 @@
 import sys
-from emergency_plan_sql import emergency_plan
 
+from emergency_plan_sql import emergency_plan
 from planInput import *
 from utilities import *
 
@@ -86,14 +86,14 @@ class ManageEmergencyPlan:
                     'numberOfCamps',
                 ], limited=True)
                 print(
-                    "\n"+u"\u2757"+'This plan has not been opened yet. You could edit the properties below:\n')
+                    "\n" + u"\u2757" + 'This plan has not been opened yet. You could edit the properties below:\n')
             case 1:
                 options = Options([
                     'description',
                     'endDate',
                 ], limited=True)
                 print(
-                    "\n"+u"\u2757"+'This plan has already been opened. You can only edit the properties below:\n')
+                    "\n" + u"\u2757" + 'This plan has already been opened. You can only edit the properties below:\n')
             case 2:
                 warn('This plan has been closed. You are not allowed edit it!')
                 return
@@ -141,7 +141,7 @@ class ManageEmergencyPlan:
             conn.commit()
 
     def view_plans(self, planIDs):
-        print(u"\U0001F538"+"Please see emergency plan summary below: \n")
+        print(u"\U0001F538" + "Please see emergency plan summary below: \n")
         select_info_from_camp(select_camps_from_plan(planIDs))
         print("\n")
 
@@ -178,7 +178,7 @@ class ManageEmergencyPlan:
                             conn.commit()
                 if confirm('* This plan is an opened plan.\n'
                            u"\U0001F539" + 'Do you want to close it now?\n'
-                           u"\u2757"+'Note: The end date of this plan will be set to today date.'):
+                                           u"\u2757" + 'Note: The end date of this plan will be set to today date.'):
                     delete_by_IDs('camp', campIDs)
                     self.update_new_value(planID, 'status', 2)
                     self.update_new_value(
@@ -194,15 +194,23 @@ class ManageEmergencyPlan:
     @staticmethod
     def delete_emergency_plan(planID):
         df = pd_read_by_IDs('plan', planID)
-        if df.loc[0, 'status'] != 2:
-            print("You can only delete a closed plan.")
-            print("Please close this plan first, before deleting it!")
-        else:
-            campIDs = get_linked_IDs('camp', 'plan', planID)
-            if confirm('Once you delete this plan you can not find it anymore.'):
-                delete_by_IDs('camp', campIDs)
-                delete_by_IDs('plan', planID)
-            print('Succeed!')
+        match df.loc[0, 'status']:
+            case 0:
+                campIDs = get_linked_IDs('camp', 'plan', planID)
+                print('This plan have not opened yet.')
+                if confirm('Once you delete this plan you can not find it anymore.'):
+                    delete_by_IDs('camp', campIDs)
+                    delete_by_IDs('plan', planID)
+                print('Succeed!')
+            case 1:
+                print('This plan is opened. You can not delete it.')
+                print("You can only delete a closed plan.")
+                print("Please close this plan first, before deleting it!")
+            case 2:
+                print('This plan have not closed. You can delete it.')
+                if confirm('Once you delete this plan you can not find it anymore.'):
+                    delete_by_IDs('plan', planID)
+                print('Succeed!')
 
     def insert_one_plan(self, plan):
         with sqlite3.connect('emergency_system.db') as conn:
@@ -234,9 +242,8 @@ class ManageEmergencyPlan:
                 "update sqlite_sequence set seq = {} where name = 'camp'".format(seqCamp))
             conn.commit()
             self.assign_campIDs_to_plan(seqPlan + 1, plan['numberOfCamps'])
-            print(u"\U0001F538"+f"New Plan ID: {seqPlan + 1}")
+            print(u"\U0001F538" + f"New Plan ID: {seqPlan + 1}")
             return seqPlan + 1
-
 
     @staticmethod
     def assign_campIDs_to_plan(planID, numberOfCamps):
@@ -244,10 +251,10 @@ class ManageEmergencyPlan:
         with sqlite3.connect('emergency_system.db') as conn:
             c = conn.cursor()
             campframe = pd.read_sql_query('SELECT * FROM camp', conn)
-            campID_latest = int(campframe['campID'].iloc[-1])+1
+            campID_latest = int(campframe['campID'].iloc[-1]) + 1
             for i in range(numberOfCamps):
-                new_campID.append(campID_latest+i)
+                new_campID.append(campID_latest + i)
                 c.execute(
                     f'insert into camp (capacity, planID) values (20, {planID})')
                 conn.commit()
-        print("\n"+u"\U0001F538"+ f"New Camp ID associated with new plan ID: {new_campID}")
+        print("\n" + u"\U0001F538" + f"New Camp ID associated with new plan ID: {new_campID}")
