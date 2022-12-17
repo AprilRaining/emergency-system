@@ -382,9 +382,9 @@ class Volunteer:
     def create_emergency_refugee_file(self):
         conn = connect_db()
         # create instance of refugee
-        new_ref = Refugee("Register", conn)
+        new_ref = Refugee("Register", conn, planID=self.planID)
         # register new refugee
-        new_ref.refugee_registration_form()
+        new_ref.refugee_registration_form(self.campID)
 
     def edit_emergency_refugee_file(self):
         conn = connect_db()
@@ -420,9 +420,14 @@ class Volunteer:
 
     def view_refugee_req_schedule(self):
         conn = connect_db()
-        refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID(
-            "schedule", refugee_df, conn)
+        # refugee_df = get_refugee_dataframe(conn)
+        campIDs = get_linked_IDs('camp', 'plan', self.planID)
+        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        print("\n" + u"\U0001F538" +
+              f"Refugees in this plan:")
+        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
+        # ref_df_by_id = refugee_validity_check_by_ID(
+        #     "schedule", refugee_df, conn)
         day_index = {"Monday": 1, "Tuesday": 2, "Wednesday": 3,
                      "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7}
         data_sch = {
@@ -456,8 +461,11 @@ class Volunteer:
     def close_emergency_refugee_file(self):
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID(
-            "deactivate", refugee_df, conn)
+        campIDs = get_linked_IDs('camp', 'plan', self.planID)
+        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        print("\n" + u"\U0001F538" +
+              f"Refugees in this plan:")
+        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
         print("\nPlease see refugee details below.\n")
         df_id = refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id]
         print_table(df_id.columns, df_id.to_numpy().tolist(),
@@ -500,8 +508,11 @@ class Volunteer:
     def reopen_emergency_refugee_file(self):
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID(
-            "activate", refugee_df, conn)
+        campIDs = get_linked_IDs('camp', 'plan', 0)
+        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        print("\n" + u"\U0001F538" +
+              f"Inactive Refugees")
+        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
         ref_status = str(
             refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id, "status"].values[0])
         if ref_status == "active":
@@ -513,7 +524,8 @@ class Volunteer:
 
             # ask to assign camp
             ref_open = Refugee("Open", conn)
-            new_camp_ID = ref_open.assign_camp_ID("reopen", 0)
+            new_camp_ID = ref_open.assign_camp_ID(
+                "reopen", self.campID)
             update_refdb_attr(conn, ref_df_by_id, "campID", new_camp_ID)
             print(
                 "--------------------------------------------------------------------------")
@@ -525,7 +537,11 @@ class Volunteer:
     def delete_emergency_refugee_file(self):
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID("delete", refugee_df, conn)
+        campIDs = get_linked_IDs('camp', 'plan', self.planID)
+        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        print("\n" + u"\U0001F538" +
+              f"Refugees in this plan:")
+        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
         print("\nPlease see refugee details below before deleting.\n")
         df_id = refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id]
         print_table(df_id.columns, df_id.to_numpy().tolist(),

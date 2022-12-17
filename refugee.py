@@ -12,9 +12,10 @@ from email_noti import *
 
 class Refugee:
 
-    def __init__(self, purpose, conn):
+    def __init__(self, purpose, conn, planID='0'):
         if purpose == "Register":
             print("The form comprises of 4 main sections:\n1. Camp selection\n2. General information\n3. Medical condition\n4. Make a request\n")
+            self.planID = planID
         self.ref_row = []
         self.conn = conn
 
@@ -481,7 +482,7 @@ class Refugee:
         return refugee_id
 
     # FINAL: Registration form
-    def refugee_registration_form(self):
+    def refugee_registration_form(self, campID):
         # df for use
         refugee_df = get_refugee_dataframe(self.conn)
         # assign_camp_ID
@@ -491,7 +492,7 @@ class Refugee:
             "----------------------ASSIGNING CAMP IDENTIFICATION-----------------------")
         prCyan(
             "--------------------------------------------------------------------------\n")
-        self.assign_camp_ID("create")
+        self.assign_camp_ID("create", campid=campID)
 
         # general info
         prCyan(
