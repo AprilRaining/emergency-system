@@ -165,6 +165,8 @@ def select_camps_from_plan(planIDs):
                     else:
                         campIDs = get_linked_IDs('camp', 'plan', option)
                         if campIDs:
+                            print("\n" + u"\U0001F538" +
+                                  f"Camps in the plan ID {option}:")
                             TableDisplayer.camp(campIDs)
                             return campIDs
                         else:

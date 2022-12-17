@@ -69,6 +69,14 @@ def get_linked_IDs(subTable, superTable, TableIDs):
         return sonTableIDs
 
 
+def get_planID(campID):
+    with sqlite3.connect('emergency_system.db') as conn:
+        c = conn.cursor()
+        result = c.execute(
+            f'select planID from camp where campID = {campID}')
+        return result.fetchall()[0][0]
+
+
 def search_sqlite(table):
     with sqlite3.connect('emergency_system.db') as conn:
         c = conn.cursor()
