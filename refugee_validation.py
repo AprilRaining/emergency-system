@@ -105,11 +105,18 @@ def camp_capacity_check(conn, purpose, old_camp_id):
     # check if the camp is full or can accept more refugee
     while True:
         try:
-            camp_df = display_open_camp_option(conn,"refugee")
-            camp_df_cop = camp_df.copy()
-            print_table(camp_df_cop.columns,camp_df_cop.to_numpy().tolist(),(25,25,70,70,70,40))
-            print("--------------------------------------------------------------------\n")
-            camp = int(input(u"\U0001F539"+f"Assign the camp ID to the refugee: "))
+            campIDs = get_linked_IDs('camp', 'plan', get_planID(old_camp_id))
+            print("\n" + u"\U0001F538" +
+                  f"Camps in this plan:")
+            TableDisplayer.camp(campIDs)
+            camp_df = display_open_camp_option(conn)
+            # camp_df_cop = camp_df.copy()
+            # print_table(camp_df_cop.columns, camp_df_cop.to_numpy(
+            # ).tolist(), (25, 25, 70, 70, 70, 40))
+            print(
+                "--------------------------------------------------------------------\n")
+            camp = int(
+                input(u"\U0001F539"+f"Assign the camp ID to the refugee: "))
             campID_list = list(camp_df.loc[:, "campID"].values)
             if camp not in campID_list:
                 raise exc.camp_id_out_of_range
@@ -211,21 +218,6 @@ def numerical_input_check(options):
         else:
             # array of numerical input (no duplication)
             return array_opts
-
-def task_ID_input_check(task_ID_list):
-    while True:
-        try:
-            selected_task = int(input(u"\U0001F539"+"Enter a task ID which refugee would like to make change to: "))
-            if selected_task not in task_ID_list:
-                raise InvalidChoiceError(selected_task)
-        except InvalidChoiceError:
-            print_log("Your input number is invalid in our options. Please try again.")
-        except ValueError:
-            print_log("Please enter a numerical value for your selected options.")
-        except Exception as e:
-            print_log(str(e))
-        else:
-            return selected_task
 
 
 def single_input_check(options):

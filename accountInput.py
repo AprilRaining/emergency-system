@@ -1,8 +1,7 @@
 import re
 import sqlite3 as db
-from get import *
+
 from utilities import *
-from sqliteFunctions import *
 
 
 class AccountCreation:

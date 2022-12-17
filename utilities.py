@@ -1,7 +1,6 @@
 import json
 
 import TableDisplayer
-import datetime
 import refugee_exception as exc
 from TableDisplayer import *
 
@@ -29,7 +28,7 @@ def volunteer_login():
             password = input(
                 u"\U0001F539" + "Input the password of volunteer:")
 
-            result = c.execute(f"select volunteerID, accountStatus, volunteer.campID, camp.planID from volunteer join camp on volunteer.campID = camp.campID where username = '{name}' "
+            result = c.execute(f"select volunteerID, accountStatus, campID from volunteer where username = '{name}' "
                                f"and password = '{password}'").fetchall()
             if len(result) > 0:
                 if result[0][1] == 0:
@@ -40,10 +39,6 @@ def volunteer_login():
                     result = list(result[0])
                     result.append(
                         c.execute(f'select planID from camp where campID = {result[2]}').fetchall()[0][0])
-                    # keep user session
-                    volunteer_current = {"volunteerID":result[0][0],"campID":result[0][2], "planID":result[0][3], "login_time":str(datetime.datetime.today())}
-                    with open("user_session.json", "w") as f:
-                        json.dump(volunteer_current, f)
                     print("\n", u'\u2705', 'Welcome to the system, Volunteer!.')
                     prYellow("\nPlease select your options below: \n")
                     return result
