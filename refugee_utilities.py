@@ -116,7 +116,23 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             time.sleep(1.2)
             conn.commit()
             cur.close()
-        print("\n\n",u'\u2705'+"New volunteer request is added to the schedule!\n")
+        print("\n\n",u'\u2705'+"New refugee's request is added to the volunteer schedule!\n")
 
 
     return req_id_mul
+
+from email_noti import *
+def ask_to_leave_req_system(conn,purpose,req_form_coll,req_edit_id,refugee_df):
+    req_ids = 0
+    if purpose == "add":
+        # add to databases
+        req_ids = task_ref_vol_db(conn, req_form_coll, req_edit_id, refugee_df, purpose)
+        # send email notification only if there's a request
+        ref_name = str(refugee_df.loc[refugee_df["refugeeID"] == req_edit_id, "fName"].values[0])
+        ref_email = str(refugee_df.loc[refugee_df["refugeeID"] == req_edit_id, "email"].values[0])
+        if req_form_coll != [] and "@" in ref_email:
+                prLightGray("\n..........Sending request confirmation email..........")
+                email_noti(receiver_name=ref_name,receiver_email = ref_email,request_list=req_form_coll,ref_ID=req_edit_id,purpose="add_req")
+    return (req_form_coll,req_ids)
+
+

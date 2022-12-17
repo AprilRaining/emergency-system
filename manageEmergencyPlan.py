@@ -52,8 +52,7 @@ class ManageEmergencyPlan:
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDELETE EMERGENCY PLAN\n")
-                    self.delete_emergency_plan(
-                        select_sqlite('plan', get_all_IDs('plan')))
+                    self.delete_emergency_plan(select_sqlite('plan', get_all_IDs('plan')))
                     # delete = emergency_plan.Delete_Emergency_Plan()
                     # delete.delete_now()
                     back()
@@ -160,8 +159,6 @@ class ManageEmergencyPlan:
                     print(u'\u2705' +
                           'This emergency plan is successfully openned.')
                     return
-                else:
-                    print(u"\U0001F539" + "Operation is cancelled.")
             case 1:
                 campIDs = get_linked_IDs('camp', 'plan', planID)
                 volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
@@ -261,5 +258,4 @@ class ManageEmergencyPlan:
                 c.execute(
                     f'insert into camp (capacity, planID) values (20, {planID})')
                 conn.commit()
-        print("\n" + u"\U0001F538" +
-              f"New Camp ID associated with new plan ID: {new_campID}")
+        print("\n" + u"\U0001F538" + f"New Camp ID associated with new plan ID: {new_campID}")
