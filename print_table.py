@@ -52,10 +52,10 @@ def print_table(headers, rows, sizes):
 
     short_sizes = fit_to_term()
 
-    # for size in short_sizes:
-    #     template += "{:<"+str(size)+"} "
-    for n, size in enumerate(short_sizes):
-        template += "{:<"+str(size - 1)+"} "
+    for size in short_sizes:
+        template += "{:<"+str(size)+"} "
+    # for n, size in enumerate(short_sizes):
+    #     template += "{:<"+str(size - 1)+"} "
 
     def process_row(row):
         while any(row):
