@@ -374,44 +374,38 @@ class Volunteer:
     def create_emergency_refugee_file(self):
         conn = connect_db()
         # create instance of refugee
-        new_ref = Refugee("Register", conn, self.planID)
+        new_ref = Refugee("Register", conn)
         # register new refugee
         new_ref.refugee_registration_form()
 
     def edit_emergency_refugee_file(self):
+
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        campIDs = get_linked_IDs('camp', 'plan', self.planID)
-        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
-        if not refugeeIDs:
-            warn("No refugees in this plan!!!")
-            return
-        print("\n" + u"\U0001F538" +
-              f"Refugees in this plan:")
-        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
+        ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df, conn)
         print("--------------------------------------------------------------------------")
-        print("\n"+u"\U0001F539"+"Select an information field that you would like to edit: ")
-
-        edit_opt = refugee_input_option("Edit")
+        print(u"\U0001F539"+"Select a database field that you would like to edit: ")
+        edit_opt = refugee_input_option("Edit")      
         edit_selected = single_input_check(edit_opt)
-        if edit_selected != '13':
-            prCyan(
+        # if edit_selected != '13':
+        prCyan(
                 "\n-------------------------------INFO EDITION-------------------------------\n")
-            edited_dict = input_matching("Edit")
-            # allow single selection
-            edited_fields = refugee_info_edit(
+        edited_dict = input_matching("Edit")
+        # allow single selection
+        edited_fields = refugee_info_edit(
                 int(edit_selected), ref_df_by_id, refugee_df, conn)
-            if edited_fields == 0:
-                print("The refugee's information edition is ended.\n")
-            else:
-                col_name = edited_dict[int(edit_selected)]
-                # print("field", edited_fields,"col", col_name_arr)
-                for i in range(len(col_name)):
-                    # update info in database
-                    update_refdb_attr(conn, ref_df_by_id,
+        if edited_fields == 0:
+            print("--------------------------------------------------------------------------")
+            print("The refugee's information edition is ended.\n")
+        else:
+            col_name = edited_dict[int(edit_selected)]
+            # print("field", edited_fields,"col", col_name_arr)
+            for i in range(len(col_name)):
+                # update info in database
+                update_refdb_attr(conn, ref_df_by_id,
                                       col_name[i], edited_fields[i])
-        print("--------------------------------------------------------------------------")
-        print(u'\u2705' + "The refugee's information edition has ended.\n")
+            print("--------------------------------------------------------------------------")
+            print(u'\u2705' + "The refugee's information edition has ended.\n")
 
     def view_refugee_req_schedule(self):
         conn = connect_db()

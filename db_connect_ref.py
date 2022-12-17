@@ -111,6 +111,7 @@ def display_open_camp_option(conn,condition):
         camp_query = f'''SELECT camp.planID,camp.campID,type,area,COUNT(refugeeID) as no_of_refugees,capacity FROM camp
                             LEFT JOIN refugee ON camp.campID = refugee.campID JOIN plan ON camp.planID=plan.planID WHERE plan.status=1
                             GROUP BY camp.campID'''
+
     pd_camp = pd.read_sql_query(camp_query, conn)
     camp_df = pd.DataFrame(pd_camp, columns=['planID','campID','type','area','no_of_refugees', 'capacity'])
     camp_df = camp_df.drop(camp_df[camp_df['campID'] == 0].index)

@@ -12,10 +12,9 @@ from email_noti import *
 
 class Refugee:
 
-    def __init__(self, purpose, conn, planID):
+    def __init__(self, purpose, conn):
         if purpose == "Register":
             print("The form comprises of 4 main sections:\n1. Camp selection\n2. General information\n3. Medical condition\n4. Make a request\n")
-        self.planID = planID
         self.ref_row = []
         self.conn = conn
 
@@ -84,7 +83,6 @@ class Refugee:
         print(u"\U0001F538"+"Please see the camp detail below:\n")
         print_table(selc_camp_df.columns,
                     selc_camp_df.to_numpy().tolist(), (25, 25, 70, 70, 70, 40))
-        # TableDisplayer.camp(self.assigned_camp)
         return self.assigned_camp
 
     def refugee_illnesses(self):
