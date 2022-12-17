@@ -169,16 +169,15 @@ class ManageEmergencyPlan:
                     return
                 else:
                     if volunteerIDs:
-                        print(
-                            'There are volunteers in this plan, closing it will remove those volunteers.')
-                        with sqlite3.connect('emergency_system.db') as conn:
-                            c = conn.cursor()
-                            c.execute(
-                                f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
-                            conn.commit()
-                if confirm('* This plan is an opened plan.\n'
-                           u"\U0001F539" + 'Do you want to close it now?\n'
-                                           u"\u2757" + 'Note: The end date of this plan will be set to today date.'):
+                        if confirm('There are volunteers in this plan, closing it will remove those volunteers.'):
+                            with sqlite3.connect('emergency_system.db') as conn:
+                                c = conn.cursor()
+                                c.execute(
+                                    f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
+                                conn.commit()
+                        else:
+                            return
+
                     delete_by_IDs('camp', campIDs)
                     self.update_new_value(planID, 'status', 2)
                     self.update_new_value(
