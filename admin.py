@@ -1,12 +1,6 @@
-import json
-from get import Get
-import pandas as pd
-from manageEmergencyPlan import *
 from accountInput import *
-import sqlite3 as db
 from db_connect_ref import *
-from system_log import *
-from db_connect_ref import *
+from manageEmergencyPlan import *
 
 
 class Admin:
@@ -54,7 +48,6 @@ class Admin:
                     back()
                 case 4:
                     self.display_volunteer_account()
-                    back()
                 case 5:
                     self.delete_account()
                     back()
@@ -64,12 +57,12 @@ class Admin:
     def reactive_volunteer_account(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tREACTIVATE VOLUNTEER ACCOUNT\n")
-        ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
+        ID = Get.int(u"\U0001F539" + 'Enter the volunteer ID:')
         try:
             with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
                 c.execute(
-                    f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID, ))
+                    f'''SELECT accountStatus FROM volunteer WHERE volunteerID = (?)''', (ID,))
                 status = c.fetchall()[0][0]
                 time.sleep(1.0)
             if status == 1:
@@ -77,15 +70,15 @@ class Admin:
                 print("-------------------------------------")
             else:
                 c.execute(
-                    f'''UPDATE volunteer SET accountStatus = 1 WHERE volunteerID = (?)''', (ID, ))
+                    f'''UPDATE volunteer SET accountStatus = 1 WHERE volunteerID = (?)''', (ID,))
                 conn.commit()
                 # time.sleep(1.0)
                 # vol_df = get_volunteer_schedule_df(conn,purpose="Display")
                 # sp_vol_df = vol_df.loc[vol_df["volunteerID"]==ID,"volunteerID":"accountStatus"]
                 # print("\n"+u"\U0001F538"+"Please see the volunteer status update below:\n")
                 # print_table(sp_vol_df.columns,sp_vol_df.to_numpy().tolist(),(30,30,30,30,30,30,40))
-                print("\n"+
-                    u'\u2705', "Volunteer with ID {}'s account is now reactivated.".format(ID))
+                print("\n" +
+                      u'\u2705', "Volunteer with ID {}'s account is now reactivated.".format(ID))
         except IndexError:
             print_log("{} is an invalid ID".format(ID))
         except:
@@ -94,7 +87,7 @@ class Admin:
     def deactive_volunteer_account(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tDEACTIVATE VOLUNTEER ACCOUNT\n")
-        ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
+        ID = Get.int(u"\U0001F539" + 'Enter the volunteer ID:')
         try:
             with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
@@ -115,8 +108,8 @@ class Admin:
                     # sp_vol_df = vol_df.loc[vol_df["volunteerID"]==ID,"volunteerID":"accountStatus"]
                     # print("\n"+u"\U0001F538"+"Please see the volunteer status update below:\n")
                     # print_table(sp_vol_df.columns,sp_vol_df.to_numpy().tolist(),(30,30,30,30,30,30,40))
-                    print("\n"+
-                        u'\u2705', "Volunteer with ID {}'s account is now deactive".format(ID))
+                    print("\n" +
+                          u'\u2705', "Volunteer with ID {}'s account is now deactive".format(ID))
                 else:
                     return
         except IndexError:
@@ -129,45 +122,35 @@ class Admin:
         prLightPurple("\t\t\tCREATE VOLUNTEER ACCOUNT\n")
         new_volunteer = []
 
-        fname = input(u"\U0001F539"+'Enter the first name:')
-        lname = input(u"\U0001F539"+'Enter the last name:')
+        fname = input(u"\U0001F539" + 'Enter the first name:')
+        lname = input(u"\U0001F539" + 'Enter the last name:')
         username = AccountCreation.get_username()
-        password = input(u"\U0001F539"+'Enter the password:')
+        password = input(u"\U0001F539" + 'Enter the password:')
         campID = AccountCreation.get_camp_id()
-
-        # preference = AccountCreation.preference_default()
-        # preference['Monday'] = AccountCreation.get_work_day('Monday')
-        # preference['Tuesday'] = AccountCreation.get_work_day('Tuesday')
-        # preference['Wednesday'] = AccountCreation.get_work_day('Wednesday')
-        # preference['Thursday'] = AccountCreation.get_work_day('Thursday')
-        # preference['Friday'] = AccountCreation.get_work_day('Friday')
-        # preference['Saturday'] = AccountCreation.get_work_day('Saturday')
-        # preference['Sunday'] = AccountCreation.get_work_day('Sunday')
-
         preference = AccountCreation.get_week_preference()
         workshift = AccountCreation.get_work_shift()
 
         show_dict = {"First Name": fname, "Last Name": lname, "Username": username, "Password": password,
                      "CampID": campID, "Preference": preference, "Workshift": workshift}
         while True:
-            print("\n",u'\u2705',"This is the new volunteer account's information.\n")
+            print("\n", u'\u2705', "This is the new volunteer account's information.\n")
             for key, value in show_dict.items():
                 if key == "Preference":
-                    day_coll = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+                    day_coll = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
                     avai_val = []
                     val_dict = value
-                    for k,v in val_dict.items():
+                    for k, v in val_dict.items():
                         if v == -1:
                             avai_val.append("Unavailable")
                         elif v == 0:
                             avai_val.append("Available")
-                    pref_df = pd.DataFrame({"Day":day_coll,"Availability":avai_val})
-                    print(u"\U0001F4C6",'Weekly schedule: \n')
-                    print_table(pref_df.columns,pref_df.to_numpy().tolist(),(20,20))
+                    pref_df = pd.DataFrame({"Day": day_coll, "Availability": avai_val})
+                    print(u"\U0001F4C6", 'Weekly schedule: \n')
+                    print_table(pref_df.columns, pref_df.to_numpy().tolist(), (20, 20))
                 else:
-                    print(u"\U0001F538"+key, ': ', value)
+                    print(u"\U0001F538" + key, ': ', value)
             check = input(
-                u"\U0001F539"+"If the information is right, please press Y/y, or N/n to correct: ")
+                u"\U0001F539" + "If the information is right, please press Y/y, or N/n to correct: ")
             if check == "Y" or check == "y":
                 break
             elif check == "N" or check == "n":
@@ -187,15 +170,15 @@ class Admin:
                     if input_second in show_dict.keys():
                         if input_second == "First Name":
                             show_dict["First Name"] = input(
-                                u"\U0001F539"+'Enter the first name:')
+                                u"\U0001F539" + 'Enter the first name:')
                         elif input_second == "Last Name":
                             show_dict["Last Name"] = input(
-                                u"\U0001F539"+'Enter the last name:')
+                                u"\U0001F539" + 'Enter the last name:')
                         elif input_second == "Username":
                             show_dict["Username"] = AccountCreation.get_username()
                         elif input_second == "Password":
                             show_dict["Password"] = input(
-                                u"\U0001F539"+'Enter the password:')
+                                u"\U0001F539" + 'Enter the password:')
                         elif input_second == "CampID":
                             show_dict["CampID"] = AccountCreation.get_camp_id()
                         elif input_second == "Preference":
@@ -234,17 +217,17 @@ class Admin:
             c.execute(sql, new_volunteer)
             conn.commit()
             time.sleep(0.8)
-            vol_df = get_volunteer_schedule_df(conn,purpose="Display")
+            vol_df = get_volunteer_schedule_df(conn, purpose="Display")
             vol_id = vol_df['volunteerID'].iloc[-1]
             print(f"\nNew volunteer ID created: [{vol_id}]\n")
-            print(u'\u2705',"New volunteer account is successfully created!")
+            print(u'\u2705', "New volunteer account is successfully created!")
 
     def display_volunteer_account(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tDISPLAY VOLUNTEER ACCOUNT\n")
         while True:
             print(menu())
-            match menu_choice_get(menu().count('\n') + 1,"\n-->"):
+            match menu_choice_get(menu().count('\n') + 1, "\n-->"):
                 case 1:
                     self.display_account_byID()
                     back()
@@ -260,35 +243,35 @@ class Admin:
     def display_account_byID(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tDISPLAY BY VOLUNTEER ID\n")
-        ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
+        ID = Get.option_in_list(get_all_IDs('volunteer'), u"\U0001F539" + 'Enter the volunteer ID:')
         try:
             sch = ""
             with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
-                sch = get_volunteer_schedule_df(conn,campID=0,volunteer_ID=ID,purpose ="Display")
+                sch = get_volunteer_schedule_df(conn, campID=0, volunteer_ID=ID, purpose="Display")
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
                 volunteerID = (?)''', (ID,))
-            fd = pd.DataFrame(list(c.fetchall()), columns=["VolunteerID", "First Name", "Last Name", "Username", "CampID", "Account status"])
+            fd = pd.DataFrame(list(c.fetchall()),
+                              columns=["VolunteerID", "First Name", "Last Name", "Username", "CampID",
+                                       "Account status"])
             if fd.empty:
                 warn(f"\nThere is no account based on the volunteerID: {ID}")
             else:
-                print(f"\nPlease see the information about volunteer with ID {ID} below: \n")
-                prCyan(u"\U0001F538","---GENERAL INFORMATION---\n")
-                print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                prCyan("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
-                print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
+                print(f"\nPlease see the information about volunteer with ID {ID} below: ")
+                prCyan("\n" + u"\U0001F538" + "---GENERAL INFORMATION---\n")
+                print_table(fd.columns, fd.to_numpy().tolist(), (12, 20, 20, 18, 12, 15))
+                prCyan("\n" + u"\U0001F538" + "---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                print_table(sch.columns, sch.to_numpy().tolist(), (12, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18))
         except IndexError:
             print_log("{} is an invalid ID".format(ID))
-        except:
-            print_log("Wrong connection to the database.")
 
     def display_account_byCamp(self):
-        ID = Get.int(u"\U0001F539"+'Enter the Camp ID:')
+        ID = Get.option_in_list(get_all_IDs('camp'), u"\U0001F539" + 'Enter the Camp ID:')
         try:
             sch = []
             with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
-                sch = get_volunteer_schedule_df(conn,campID=ID,volunteer_ID=0,purpose ="Display")
+                sch = get_volunteer_schedule_df(conn, campID=ID, volunteer_ID=0, purpose="Display")
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
                         campID = (?)''', (ID,))
             fd = pd.DataFrame(list(c.fetchall()),
@@ -297,11 +280,11 @@ class Admin:
             if fd.empty:
                 print(f"There is no account based in the camp {ID}.")
             else:
-                print(f"Please see the information about volunteers in camp ID {ID} below: \n")
-                prCyan(u"\U0001F538","---GENERAL INFORMATION---\n")
-                print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                prCyan("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
-                print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
+                print(f"Please see the information about volunteers in camp ID {ID} below: ")
+                prCyan("\n" + u"\U0001F538" + "---GENERAL INFORMATION---\n")
+                print_table(fd.columns, fd.to_numpy().tolist(), (12, 20, 20, 18, 12, 15))
+                prCyan("\n" + u"\U0001F538" + "---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                print_table(sch.columns, sch.to_numpy().tolist(), (12, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18))
         except:
             print_log("Wrong connection to the database.")
 
@@ -310,7 +293,7 @@ class Admin:
             sch = []
             with db.connect('emergency_system.db') as conn:
                 c = conn.cursor()
-                sch = get_volunteer_schedule_df(conn,campID=0,volunteer_ID=0,purpose ="Display")
+                sch = get_volunteer_schedule_df(conn, campID=0, volunteer_ID=0, purpose="Display")
                 c.execute(f'''SELECT volunteerID, fName, lName, username, campID, accountStatus FROM volunteer WHERE 
                                 1''')
             fd = pd.DataFrame(list(c.fetchall()),
@@ -320,19 +303,18 @@ class Admin:
                 print(f"There is no volunteer account in the system! Recruit some volunteers please.")
             else:
                 print("Please see all volunteers information below: \n")
-                prCyan(u"\U0001F538","---GENERAL INFORMATION---\n")
-                print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                prCyan("\n",u"\U0001F538","---VOLUNTEER AVAILABILITY SCHEDULE---\n")
-                print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
-                
+                prCyan("\n" + u"\U0001F538" + "---GENERAL INFORMATION---\n")
+                print_table(fd.columns, fd.to_numpy().tolist(), (12, 20, 20, 18, 12, 15))
+                prCyan("\n" + u"\U0001F538" + "---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                print_table(sch.columns, sch.to_numpy().tolist(), (12, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18))
+
         except:
             print_log("Wrong connection to the database")
-
 
     def delete_account(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tDELETE VOLUNTEER ACCOUNT\n")
-        ID = input(u"\U0001F539"+'Enter the volunteer ID you would like to delete:')
+        ID = input(u"\U0001F539" + 'Enter the volunteer ID you would like to delete:')
         print("\n")
         try:
             with db.connect('emergency_system.db') as conn:
@@ -344,7 +326,7 @@ class Admin:
                     fd = pd.DataFrame([a[0][:-1]],
                                       columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp ID",
                                                "Account status"])
-                    print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,20,15,18))
+                    print_table(fd.columns, fd.to_numpy().tolist(), (12, 20, 20, 20, 15, 18))
                     confirm = AccountCreation.confirm_deletion()
                     if confirm == 1:
                         c = conn.cursor()
@@ -353,7 +335,7 @@ class Admin:
                         conn.commit()
                         c.execute(f"insert into deleted_vol_account (volunteerID, username, password) "
                                   f"values({ID}, '{a[0][3]}', '{a[0][-1]}') ")
-                        print(u'\u2705'+'The account is successfully deleted.')
+                        print(u'\u2705' + 'The account is successfully deleted.')
                 else:
                     raise IndexError
 

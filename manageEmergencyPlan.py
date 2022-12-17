@@ -52,9 +52,9 @@ class ManageEmergencyPlan:
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDELETE EMERGENCY PLAN\n")
-                    # self.delete_emergency_plan(select_sqlite('plan', get_all_IDs('plan')))
-                    delete = emergency_plan.Delete_Emergency_Plan()
-                    delete.delete_now()
+                    self.delete_emergency_plan(select_sqlite('plan', get_all_IDs('plan')))
+                    # delete = emergency_plan.Delete_Emergency_Plan()
+                    # delete.delete_now()
                     back()
                 case 0:
                     return
@@ -143,9 +143,8 @@ class ManageEmergencyPlan:
 
     def view_plans(self, planIDs):
         print(u"\U0001F538"+"Please see emergency plan summary below: \n")
-        TableDisplayer.plan(planIDs)
+        select_info_from_camp(select_camps_from_plan(planIDs))
         print("\n")
-        self.select_info_from_camp(self.select_camps_from_plan(planIDs))
 
     def close_or_open_emergency_plan(self, planID):
         df = pd_read_by_IDs('plan', planID)
@@ -197,7 +196,7 @@ class ManageEmergencyPlan:
     def delete_emergency_plan(planID):
         df = pd_read_by_IDs('plan', planID)
         if df.loc[0, 'status'] != 2:
-            print("You can only close a closed plan.")
+            print("You can only delete a closed plan.")
             print("Please close this plan first, before deleting it!")
         else:
             campIDs = get_linked_IDs('camp', 'plan', planID)
@@ -238,76 +237,6 @@ class ManageEmergencyPlan:
             self.assign_campIDs_to_plan(seqPlan + 1, plan['numberOfCamps'])
             return seqPlan + 1
 
-    @staticmethod
-    def select_camps_from_plan(planIDs):
-        if not planIDs:
-            return
-        else:
-            while True:
-                option = input("\n" +
-                               u"\U0001F539"+f"Input a plan ID to view more details or 'Q/q' to quit:")
-                print("\n")
-                if option != 'q' and option != 'Q':
-                    try:
-                        option = int(option)
-                    except ValueError:
-                        print_log("Please reenter a valid value.")
-                    else:
-                        if option not in planIDs:
-                            print_log(
-                                f'{option} is not a valid input. Please try again.')
-                        else:
-                            campIDs = get_linked_IDs('camp', 'plan', option)
-                            if campIDs:
-                                TableDisplayer.camp(campIDs)
-                                return campIDs
-                            else:
-                                print('No camps under this plan '+u"\u203C")
-                                return False
-                else:
-                    return False
-
-    @staticmethod
-    def select_info_from_camp(campIDs):
-        if not campIDs:
-            return
-        else:
-            while True:
-                option = input("\n"
-                               u"\U0001F539"+f"Input a camp ID to view more details or 'Q/q' to quit:")
-                if option != 'q' and option != 'Q':
-                    try:
-                        option = int(option)
-                    except ValueError:
-                        print_log("Please reenter a valid value.")
-                    else:
-                        if option not in campIDs:
-                            print(
-                                f'{option} is not a valid input. Please try again.')
-                        else:
-                            volunteerIDs = get_linked_IDs(
-                                'volunteer', 'camp', option)
-                            refugeeIDs = get_linked_IDs(
-                                'refugee', 'camp', option)
-                            if volunteerIDs:
-                                print("\n"+u"\U0001F538" +
-                                      f"Volunteers in the camp ID {option}:")
-                                TableDisplayer.volunteers(volunteerIDs)
-                                print('')
-                            else:
-                                print("\n"+'No volunteer in this camp ' +
-                                      u"\u203C"+"\n")
-                            if refugeeIDs:
-                                print("\n"+u"\U0001F538" +
-                                      f"Refugees in the camp ID {option}:")
-                                display_by_IDs('refugee', refugeeIDs)
-                                print('')
-                            else:
-                                print('No refugee in this camp '+u"\u203C")
-                            back()
-                            return
-                else:
-                    return
 
     @staticmethod
     def assign_campIDs_to_plan(planID, numberOfCamps):

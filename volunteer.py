@@ -2,9 +2,9 @@ import copy
 import json
 from datetime import datetime
 
+from accountInput import *
 from refugee_info_edit import *
 from refugee_input_option import *
-from accountInput import *
 
 
 def connection_database(db_file):
@@ -120,7 +120,7 @@ class Volunteer:
         cur = conn.cursor()
         while True:
             volunteer_input_id = self.volunteerID
-            query_1 = f'''SELECT Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday from volunteer WHERE volunteerID={volunteer_input_id}'''
+            query_1 = f'''SELECT Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday from volunteer WHERE volunteerID={volunteer_input_id}'''
             cur.execute(query_1)
             weekday = cur.fetchall()
             if weekday == []:
@@ -304,7 +304,7 @@ class Volunteer:
             print("\n" + u"\U0001F539" + f"Your default availability when first registered is: \n")
             print_table(pre_df.columns, pre_df.to_numpy().tolist(), (20, 20, 20, 20, 20, 20, 20, 20))
             print(
-                "\n" + u"\u2757" + "Note: These tables don't display your task for this week.\nTo see your task, please go to the 'Manage Task' menu")
+                "\n" + u"\u2757" + "Note: These tables don't display your task for this week.\nTo see your task, please go to the 'View This Week Schedule' menu")
         except:
             print_log("Wrong connection to the database.")
         pass
