@@ -3,6 +3,7 @@ from db_connect_ref import *
 from manageEmergencyPlan import *
 
 
+
 class Admin:
     """
         This is the admin class for admin program.
@@ -144,11 +145,12 @@ class Admin:
         username = AccountCreation.get_username()
         password = input(u"\U0001F539" + 'Enter the password:')
         campID = AccountCreation.get_camp_id()
+        planID = get_planID(campID)
         preference = AccountCreation.get_week_preference()
         workshift = AccountCreation.get_work_shift()
 
         show_dict = {"First Name": fname, "Last Name": lname, "Username": username, "Password": password,
-                     "CampID": campID, "Preference": preference, "Workshift": workshift}
+                     'PlanID': planID, "CampID": campID, "Preference": preference, "Workshift": workshift}
         while True:
             print("\n", u'\u2705',
                   "This is the new volunteer account's information.\n")
@@ -203,6 +205,7 @@ class Admin:
                                 u"\U0001F539" + 'Enter the password:')
                         elif input_second == "CampID":
                             show_dict["CampID"] = AccountCreation.get_camp_id()
+                            show_dict["PlanID"] = get_planID(show_dict["CampID"])
                         elif input_second == "Preference":
                             show_dict["Preference"] = AccountCreation.get_week_preference(
                             )
