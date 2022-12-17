@@ -12,9 +12,10 @@ from email_noti import *
 
 class Refugee:
 
-    def __init__(self, purpose, conn):
+    def __init__(self, purpose, conn, planID):
         if purpose == "Register":
             print("The form comprises of 4 main sections:\n1. Camp selection\n2. General information\n3. Medical condition\n4. Make a request\n")
+        self.planID = planID
         self.ref_row = []
         self.conn = conn
 
@@ -73,16 +74,20 @@ class Refugee:
               "INSTRUCTION: Please assign the camp identification to the refugee.")
         print(
             "The detail below shows the availability of each camp as well as its related conditions: \n")
-        (self.assigned_camp, selc_camp_df) = camp_capacity_check(
-            self.conn, purpose, campid)
-
+        campIDs = get_linked_IDs('camp', 'plan', self.planID)
+        TableDisplayer.camp(campIDs)
+        # (self.assigned_camp, selc_camp_df) = camp_capacity_check(
+        #     self.conn, purpose, campid)
+        self.assigned_camp = Get.option_in_list(campIDs)
+        selc_camp_df = pd_read_by_IDs('camp', campIDs)
         # append camp number to the row
         self.ref_row.extend([self.assigned_camp])
         print(
             u'\u2705'+f"Refugee is successfully assigned to the camp number {self.assigned_camp}.\n")
         print(u"\U0001F538"+"Please see the camp detail below:\n")
-        print_table(selc_camp_df.columns,
-                    selc_camp_df.to_numpy().tolist(), (25, 25, 70, 70, 70, 40))
+        # print_table(selc_camp_df.columns,
+        #             selc_camp_df.to_numpy().tolist(), (25, 25, 70, 70, 70, 40))
+        TableDisplayer.camp(self.assigned_camp)
         return self.assigned_camp
 
     def refugee_illnesses(self):

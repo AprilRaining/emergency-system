@@ -10,10 +10,8 @@ class AccountCreation:
     def get_camp_id():
         while True:
             try:
-                print()
-                print(
-                    "The detail below shows the information of every plans\n")
-
+                print(u"\U0001F538" +
+                      "The detail below shows the information of every plans\n")
                 with db.connect('emergency_system.db') as conn:
                     TableDisplayer.plan(get_all_IDs('plan'))
                     planID = Get.option_in_list(get_all_IDs(

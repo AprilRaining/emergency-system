@@ -382,7 +382,7 @@ class Volunteer:
     def create_emergency_refugee_file(self):
         conn = connect_db()
         # create instance of refugee
-        new_ref = Refugee("Register", conn)
+        new_ref = Refugee("Register", conn, self.planID)
         # register new refugee
         new_ref.refugee_registration_form()
 
