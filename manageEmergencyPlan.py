@@ -176,9 +176,11 @@ class ManageEmergencyPlan:
                                 c.execute(
                                     f'update volunteer set campId = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
                                 conn.commit()
+                                c.execute(
+                                    f'update volunteer set accountStatus = 0 where volunteerID in {list_to_sqlite_string(volunteerIDs)}')
+                                conn.commit()
                         else:
                             return
-
                     delete_by_IDs('camp', campIDs)
                     self.update_new_value(planID, 'status', 2)
                     self.update_new_value(

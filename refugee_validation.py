@@ -12,6 +12,8 @@ from options import *
 from print_table import *
 from sqliteFunctions import *
 from TableDisplayer import *
+import re
+
 
 
 def refugee_existence_check(conn):
@@ -48,9 +50,8 @@ def refugee_existence_check(conn):
 def date_format_check(purpose, limit_start='', limit_end=''):
     while True:
         try:
-            input_date = input(
-                f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
-            bd_val = (input_date).split("-")
+            input_date = Get.data(f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
+            bd_val = input_date.split("-")
             if len(bd_val) != 3:
                 raise exc.wrong_birthdate_format
             if (bd_val[2]) not in [format(x, '02d') for x in range(1, 32)]:

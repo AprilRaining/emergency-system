@@ -315,7 +315,7 @@ class Volunteer:
                     preference[weekday[day]] = f"taskID:{flag}"
             pre_df = pd.DataFrame(preference, index=[0])
             print("\n" + u"\U0001F539" +
-                  f"Your default availability when first registered is: \n")
+                  f"Your default availability is: \n")
             print_table(pre_df.columns, pre_df.to_numpy().tolist(),
                         (20, 20, 20, 20, 20, 20, 20, 20))
             print("\nNote:"+u"\U00002705"+" = Free, " +
@@ -391,6 +391,9 @@ class Volunteer:
         refugee_df = get_refugee_dataframe(conn)
         campIDs = get_linked_IDs('camp', 'plan', self.planID)
         refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        if not refugeeIDs:
+            warn("No refugees in this plan!!!")
+            return
         print("\n" + u"\U0001F538" +
               f"Refugees in this plan:")
         ref_df_by_id = select_sqlite('refugee', refugeeIDs)
@@ -423,6 +426,9 @@ class Volunteer:
         # refugee_df = get_refugee_dataframe(conn)
         campIDs = get_linked_IDs('camp', 'plan', self.planID)
         refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        if not refugeeIDs:
+            warn("No refugees in this plan!!!")
+            return
         print("\n" + u"\U0001F538" +
               f"Refugees in this plan:")
         ref_df_by_id = select_sqlite('refugee', refugeeIDs)
@@ -463,6 +469,9 @@ class Volunteer:
         refugee_df = get_refugee_dataframe(conn)
         campIDs = get_linked_IDs('camp', 'plan', self.planID)
         refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        if not refugeeIDs:
+            warn("No refugees in this plan!!!")
+            return
         print("\n" + u"\U0001F538" +
               f"Refugees in this plan:")
         ref_df_by_id = select_sqlite('refugee', refugeeIDs)
@@ -510,6 +519,9 @@ class Volunteer:
         refugee_df = get_refugee_dataframe(conn)
         campIDs = get_linked_IDs('camp', 'plan', 0)
         refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        if not refugeeIDs:
+            warn("No Inactive Refugee Account!!!")
+            return
         print("\n" + u"\U0001F538" +
               f"Inactive Refugees")
         ref_df_by_id = select_sqlite('refugee', refugeeIDs)
@@ -539,6 +551,9 @@ class Volunteer:
         refugee_df = get_refugee_dataframe(conn)
         campIDs = get_linked_IDs('camp', 'plan', self.planID)
         refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        if not refugeeIDs:
+            warn("No refugees in this plan!!!")
+            return
         print("\n" + u"\U0001F538" +
               f"Refugees in this plan:")
         ref_df_by_id = select_sqlite('refugee', refugeeIDs)
