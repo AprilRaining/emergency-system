@@ -411,7 +411,7 @@ class Volunteer:
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID(
-            "schedule", refugee_df, conn)
+            "view", refugee_df, conn)
         day_index = {"Monday": 1, "Tuesday": 2, "Wednesday": 3,
                      "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7}
         data_sch = {
@@ -460,6 +460,7 @@ class Volunteer:
         if ref_status == "inactive":
             warn("Refugee's status is currently inactive. There's no need to deactivate an account again!")
         else:
+            prLightGray("\n"+u"\u2757"+"Note: Once you deactivate, all requests with volunteers will be cleared out from the schedule.")
             confirm_del = yn_valid(
                 u"\U0001F539"+"Are you sure you want to deactivate this refugee account?(Yes/No): ")
             if confirm_del == "Yes":
@@ -469,8 +470,6 @@ class Volunteer:
                     # clear out volunteer schedule related to this refugee req
                     prGreen(
                         "\n..............Deactivating refugee account................")
-                    prLightGray(
-                        u"\u2757"+"Note: All requests with volunteers will be cleared out from the schedule.\n")
                     clear_request_schedule(conn, df_task_ref_id)
 
                 update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
@@ -523,7 +522,7 @@ class Volunteer:
         ref_req = refugee_df.loc[refugee_df["refugeeID"]
                                  == ref_df_by_id, "request"].values[0]
         prLightGray(
-            "\n"+u"\u2757"+"Note: All requests with volunteers will be cleared out from the schedule.")
+            "\n"+u"\u2757"+"Note: Once you deactivate, all requests with volunteers will be cleared out from the schedule.")
         confirm_del = yn_valid(
             u"\U0001F539"+"Are you sure you want to delete this refugee from the system?(Yes/No): ")
         if confirm_del == "Yes":
