@@ -160,6 +160,8 @@ class ManageEmergencyPlan:
                     print(u'\u2705' +
                           'This emergency plan is successfully openned.')
                     return
+                else:
+                    print(u"\U0001F539" + "Operation is cancelled.")
             case 1:
                 campIDs = get_linked_IDs('camp', 'plan', planID)
                 volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
