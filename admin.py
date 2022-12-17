@@ -3,7 +3,6 @@ from db_connect_ref import *
 from manageEmergencyPlan import *
 
 
-
 class Admin:
     """
         This is the admin class for admin program.
@@ -124,6 +123,7 @@ class Admin:
                     if has_req == False:
                         c.execute(
                             f'''UPDATE volunteer SET accountStatus = 0 WHERE volunteerID = (?)''', (ID,))
+                        conn.commit()
                         c.execute(
                             f'''UPDATE volunteer SET campID = 0 WHERE volunteerID = (?)''', (ID,))
                         conn.commit()
@@ -216,7 +216,8 @@ class Admin:
                                 u"\U0001F539" + 'Enter the password:')
                         elif input_second == "CampID":
                             show_dict["CampID"] = AccountCreation.get_camp_id()
-                            show_dict["PlanID"] = get_planID(show_dict["CampID"])
+                            show_dict["PlanID"] = get_planID(
+                                show_dict["CampID"])
                         elif input_second == "Preference":
                             show_dict["Preference"] = AccountCreation.get_week_preference(
                             )
