@@ -36,14 +36,15 @@ def volunteer_login():
                     warn(
                         "Your account has been deactivated, contact the administrator.\n")
                     return -1
-                else:
-                    result = list(result[0])
-                    result.append(
-                        c.execute(f'select planID from camp where campID = {result[2]}').fetchall()[0][0])
+                else:                        
                     # keep user session
                     volunteer_current = {"volunteerID":result[0][0],"campID":result[0][2], "planID":result[0][3], "login_time":str(datetime.datetime.today())}
                     with open("user_session.json", "w") as f:
                         json.dump(volunteer_current, f)
+                        
+                    result = list(result[0])
+                    result.append(
+                        c.execute(f'select planID from camp where campID = {result[2]}').fetchall()[0][0])
                     print("\n", u'\u2705', 'Welcome to the system, Volunteer!.')
                     prYellow("\nPlease select your options below: \n")
                     return result

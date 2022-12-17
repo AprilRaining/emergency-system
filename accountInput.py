@@ -16,13 +16,12 @@ class AccountCreation:
                 with db.connect('emergency_system.db') as conn:
                     TableDisplayer.plan(get_all_IDs('plan'))
                     planID = Get.option_in_list(get_all_IDs(
-                        'plan'), u"\U0001F539" + "\n" + u"\U0001F531" +
-                        "INSTRUCTION: Please choose which plan this volunteer will be first.")
+                        'plan'), u"\U0001F539" + "INSTRUCTION: Please select which emergency plan the volunteer will be registered to: ")
                     print("\n" + u"\U0001F538" +
-                          f"Camps in the plan ID {planID}:")
+                          f"Camps in the plan ID {planID}:\n")
                     TableDisplayer.camp(get_linked_IDs('camp', 'plan', planID))
                     campID = Get.option_in_list(get_linked_IDs('camp', 'plan', planID),
-                                                u"\U0001F539" + "Pleas choose a camp by campID:")
+                                               "\n" + u"\U0001F539" + "Pleas select a camp for the the volunteer by campID:")
                     c = conn.cursor()
                     c.execute(
                         f'''SELECT * FROM camp WHERE campID = {campID}''')

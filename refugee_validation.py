@@ -145,7 +145,7 @@ def camp_capacity_check(conn, purpose, old_camp_id):
 def refugee_validity_check_by_ID(cond, refugee_df, conn):
     while True:
         try:
-            print("Search for the refugee information by")
+            print("Search for the refugee information in your emergency plan by")
             opt_dict = {'First Name': 'fName', 'Last Name': 'lName',
                         'Camp ID': 'campID', 'Family Member Name': 'familyMemberName'}
             options = Options(list(opt_dict.keys()), limited=True)
@@ -176,6 +176,7 @@ def refugee_validity_check_by_ID(cond, refugee_df, conn):
                     raise exc.inactive_refugee_edit
         except exc.refugee_id_out_of_range:
             print_log("There is no search result, please change your keyword.")
+            print("Note: You are only allowed to search for refugee who is in the same emergency plan as you.")
         except ValueError:
             print_log("Please enter a numerical value for your input.")
         except exc.inactive_refugee_edit:

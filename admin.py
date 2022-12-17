@@ -152,7 +152,7 @@ class Admin:
         show_dict = {"First Name": fname, "Last Name": lname, "Username": username, "Password": password,
                      'PlanID': planID, "CampID": campID, "Preference": preference, "Workshift": workshift}
         while True:
-            print("\n", u'\u2705',
+            print("\n"+u"\U0001F531"+
                   "This is the new volunteer account's information.\n")
             for key, value in show_dict.items():
                 if key == "Preference":

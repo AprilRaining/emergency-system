@@ -73,6 +73,7 @@ class emergency_plan:
             loop = True
             while loop:
                 try:
+                    prCyan('\nStart Date:')
                     date_format = input(u"\U0001F539" + 'Please enter the start date of the emergency plan in the '
                                                         'format of yyyy-mm-dd: ')
                     if validate(date_format) == True:
@@ -102,6 +103,7 @@ class emergency_plan:
             loop = True
             while loop:
                 try:
+                    prCyan('\nNumber of Camps:')
                     camp = input(
                 u"\U0001F539" + 'Please input the number of camps in this plan: ')
                     if camp.isdigit() and int(camp) > 0:
@@ -155,14 +157,18 @@ class emergency_plan:
             updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
             campframe = pd.read_sql_query('SELECT * FROM camp', conn)
             campID = int(campframe['campID'].iloc[-1]) + 1
+            campID_coll = []
             for i in range(int(self.camp)):
                 c.execute("INSERT INTO camp (campID, capacity, planID) VALUES (?, ?, ?)",
                           (campID + i, 20, self.planID))
+                campID_coll.append(campID + i)
                 conn.commit()
             # print(updatedframe.to_string(index=False))
-            print(u"\U0001F539" + 'These are current plans: ')
+            print(u"\U0001F538" + 'These are current emergency plans: \n')
             print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18,18))
             conn.close()
+            print("\n"+u"\U0001F538"+f"New Plan ID: [{self.planID}]")
+            print(u"\U0001F538"+ f"New Camp ID associated with new plan ID: {campID_coll}\n")
 
     class Display_Emergency_Plan:
         def __init__(self):
