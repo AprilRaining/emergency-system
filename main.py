@@ -4,12 +4,6 @@ from admin import Admin
 from myfunctionlib import *
 from volunteer import Volunteer
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.max_rows', None)
-pd.set_option('max_colwidth', 100)
-
-# sys.path.insert(0, os.getcwd())
-
 if __name__ == "__main__":
     """
     TO DO (Possible):
@@ -55,7 +49,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print_log('\nForce Quit!')
     except Exception as e:
-        print('\nExit with unknown errors')
-        print(e)
+        warn('\nExit with unknown errors')
+        warn(e)
     finally:
         pass
