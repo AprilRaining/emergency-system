@@ -309,7 +309,7 @@ class Volunteer:
                     preference[weekday[day]] = f"taskID:{flag}"
             pre_df = pd.DataFrame(preference, index=[0])
             print("\n" + u"\U0001F539" +
-                  f"Your default availability when first registered is: \n")
+                  f"Your default availability is: \n")
             print_table(pre_df.columns, pre_df.to_numpy().tolist(),
                         (20, 20, 20, 20, 20, 20, 20, 20))
             print("\nNote:"+u"\U00002705"+" = Free, " +
