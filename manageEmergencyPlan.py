@@ -160,8 +160,6 @@ class ManageEmergencyPlan:
                     print(u'\u2705' +
                           'This emergency plan is successfully openned.')
                     return
-                else:
-                    print(u"\U0001F539" + "Operation is cancelled.")
             case 1:
                 campIDs = get_linked_IDs('camp', 'plan', planID)
                 volunteerIDs = get_linked_IDs('volunteer', 'camp', campIDs)
@@ -192,7 +190,7 @@ class ManageEmergencyPlan:
                         u'\u2705', f"This plan ID: {planID} is successfully closed.")
                     return
             case 2:
-                warn('This plan has been closed. You are not allowed change it.')
+                warn('This plan has been closed. You are not allowed to change it.')
                 return
 
     @staticmethod

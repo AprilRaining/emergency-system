@@ -119,10 +119,11 @@ def confirm(hint=''):
     :return: Bool
     """
     print(hint)
-    key = input("Enter Yes to confirm your action: ")
+    key = input("Enter Yes/yes to confirm your action: ")
     if key == 'Yes' or key == 'yes':
         return True
     else:
+        print(u"\U0001F539" + "Operation is cancelled.")
         return False
 
 
