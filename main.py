@@ -50,6 +50,6 @@ if __name__ == "__main__":
         print_log('\nForce Quit!')
     except Exception as e:
         warn('\nExit with unknown errors')
-        warn(e)
+        print_log(str(e))
     finally:
         pass
