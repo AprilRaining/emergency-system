@@ -10,13 +10,13 @@ def admin_login():
     while True:
         print("--------------------------------------------------------------------------")
         prYellow("\t\t\t\tADMIN LOGIN\n")
-        password = input(u"\U0001F539" + "Input the password of admin:")
+        password = Get.string(u"\U0001F539" + "Input the password of admin:")
         if str(password) == "12345":
             print("\n", u'\u2705', 'Welcome to the system, Admin!.')
             prYellow("\nPlease select your options below: \n")
             return
         else:
-            warn("Wrong password! Check your input please.")
+            print("Wrong password! Check your input please.")
 
 
 def volunteer_login():
@@ -25,15 +25,15 @@ def volunteer_login():
     with sqlite3.connect('emergency_system.db') as conn:
         c = conn.cursor()
         while True:
-            name = input(u"\U0001F539" + "Input your username:")
-            password = input(
+            name = Get.string(u"\U0001F539" + "Input your username:")
+            password = Get.string(
                 u"\U0001F539" + "Input the password of volunteer:")
 
             result = c.execute(f"select volunteerID, accountStatus, volunteer.campID, camp.planID from volunteer join camp on volunteer.campID = camp.campID where username = '{name}' "
                                f"and password = '{password}'").fetchall()
             if len(result) > 0:
                 if result[0][1] == 0:
-                    warn(
+                    print(
                         "Your account has been deactivated, contact the administrator.\n")
                     return -1
                 else:                        
@@ -52,10 +52,10 @@ def volunteer_login():
                 vol_res = c.execute(f"select * from deleted_vol_account where username = '{name}' "
                                     f"and password = '{password}'").fetchall()
                 if len(vol_res) > 0:
-                    warn("Account doesn't exist.")
+                    print("Account doesn't exist.")
                     return -1
                 else:
-                    warn("Wrong username or password! Check your input please.")
+                    print("Wrong username or password! Check your input please.")
 
 
 def check_week():

@@ -68,7 +68,7 @@ class AccountCreation:
     def get_username():
         while True:
             try:
-                username = input(u"\U0001F539" + 'Enter the username:')
+                username = Get.string(u"\U0001F539" + 'Enter the username:')
                 if username == "":
                     print("The username can not be empty, Please input again:")
                     continue
