@@ -65,6 +65,8 @@ class Refugee:
         self.members = input(
             u"\U0001F539"+"Enter all members' first name (e.g. Dan, John, Emily) or put '-' if no member: ")
         # add member's name
+        if not self.members:
+            self.members = "-"
         self.ref_row.extend([self.members])
         print("\n")
 
