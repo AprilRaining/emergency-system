@@ -57,11 +57,14 @@ class Admin:
     def reactive_volunteer_account(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tREACTIVATE VOLUNTEER ACCOUNT\n")
-        print(u"\U0001F531"+"Please see volunteer details below for your information: \n")  
+        print(u"\U0001F531" +
+              "Please see volunteer details below for your information: \n")
         conn1 = connect_db()
-        vol_df = get_volunteer_schedule_df(conn1,purpose="Status")
-        print_table(vol_df.columns,vol_df.to_numpy().tolist(),(25,25,25,25,25,25,35,35,35,35,35,35,35))
-        print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C"+" = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
+        vol_df = get_volunteer_schedule_df(conn1, purpose="Status")
+        print_table(vol_df.columns, vol_df.to_numpy().tolist(),
+                    (25, 25, 25, 25, 25, 25, 35, 35, 35, 35, 35, 35, 35))
+        print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
+              " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
 
         ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
 
@@ -79,8 +82,8 @@ class Admin:
                 c.execute(
                     f'''UPDATE volunteer SET accountStatus = 1 WHERE volunteerID = (?)''', (ID,))
                 conn.commit()
-                print("\n"+
-                    u'\u2705', "Volunteer with ID {}'s account is now reactivated.".format(ID))
+                print("\n" +
+                      u'\u2705', "Volunteer with ID {}'s account is now reactivated.".format(ID))
         except IndexError:
             print_log("{} is an invalid ID".format(ID))
         except:
@@ -89,11 +92,14 @@ class Admin:
     def deactive_volunteer_account(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tDEACTIVATE VOLUNTEER ACCOUNT\n")
-        print(u"\U0001F531"+"Please see volunteer details below for your information: \n") 
+        print(u"\U0001F531" +
+              "Please see volunteer details below for your information: \n")
         conn1 = connect_db()
-        vol_df = get_volunteer_schedule_df(conn1,purpose="Status")
-        print_table(vol_df.columns,vol_df.to_numpy().tolist(),(25,25,25,25,25,25,35,35,35,35,35,35,35))
-        print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C"+" = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
+        vol_df = get_volunteer_schedule_df(conn1, purpose="Status")
+        print_table(vol_df.columns, vol_df.to_numpy().tolist(),
+                    (25, 25, 25, 25, 25, 25, 35, 35, 35, 35, 35, 35, 35))
+        print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
+              " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
         ID = Get.int(u"\U0001F539"+'Enter the volunteer ID:')
         try:
             with db.connect('emergency_system.db') as conn:
@@ -108,7 +114,7 @@ class Admin:
             else:
                 if confirm(u"\U0001F539"+f"Do you want to deactivate this account ID {ID}?"):
                     day_col = list(vol_df.columns[6:])
-                    vol_df_byID = vol_df.loc[vol_df["volunteerID"]==ID,:]
+                    vol_df_byID = vol_df.loc[vol_df["volunteerID"] == ID, :]
                     has_req = False
                     for d in day_col:
                         for ind in vol_df_byID.index:
@@ -116,15 +122,20 @@ class Admin:
                                 has_req = True
                     if has_req == False:
                         c.execute(
-                        f'''UPDATE volunteer SET accountStatus = 0 WHERE volunteerID = (?)''', (ID,))
+                            f'''UPDATE volunteer SET accountStatus = 0 WHERE volunteerID = (?)''', (ID,))
+                        c.execute(
+                            f'''UPDATE volunteer SET campID = 0 WHERE volunteerID = (?)''', (ID,))
                         conn.commit()
-                        print("\n"+
-                        u'\u2705', "Volunteer with ID {}'s account is now deactive".format(ID))
+                        print("\n" +
+                              u'\u2705', "Volunteer with ID {}'s account is now deactive".format(ID))
                     else:
                         print("\n")
-                        print_table(vol_df_byID.columns,vol_df_byID.to_numpy().tolist(),(25,25,25,25,25,25,35,35,35,35,35,35,35))
-                        print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C"+" = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
-                        warn("You cannot deactivate this volunteer account because there is still a task request from the refugee.")
+                        print_table(vol_df_byID.columns, vol_df_byID.to_numpy().tolist(
+                        ), (25, 25, 25, 25, 25, 25, 35, 35, 35, 35, 35, 35, 35))
+                        print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
+                              " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
+                        warn(
+                            "You cannot deactivate this volunteer account because there is still a task request from the refugee.")
                         return
 
                 else:
@@ -281,12 +292,17 @@ class Admin:
             if fd.empty:
                 warn(f"\nThere is no account based on the volunteerID: {ID}")
             else:
-                print(f"\nPlease see the information about volunteer with ID {ID} below: \n")
+                print(
+                    f"\nPlease see the information about volunteer with ID {ID} below: \n")
                 prCyan(u"\U0001F538"+"---GENERAL INFORMATION---\n")
-                print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                prCyan("\n"+u"\U0001F538"+"---VOLUNTEER AVAILABILITY SCHEDULE---\n")
-                print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
-                print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C"+" = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
+                print_table(fd.columns, fd.to_numpy().tolist(),
+                            (12, 20, 20, 18, 12, 15))
+                prCyan("\n"+u"\U0001F538" +
+                       "---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                print_table(sch.columns, sch.to_numpy().tolist(),
+                            (12, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18))
+                print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
+                      " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
         except IndexError:
             print_log("{} is an invalid ID".format(ID))
 
@@ -307,12 +323,17 @@ class Admin:
             if fd.empty:
                 print(f"There is no account based in the camp {ID}.")
             else:
-                print(f"Please see the information about volunteers in camp ID {ID} below: \n")
+                print(
+                    f"Please see the information about volunteers in camp ID {ID} below: \n")
                 prCyan(u"\U0001F538"+"---GENERAL INFORMATION---\n")
-                print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                prCyan("\n"+u"\U0001F538"+"---VOLUNTEER AVAILABILITY SCHEDULE---\n")
-                print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
-                print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C"+" = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
+                print_table(fd.columns, fd.to_numpy().tolist(),
+                            (12, 20, 20, 18, 12, 15))
+                prCyan("\n"+u"\U0001F538" +
+                       "---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                print_table(sch.columns, sch.to_numpy().tolist(),
+                            (12, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18))
+                print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
+                      " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
         except:
             print_log("Wrong connection to the database.")
 
@@ -334,22 +355,30 @@ class Admin:
             else:
                 print("Please see all volunteers information below: \n")
                 prCyan(u"\U0001F538"+"---GENERAL INFORMATION---\n")
-                print_table(fd.columns,fd.to_numpy().tolist(),(12,20,20,18,12,15))
-                prCyan("\n"+u"\U0001F538"+"---VOLUNTEER AVAILABILITY SCHEDULE---\n")
-                print_table(sch.columns,sch.to_numpy().tolist(),(12,15,15,15,15,18,18,18,18,18,18,18))
-                print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C"+" = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
+                print_table(fd.columns, fd.to_numpy().tolist(),
+                            (12, 20, 20, 18, 12, 15))
+                prCyan("\n"+u"\U0001F538" +
+                       "---VOLUNTEER AVAILABILITY SCHEDULE---\n")
+                print_table(sch.columns, sch.to_numpy().tolist(),
+                            (12, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18))
+                print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
+                      " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
         except:
             print_log("Wrong connection to the database")
 
     def delete_account(self):
         print("--------------------------------------------------------------------------")
         prLightPurple("\t\t\tDELETE VOLUNTEER ACCOUNT\n")
-        print(u"\U0001F531"+"Please see volunteer details below for your information: \n") 
+        print(u"\U0001F531" +
+              "Please see volunteer details below for your information: \n")
         conn1 = connect_db()
-        vol_df = get_volunteer_schedule_df(conn1,purpose="Status")
-        print_table(vol_df.columns,vol_df.to_numpy().tolist(),(25,25,25,25,25,25,35,35,35,35,35,35,35))
-        print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C"+" = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
-        ID = Get.int(u"\U0001F539"+'Enter the volunteer ID you would like to delete:')
+        vol_df = get_volunteer_schedule_df(conn1, purpose="Status")
+        print_table(vol_df.columns, vol_df.to_numpy().tolist(),
+                    (25, 25, 25, 25, 25, 25, 35, 35, 35, 35, 35, 35, 35))
+        print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
+              " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
+        ID = Get.int(
+            u"\U0001F539"+'Enter the volunteer ID you would like to delete:')
         print("\n")
         try:
             with db.connect('emergency_system.db') as conn:
@@ -366,26 +395,29 @@ class Admin:
                     confirm = AccountCreation.confirm_deletion()
                     if confirm == 1:
                         day_col = list(vol_df.columns[6:])
-                        vol_df_byID = vol_df.loc[vol_df["volunteerID"]==ID,:]
+                        vol_df_byID = vol_df.loc[vol_df["volunteerID"] == ID, :]
                         has_req = False
                         for d in day_col:
                             for ind in vol_df_byID.index:
                                 if vol_df_byID[d][ind] == u"\U0001F4D1":
                                     has_req = True
-                    
+
                         if has_req == False:
                             c = conn.cursor()
                             sql = '''DELETE FROM volunteer WHERE volunteerID = (?)'''
                             c.execute(sql, (ID,))
                             conn.commit()
                             c.execute(f"insert into deleted_vol_account (volunteerID, username, password)"
-                                  f"values({ID}, '{a[0][3]}', '{a[0][-1]}') ")
+                                      f"values({ID}, '{a[0][3]}', '{a[0][-1]}') ")
                             print(u'\u2705'+'The account is successfully deleted.')
                         else:
                             print("\n")
-                            print_table(vol_df_byID.columns,vol_df_byID.to_numpy().tolist(),(25,25,25,25,25,25,35,35,35,35,35,35,35))
-                            print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C"+" = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
-                            warn("You cannot delete this volunteer account because there is still a task request from the refugee.")
+                            print_table(vol_df_byID.columns, vol_df_byID.to_numpy().tolist(
+                            ), (25, 25, 25, 25, 25, 25, 35, 35, 35, 35, 35, 35, 35))
+                            print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
+                                  " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
+                            warn(
+                                "You cannot delete this volunteer account because there is still a task request from the refugee.")
                             return
                 else:
                     raise IndexError
