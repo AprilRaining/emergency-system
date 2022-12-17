@@ -136,6 +136,9 @@ class AccountCreation:
                     "Please input the day(s) this volunteer is available in a week(from 1 to 7) and divided by comma.\n"
                     "For example, 6,7 means Saturday and Sunday are available. \n"
                     "If there is no available day, just press 8: \n--> ")
+                if not re.match(re.compile("^([1-7])+(,[1-7])*$"), input_str):
+                    warn("Invaid input!, check your input.")
+                    continue
                 if input_str == '8':
                     print("You're not available this week!\n")
                     return preference
@@ -143,6 +146,8 @@ class AccountCreation:
                     if int(input_str) > 8 or int(input_str) < 1:
                         warn("Wrong input, check your input please!\n")
                         raise InvalidChoiceError(input_str)
+                    else:
+                        preference[weekday_list[int(input_str)-1]] = 0
                 else:
                     for d in input_str.split(","):
                         if int(d) == 8:
