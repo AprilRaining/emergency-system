@@ -1,6 +1,7 @@
 import datetime
 from system_log import *
 from myError import *
+import re
 
 
 class Get:
@@ -22,6 +23,14 @@ class Get:
                 print_log("Please reenter a valid value.")
             except InvalidInput as e:
                 print(e)
+            else:
+                return n
+
+    def string(hint: str, sign=1):
+        while True:
+            n = input(hint)
+            if not re.match(r'^\w+$', n):
+                warn('Number, characters and underline ONLY!!!')
             else:
                 return n
 
