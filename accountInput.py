@@ -14,12 +14,6 @@ class AccountCreation:
                 print("The detail below shows the availability of each camp as well as its related conditions:\n")
 
                 with db.connect('emergency_system.db') as conn:
-                    # camp_df = display_open_camp_option(conn)
-                    # camp_df_cop = camp_df.copy()
-                    # print_table(camp_df_cop.columns, camp_df_cop.to_numpy().tolist(), (25, 25, 70, 70, 70, 40))
-                    # print("--------------------------------------------------------------------\n")
-                    # campID = Get.int(u"\U0001F539" + 'Enter the camp ID:')
-                    # camp_id = (campID,)
                     TableDisplayer.plan(get_all_IDs('plan'))
                     planID = Get.option_in_list(get_all_IDs('plan'), u"\U0001F539" + "Pleas choose a plan by planID:")
                     TableDisplayer.camp(get_linked_IDs('camp', 'plan', planID))

@@ -67,7 +67,7 @@ def email_noti(receiver_name='',receiver_email='',request_list='',ref_ID=0,purpo
         smtp_server.login(gmail_user, gmail_password)
         smtp_server.sendmail(sent_from, to, email_text)
         smtp_server.close()
-        print(u"\U0001F4E7"+"Confirmation Email sent successfully!")
+        print(u"\U0001F4E7"+"Confirmation email sent successfully!")
     except Exception as ex:
         print("Refugee email address not found.")
         # print ("Something went wrong….",ex)

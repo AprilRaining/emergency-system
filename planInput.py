@@ -6,7 +6,7 @@ from myfunctionlib import *
 class PlanInput:
     @staticmethod
     def type():
-        print('Type of Natural Disaster: ')
+        prCyan('Type of Natural Disaster:')
         options = Options([
             'Wildfire',
             'Earthquakes',
@@ -25,11 +25,12 @@ class PlanInput:
 
     @staticmethod
     def description():
+        prCyan('\nPlan Description:')
         return input(u"\U0001F539" + 'Please input the description of the emergency plan: ')
 
     @staticmethod
     def area():
-        print('Geographical Area Affected: ')
+        prCyan('\nGeographical Area Affected: ')
         options = Options([
             'Asia',
             'Europe',
@@ -43,11 +44,11 @@ class PlanInput:
         if option != 0:
             return options.values[option - 1]
         else:
-            return input('Please input the geographical area affected by the natural disaster: ')
+            return input(u"\U0001F539"+'Please input the geographical area affected by the natural disaster: ')
 
     @staticmethod
     def start_date():
-        print('Start Date:')
+        prCyan('\nStart Date:')
         options = Options([
             'Today'
         ])
@@ -60,7 +61,7 @@ class PlanInput:
 
     @staticmethod
     def end_date(startDate):
-        print('End Date:')
+        prCyan('\nEnd Date:')
         options = Options([
             'Input later'
         ])
@@ -74,6 +75,7 @@ class PlanInput:
 
     @staticmethod
     def number_of_camps():
+        prCyan('\nNumber of Refugee Camps:')
         return Get.int(u"\U0001F539" + 'Please input the number of camps: ')
 
     @staticmethod

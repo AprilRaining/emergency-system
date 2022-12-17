@@ -39,7 +39,7 @@ def update_refdb_attr(conn, refugeeID, attr, refugee_attr):
                 WHERE refugeeID = {refugeeID} '''
     cur.execute(query)
     conn.commit()
-    time.sleep(2.0)
+    time.sleep(1.3)
     cur.close()
 
 def delete_ref_by_id(conn,refugeeID):
@@ -62,7 +62,40 @@ def clear_request_schedule(conn,df_task_by_ref):
         cur = conn.cursor()
         cur.execute(vol_upd1)
         conn.commit()
-        time.sleep(2.0)
+        time.sleep(1.5)
+
+# def clear_vol_ref_schedule(conn,vol_ID):
+#     clear_query = f'''SELECT task.refugeeID,task.taskID,task.volunteerID,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer JOIN task ON volunteer.volunteerID = task.volunteerID WHERE volunteer.volunteerID={vol_ID}'''
+#     clear_pd = pd.read_sql_query(clear_query,conn)
+#     # to be used to clear refugee req: only ref related to this volunteer
+#     clear_ref = clear_pd.loc[:,["refugeeID","taskID"]]
+#     print("clear ref",clear_ref)
+#     ref_df = get_refugee_dataframe(conn)
+#     ref_data_row = ref_df.shape[0]
+#     clear_ref_date_row = clear_ref.shape[0]
+#     for i in range(ref_data_row):
+#         for j in range(clear_ref_date_row):
+#             if ref_df.loc[i,"refugeeID"] == clear_ref.loc[j,"refugeeID"]:
+#                 if "," in ref_df.loc[i,"request"]:
+#                     req_ref = ref_df.loc[i,"request"].split(",")
+#                     print("req",req_ref)
+#                     if clear_ref.loc[j,"taskID"] in req_ref:
+#                         req_ref.remove(clear_ref.loc[j,"taskID"])
+#                         new_req_ref = ",".join(req_ref)
+#                         # remove request
+#                         update_refdb_attr(conn,clear_ref.loc[j,"refugeeID"],"request",new_req_ref)
+#                 else:
+#                     if ref_df.loc[i,"request"] == clear_ref.loc[j,"taskID"]:
+#                         # set request to 0
+#                         update_refdb_attr(conn,clear_ref.loc[j,"refugeeID"],"request","0")
+#     # clear volunteer schedule
+#     vol_upd= f'''UPDATE volunteer SET Monday=0,Tuesday=0,Wednesday=0,Thursday=0,Friday=0,Saturday=0,Sunday=0 WHERE volunteerID = {vol_ID}'''
+#     cur = conn.cursor()
+#     cur.execute(vol_upd)
+#     conn.commit()
+#     time.sleep(1.2)
+#     cur.close()
+
 
 def display_open_camp_option(conn):
     camp_query = '''SELECT camp.planID,camp.campID,type,area,COUNT(refugeeID) as no_of_refugees,capacity FROM camp
@@ -100,6 +133,8 @@ def get_volunteer_schedule_df(conn,campID=0,volunteer_ID = 0, purpose=''):
             query =  f'''SELECT volunteerID,fName,lName,campID,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer WHERE campID={campID}'''
         elif campID == 0 and volunteer_ID == 0:
             query =  f'''SELECT volunteerID,fName,lName,campID,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer'''
+    elif purpose == "Status":
+        query =  f'''SELECT volunteerID,fName,lName,campID,accountStatus,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer'''
     else:
         if volunteer_ID != 0 and campID==0:
             query =  f'''SELECT volunteerID,fName,lName,campID,workShift,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday FROM volunteer WHERE volunteerID={volunteer_ID}'''
@@ -113,19 +148,27 @@ def get_volunteer_schedule_df(conn,campID=0,volunteer_ID = 0, purpose=''):
     # df_vol = pd.DataFrame(pd_select, columns=col_names)
     time.sleep(1.0)
     df_vol_sch = pd_select.copy(deep=True)
-    if purpose == "Display":
-        col_list = list(df_vol_sch.columns[5:])
-    else:
-        col_list = list(df_vol_sch.columns[5:])
+    col_list = list(df_vol_sch.columns[5:])
     data_row = df_vol_sch.shape[0]
+    if purpose == "Status":
+        col_list = list(df_vol_sch.columns[6:])
+        for ind in df_vol_sch.index:
+            if df_vol_sch["accountStatus"][ind] == 0:
+                df_vol_sch.at[ind,"accountStatus"] = "Inactive"
+            else:
+                df_vol_sch.at[ind,"accountStatus"] = "Active"
+
+    # Day schedule
     for c in col_list:
-        for ind in range(data_row):
-            if df_vol_sch.loc[ind,c] == 0:
-                df_vol_sch.at[ind,c] = "free"
-            elif df_vol_sch.loc[ind,c] == -1 :
-                df_vol_sch.at[ind,c] = "unavailable"
+        for ind in df_vol_sch.index:
+            if df_vol_sch[c][ind] == 0:
+                df_vol_sch.at[ind,c] = u"\U00002705"
+            elif df_vol_sch[c][ind] == -1 :
+                df_vol_sch.at[ind,c] = u"\U0000274C"
             else:
                 # task ID
-                df_vol_sch.at[ind,c] = "booked"
+                df_vol_sch.at[ind,c] = u"\U0001F4D1"
 
     return df_vol_sch
+
+

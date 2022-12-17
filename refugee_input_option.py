@@ -54,7 +54,7 @@ def refugee_input_option(name):
         case 'Task Request':
             return (
                 '[ 1.] Medical care\n'
-                '[ 2.] Psychological consultancy\n'
+                '[ 2.] Psychotherapy\n'
                 '[ 3.] Physiotherapy\n'
                 '[ 4.] Repair\n'
                 '[ 5.] Translator\n'
@@ -99,7 +99,7 @@ def input_matching(name):
             return {1: "Grass and tree pollen", 2: "Animal dander", 3: "Dust mites", 4: "Latex", 5: "Food",
                     6: "Medication", 7: "Others", 8: "None"}
         case 'Task Request':
-            return {1: "Medical care", 2: "Psychological consultancy", 3: "Physiotherapy", 4: "Repair", 5: "Translator", 6: "Lessons"}
+            return {1: "Medical care", 2: "Psychotherapy", 3: "Physiotherapy", 4: "Repair", 5: "Translator", 6: "Lessons"}
         case 'Shift Time':
             return {1: "Morning", 2: "Afternoon", 3: "Night"}
         case 'Edit':
