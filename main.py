@@ -55,8 +55,8 @@ if __name__ == "__main__":
                     break
     except KeyboardInterrupt:
         print_log('\nForce Quit!')
-    except Exception as e:
-        print('\nExit with unknown errors')
-        print(e)
+    # except Exception as e:
+    #     print('\nExit with unknown errors')
+    #     print(e)
     finally:
         pass

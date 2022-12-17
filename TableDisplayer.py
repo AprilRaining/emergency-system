@@ -25,8 +25,10 @@ class TableDisplayer():
             numberOfRefugees.append(len(refugeeIDs))
         df['numberOfVolunteers'] = numberOfVolunteers
         df['numberOfRefugees'] = numberOfRefugees
-        df['status'] = df.apply(lambda a: TableDisplayer.to_string_plan_status(a), axis=1)
-        print_table(df.columns, df.to_numpy().tolist(), (30, 50, 80, 60, 60, 60, 70, 40, 80, 80))
+        df['status'] = df.apply(
+            lambda a: TableDisplayer.to_string_plan_status(a), axis=1)
+        print_table(df.columns, df.to_numpy().tolist(),
+                    (30, 50, 80, 60, 60, 60, 70, 40, 80, 80))
 
     @staticmethod
     def camp(campIDs):
@@ -47,18 +49,31 @@ class TableDisplayer():
     def volunteers(volunteerIDs):
         volunteerIDs = TableDisplayer.unifiy_type(volunteerIDs)
         df = pd_read_by_IDs('volunteer', volunteerIDs)
-        df['accountStatus'] = df['accountStatus'].map({0: 'Inactive', 1: 'Active'})
-        workdayDict = {-1: u"\U0000274C", 0: u"\U00002705"}
-        df['Monday'] = df['Monday'].map(workdayDict)
-        df['Tuesday'] = df['Tuesday'].map(workdayDict)
-        df['Wednesday'] = df['Wednesday'].map(workdayDict)
-        df['Thursday'] = df['Thursday'].map(workdayDict)
-        df['Friday'] = df['Friday'].map(workdayDict)
-        df['Saturday'] = df['Saturday'].map(workdayDict)
-        df['Sunday'] = df['Sunday'].map(workdayDict)
+        df['accountStatus'] = df['accountStatus'].map(
+            {0: 'Inactive', 1: 'Active'})
+        df['Monday'] = df['Monday'].map(TableDisplayer.to_string_work_schedule)
+        df['Tuesday'] = df['Tuesday'].map(
+            TableDisplayer.to_string_work_schedule)
+        df['Wednesday'] = df['Wednesday'].map(
+            TableDisplayer.to_string_work_schedule)
+        df['Thursday'] = df['Thursday'].map(
+            TableDisplayer.to_string_work_schedule)
+        df['Friday'] = df['Friday'].map(TableDisplayer.to_string_work_schedule)
+        df['Saturday'] = df['Saturday'].map(
+            TableDisplayer.to_string_work_schedule)
+        df['Sunday'] = df['Sunday'].map(TableDisplayer.to_string_work_schedule)
         del df['preference']
         print_table(df.columns, df.to_numpy().tolist(), (18, 25, 25, 25, 25, 20, 16, 20,
                                                          30, 30, 30, 30, 30, 30, 30))
+        print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
+              " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
+
+    @staticmethod
+    def refugees(refugeeIDs):
+        refugeeIDs = TableDisplayer.unifiy_type(refugeeIDs)
+        df = pd_read_by_IDs('refugee', refugeeIDs)
+        print_table(df.columns, df.to_numpy().tolist(), (18, 16, 25, 25, 30, 25, 32, 70,
+                                                         60, 70, 70, 60, 30, 30, 30, 25))
 
     @staticmethod
     def to_string_plan_status(df):
@@ -69,6 +84,14 @@ class TableDisplayer():
                 return 'Opened'
             case 2:
                 return 'Closed'
+
+    def to_string_work_schedule(n):
+        match n:
+            case -1:
+                return u"\U0000274C"
+            case 0:
+                return u"\U00002705"
+        return u"\U0001F4D1"
 
     @staticmethod
     def unifiy_type(IDs):

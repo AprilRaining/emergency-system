@@ -1,5 +1,6 @@
 import json
 
+import TableDisplayer
 import refugee_exception as exc
 from TableDisplayer import *
 
@@ -138,3 +139,73 @@ def select_sqlite(table, IDs):
             IDs = search_sqlite(table)
         else:
             return ID
+
+
+def select_camps_from_plan(planIDs):
+    if not planIDs:
+        return
+    else:
+        TableDisplayer.plan(planIDs)
+        while True:
+            option = input("\n" +
+                           u"\U0001F539" + f"Input a plan ID to view more details or 'Q/q' to quit:")
+            print("\n")
+            if option != 'q' and option != 'Q':
+                try:
+                    option = int(option)
+                except ValueError:
+                    print_log("Please reenter a valid value.")
+                else:
+                    if option not in planIDs:
+                        print_log(
+                            f'{option} is not a valid input. Please try again.')
+                    else:
+                        campIDs = get_linked_IDs('camp', 'plan', option)
+                        if campIDs:
+                            TableDisplayer.camp(campIDs)
+                            return campIDs
+                        else:
+                            print('No camps under this plan ' + u"\u203C")
+                            return False
+            else:
+                return False
+
+
+def select_info_from_camp(campIDs):
+    if not campIDs:
+        return
+    else:
+        while True:
+            option = input("\n"
+                           u"\U0001F539" + f"Input a camp ID to view more details or 'Q/q' to quit:")
+            if option != 'q' and option != 'Q':
+                try:
+                    option = int(option)
+                except ValueError:
+                    print_log("Please reenter a valid value.")
+                else:
+                    if option not in campIDs:
+                        print(
+                            f'{option} is not a valid input. Please try again.')
+                    else:
+                        volunteerIDs = get_linked_IDs(
+                            'volunteer', 'camp', option)
+                        refugeeIDs = get_linked_IDs(
+                            'refugee', 'camp', option)
+                        if volunteerIDs:
+                            print("\n" + u"\U0001F538" +
+                                  f"Volunteers in the camp ID {option}:")
+                            TableDisplayer.volunteers(volunteerIDs)
+                        else:
+                            print("\n" + 'No volunteer in this camp ' +
+                                  u"\u203C" + "\n")
+                        if refugeeIDs:
+                            print("\n" + u"\U0001F538" +
+                                  f"Refugees in the camp ID {option}:")
+                            TableDisplayer.refugees(refugeeIDs)
+                        else:
+                            print('No refugee in this camp ' + u"\u203C")
+                        back()
+                        return
+            else:
+                return

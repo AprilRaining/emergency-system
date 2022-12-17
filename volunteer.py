@@ -2,9 +2,9 @@ import copy
 import json
 from datetime import datetime
 
+from accountInput import *
 from refugee_info_edit import *
 from refugee_input_option import *
-from accountInput import *
 
 
 def connection_database(db_file):
@@ -103,7 +103,8 @@ class Volunteer:
                 continue
             else:
                 break
-        first_name = input(u"\U0001F539" + "Please input your new first name: ")
+        first_name = input(
+            u"\U0001F539" + "Please input your new first name: ")
         last_name = input(u"\U0001F539" + "Please input your new last name: ")
         self.last_name = last_name
         self.first_name = first_name
@@ -111,7 +112,8 @@ class Volunteer:
         cur.execute(query)
         conn.commit()
         cur.close()
-        print(u'\u2705' + "Your new name have been changed to: " + first_name + " " + last_name, "\n")
+        print(u'\u2705' + "Your new name have been changed to: " +
+              first_name + " " + last_name, "\n")
 
     def edit_password(self):
         print("--------------------------------------------------------------------------")
@@ -120,7 +122,7 @@ class Volunteer:
         cur = conn.cursor()
         while True:
             volunteer_input_id = self.volunteerID
-            query_1 = f'''SELECT Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday from volunteer WHERE volunteerID={volunteer_input_id}'''
+            query_1 = f'''SELECT Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday from volunteer WHERE volunteerID={volunteer_input_id}'''
             cur.execute(query_1)
             weekday = cur.fetchall()
             if weekday == []:
@@ -172,7 +174,8 @@ class Volunteer:
         for the_day in range(the_day, 6):
             judge = weekday[0][the_day]
             if judge > 0:
-                warn("You cannot change your working shift because you still have unfinished work.")
+                warn(
+                    "You cannot change your working shift because you still have unfinished work.")
                 break
         else:
             if confirm("You can change your preference now, enter 'Yes' to continue"):
@@ -191,7 +194,8 @@ class Volunteer:
             else:
                 return
 
-            match = {1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday', 7: 'Sunday'}
+            match = {1: 'Monday', 2: 'Tuesday', 3: 'Wednesday',
+                     4: 'Thursday', 5: 'Friday', 6: 'Saturday', 7: 'Sunday'}
             for i in options:
                 preference[match[i]] = 0
 
@@ -202,14 +206,17 @@ class Volunteer:
             cur.execute(query)
             conn.commit()
 
-            print("\n" + u'\u2705' + "You successfully changed your next week working day!\n")
+            print("\n" + u'\u2705' +
+                  "You successfully changed your next week working day!\n")
             print("Your current working shift is: " + preference['workShift'])
             print(
                 u"\u2757" + "Note: If you dont want to change the working shift, please select same option as the previous one! \n")
 
-            options_shift = Options(['Morning', 'Afternoon', 'Night'], limited=True)
+            options_shift = Options(
+                ['Morning', 'Afternoon', 'Night'], limited=True)
             print(options_shift)
-            options_preference = options_shift.get_option(u"\U0001F539" + "Please choose your preferred workShift: ")
+            options_preference = options_shift.get_option(
+                u"\U0001F539" + "Please choose your preferred workShift: ")
             match_preference = ['Morning', 'Afternoon', 'Night']
             preference['workShift'] = match_preference[options_preference]
             preference = json.dumps(preference)
@@ -217,7 +224,8 @@ class Volunteer:
             cur.execute(query)
             conn.commit()
             cur.close()
-            print("\n" + u'\u2705' + "You have changed your preferred work shift successfully!\n")
+            print("\n" + u'\u2705' +
+                  "You have changed your preferred work shift successfully!\n")
 
     def edit_campid(self):
         print("--------------------------------------------------------------------------")
@@ -246,7 +254,8 @@ class Volunteer:
         for the_day in range(the_day, 6):
             flag = weekday[0][the_day]
             if flag > 0:
-                warn("You cannot change your campID because you still have unfinished work")
+                warn(
+                    "You cannot change your campID because you still have unfinished work")
                 break
         else:
             new_campid = AccountCreation.get_camp_id()
@@ -275,8 +284,10 @@ class Volunteer:
                                        "Account status"])
 
             print(u"\U0001F538", "Please see your personal information below: \n")
-            print_table(fd.columns, fd.to_numpy().tolist(), (12, 20, 20, 20, 16, 20))
-            weekday = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            print_table(fd.columns, fd.to_numpy().tolist(),
+                        (12, 20, 20, 20, 16, 20))
+            weekday = ["Monday", "Tuesday", "Wednesday",
+                       "Thursday", "Friday", "Saturday", "Sunday"]
             schedule = {}
             for day, flag in enumerate(info[6:-2]):
                 if flag == -1:
@@ -287,8 +298,10 @@ class Volunteer:
                     schedule[weekday[day]] = f"taskID: {flag}"
             schedule["work_period"] = info[-2]
             info_df = pd.DataFrame(schedule, index=[0])
-            print("\n", u"\U0001F538", f"Your current availability for this week is:  \n")
-            print_table(info_df.columns, info_df.to_numpy().tolist(), (20, 20, 20, 20, 20, 20, 20, 20))
+            print("\n", u"\U0001F538",
+                  f"Your current availability for this week is:  \n")
+            print_table(info_df.columns, info_df.to_numpy().tolist(),
+                        (20, 20, 20, 20, 20, 20, 20, 20))
 
             preference = {}
             for day, flag in json.loads(info[-1]).items():
@@ -301,8 +314,10 @@ class Volunteer:
                 else:
                     preference[weekday[day]] = f"taskID: {flag}"
             pre_df = pd.DataFrame(preference, index=[0])
-            print("\n" + u"\U0001F539" + f"Your default availability when first registered is: \n")
-            print_table(pre_df.columns, pre_df.to_numpy().tolist(), (20, 20, 20, 20, 20, 20, 20, 20))
+            print("\n" + u"\U0001F539" +
+                  f"Your default availability when first registered is: \n")
+            print_table(pre_df.columns, pre_df.to_numpy().tolist(),
+                        (20, 20, 20, 20, 20, 20, 20, 20))
             print(
                 "\n" + u"\u2757" + "Note: These tables don't display your task for this week.\n"
                                    "To see your task, please go to the 'View This Week Schedule' menu")
@@ -318,32 +333,38 @@ class Volunteer:
             print(menu())
             match menu_choice_get(menu().count('\n') + 1, "\n-->"):
                 case 1:
-                    print("--------------------------------------------------------------------------")
+                    print(
+                        "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tREGISTER NEW REFUGEE\n")
                     self.create_emergency_refugee_file()
                     back()
                 case 2:
-                    print("--------------------------------------------------------------------------")
+                    print(
+                        "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tEDIT REFUGEE INFORMATION\n")
                     self.edit_emergency_refugee_file()
                     back()
                 case 3:
-                    print("--------------------------------------------------------------------------")
+                    print(
+                        "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tVIEW REFUGEE SCHEDULE\n")
                     self.view_refugee_req_schedule()
                     back()
                 case 4:
-                    print("--------------------------------------------------------------------------")
+                    print(
+                        "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDEACTIVATE REFUGEE ACCOUNT\n")
                     self.close_emergency_refugee_file()
                     back()
                 case 5:
-                    print("--------------------------------------------------------------------------")
+                    print(
+                        "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tACTIVATE REFUGEE ACCOUNT\n")
                     self.reopen_emergency_refugee_file()
                     back()
                 case 6:
-                    print("--------------------------------------------------------------------------")
+                    print(
+                        "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDELETE REFUGEE ACCOUNT\n")
                     self.delete_emergency_refugee_file()
                     back()
@@ -371,12 +392,14 @@ class Volunteer:
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df, conn)
         print("--------------------------------------------------------------------------")
-        print("\n" + u"\U0001F539" + "Select an information field that you would like to edit: ")
+        print("\n" + u"\U0001F539" +
+              "Select an information field that you would like to edit: ")
         # print(u"\u2757"+"Note: Allow multiple selections in a comma-separated format e.g. 1,3,5")
         edit_opt = refugee_input_option("Edit")
         edit_arr = numerical_input_check(edit_opt)
         # print("arr",edit_arr)
-        print("\n-------------------------------INFO EDITION-------------------------------\n")
+        print(
+            "\n-------------------------------INFO EDITION-------------------------------\n")
         edited_dict = input_matching("Edit")
         for e in edit_arr:
             # array of ref_row
@@ -397,8 +420,10 @@ class Volunteer:
     def view_refugee_req_schedule(self):
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID("schedule", refugee_df, conn)
-        day_index = {"Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7}
+        ref_df_by_id = refugee_validity_check_by_ID(
+            "schedule", refugee_df, conn)
+        day_index = {"Monday": 1, "Tuesday": 2, "Wednesday": 3,
+                     "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7}
         data_sch = {
             "Day": list(day_index.keys()),
             "Morning": [u"\u2716", u"\u2716", u"\u2716", u"\u2716", u"\u2716", u"\u2716", u"\u2716"],
@@ -418,7 +443,8 @@ class Volunteer:
                     task_df["taskInfo"][ind]) + f"[{task_df['volunteerID'][ind]}]"
 
         display_sch = pd.DataFrame(data_sch)
-        print_table(display_sch.columns, display_sch.to_numpy().tolist(), (50, 50, 50, 50))
+        print_table(display_sch.columns,
+                    display_sch.to_numpy().tolist(), (50, 50, 50, 50))
 
         print("\n" + u"\u2757" + "Note: ")
         print(u"\U0001F538", u"\u2716" + " = No request")
@@ -429,7 +455,8 @@ class Volunteer:
     def close_emergency_refugee_file(self):
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID("deactivate", refugee_df, conn)
+        ref_df_by_id = refugee_validity_check_by_ID(
+            "deactivate", refugee_df, conn)
         print("\nPlease see refugee details below.\n")
         df_id = refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id]
         print_table(df_id.columns, df_id.to_numpy().tolist(),
@@ -452,7 +479,8 @@ class Volunteer:
 
             update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
             update_refdb_attr(conn, ref_df_by_id, "request", "0")
-            print("--------------------------------------------------------------------------")
+            print(
+                "--------------------------------------------------------------------------")
             print(u'\u2705' + "The refugee's information is successfully deactivated.\n")
             print("\n" + u"\u2757" + "Note: You can activate this account anytime.")
         # if self.system_exit_check():
@@ -463,15 +491,18 @@ class Volunteer:
         print("-------------------------------------------")
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID("activate", refugee_df, conn)
+        ref_df_by_id = refugee_validity_check_by_ID(
+            "activate", refugee_df, conn)
         ref_status = str(
             refugee_df.loc[refugee_df["refugeeID"] == ref_df_by_id, "status"].values[0])
         if ref_status == "active":
-            warn("Refugee's status is currently active. There's no need to activate an account again!")
+            warn(
+                "Refugee's status is currently active. There's no need to activate an account again!")
         else:
             # update datebase: refugee[status] to active
             update_refdb_attr(conn, ref_df_by_id, "status", "active")
-            print("--------------------------------------------------------------------------")
+            print(
+                "--------------------------------------------------------------------------")
             print(u'\u2705' + "The refugee's information is successfully activated.\n")
         # if self.system_exit_check():
         #     return
@@ -505,8 +536,10 @@ class Volunteer:
 
             # delete refugee
             delete_ref_by_id(conn, ref_df_by_id)
-            print("--------------------------------------------------------------------------")
-            print(u'\u2705' + f"The refugee with ID {ref_df_by_id}'s information is successfully deleted.\n")
+            print(
+                "--------------------------------------------------------------------------")
+            print(
+                u'\u2705' + f"The refugee with ID {ref_df_by_id}'s information is successfully deleted.\n")
         # if self.system_exit_check():
         #     return
 
@@ -524,9 +557,9 @@ class Volunteer:
             sunday = saturday + one_day
 
             return datetime.datetime.strftime(monday, "%Y-%m-%d"), datetime.datetime.strftime(tuesday, "%Y-%m-%d"), \
-                   datetime.datetime.strftime(wednesday, "%Y-%m-%d"), datetime.datetime.strftime(thursday, "%Y-%m-%d"), \
-                   datetime.datetime.strftime(friday, "%Y-%m-%d"), datetime.datetime.strftime(saturday, "%Y-%m-%d"), \
-                   datetime.datetime.strftime(sunday, "%Y-%m-%d")
+                datetime.datetime.strftime(wednesday, "%Y-%m-%d"), datetime.datetime.strftime(thursday, "%Y-%m-%d"), \
+                datetime.datetime.strftime(friday, "%Y-%m-%d"), datetime.datetime.strftime(saturday, "%Y-%m-%d"), \
+                datetime.datetime.strftime(sunday, "%Y-%m-%d")
 
         day_schedule = []
 
@@ -572,4 +605,5 @@ class Volunteer:
 
         for v in d:
             day, morning, afternoon, night = v
-            print("{:<15} {:<22} {:<24} {:<15}".format(day, morning, afternoon, night))
+            print("{:<15} {:<22} {:<24} {:<15}".format(
+                day, morning, afternoon, night))
