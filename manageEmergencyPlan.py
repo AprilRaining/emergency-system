@@ -189,7 +189,7 @@ class ManageEmergencyPlan:
                         u'\u2705', f"This plan ID: {planID} is successfully closed.")
                     return
             case 2:
-                warn('This plan has been closed. You are not allowed change it.')
+                warn('This plan has been closed. You are not allowed to change it.')
                 return
 
     @staticmethod

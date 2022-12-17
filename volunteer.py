@@ -255,6 +255,9 @@ class Volunteer:
                 break
         else:
             new_campid = AccountCreation.update_campID(self.planID)
+            if new_campid == False:
+                warn("Please try again later, or consider move to other camps.")
+                return
             query_camp = f'''UPDATE volunteer SET campID='{new_campid}' WHERE volunteerID = {volunteer_input_id}'''
             self.campID = new_campid
             cur.execute(query_camp)
@@ -262,7 +265,7 @@ class Volunteer:
             cur.close()
             print("\n", u'\u2705' + "You have changed your campID successfully!\n")
             print("\n", u'\u2705' +
-                  f"You have changed your campID is {new_campid}")
+                  f"You new campID is {new_campid}")
 
     def show_my_information(self):
         print("--------------------------------------------------------------------------")

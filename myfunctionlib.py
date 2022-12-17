@@ -123,6 +123,7 @@ def confirm(hint=''):
     if key == 'Yes' or key == 'yes':
         return True
     else:
+        print(u"\U0001F539" + "Operation is cancelled.")
         return False
 
 
