@@ -14,7 +14,7 @@ class AccountCreation:
                 print(u"\U0001F538" +
                       "The detail below shows the information of every plans\n")
                 with db.connect('emergency_system.db') as conn:
-                    TableDisplayer.plan(get_all_IDs('plan'))
+                    TableDisplayer.plan(get_all_open_plan())
                     planID = Get.option_in_list(get_all_IDs(
                         'plan'), u"\U0001F539" + "INSTRUCTION: Please select which emergency plan the volunteer will be registered to: ")
                     print("\n" + u"\U0001F538" +
@@ -146,7 +146,7 @@ class AccountCreation:
                     "Please input the day(s) this volunteer is available in a week(from 1 to 7) and divided by comma.\n"
                     "For example, 6,7 means Saturday and Sunday are available. \n"
                     "If there is no available day, just press 8: \n--> ")
-                if not re.match(re.compile("^([1-7])+(,[1-7])*$"), input_str):
+                if (not re.match(re.compile("^([1-7])+(,[1-7])*$"), input_str)) and input_str != '8':
                     warn("Invaid input!, check your input.")
                     continue
                 if input_str == '8':

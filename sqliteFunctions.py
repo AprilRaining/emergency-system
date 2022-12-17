@@ -31,6 +31,16 @@ def get_all_IDs(table):
             IDs.append(i[0])
         return IDs
 
+def get_all_open_plan():
+    with sqlite3.connect('emergency_system.db') as conn:
+        c = conn.cursor()
+        result = c.execute(f'select planID from plan where status = 1').fetchall()
+        IDs = []
+        for i in result:
+            IDs.append(i[0])
+        return IDs
+
+
 
 def delete_by_IDs(table, IDs):
     with sqlite3.connect('emergency_system.db') as conn:
