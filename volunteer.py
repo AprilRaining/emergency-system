@@ -19,19 +19,10 @@ def connection_database(db_file):
 
 
 class Volunteer:
-    """
-    This is class for volunteer to operate the system.
-    """
 
     def __init__(self, last_name=None, first_name=None, password=None, campID=None, workingShift=None, workingdays=None,
-                 volunteer_id=None):
-        """
-        To Do:
-        1. Process Login when construct a new admin
-        2. Show the menu
-        3. Maybe for first login require the volunteer to edit their personal information first.
-        :return:
-        """
+                 volunteer_id=None, planID=None):
+
         self.menu = menu(self.__class__.__name__)
         self.last_name = last_name
         self.first_name = first_name
@@ -40,6 +31,7 @@ class Volunteer:
         self.workingShift = workingShift
         self.workingdays = workingdays
         self.volunteerID = volunteer_id
+        self.planID = planID
 
     def sub_main(self):
         while True:
@@ -391,11 +383,14 @@ class Volunteer:
     def edit_emergency_refugee_file(self):
         conn = connect_db()
         refugee_df = get_refugee_dataframe(conn)
-        ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df, conn)
+        campIDs = get_linked_IDs('camp', 'plan', self.planID)
+        refugeeIDs = get_linked_IDs('refugee', 'camp', campIDs)
+        print("\n" + u"\U0001F538" +
+              f"Refugees in this plan:")
+        ref_df_by_id = select_sqlite('refugee', refugeeIDs)
         print("--------------------------------------------------------------------------")
-        print("\n" + u"\U0001F539" +
-              "Select an information field that you would like to edit: ")
-        # print(u"\u2757"+"Note: Allow multiple selections in a comma-separated format e.g. 1,3,5")
+        # print("\n" + u"\U0001F539" +
+        #       "Select an refugee that you would like to edit by refugeeID: ")
         edit_opt = refugee_input_option("Edit")
         edit_selected = single_input_check(edit_opt)
         if edit_selected != '13':

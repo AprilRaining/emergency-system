@@ -10,9 +10,16 @@ class TableDisplayer():
                 return TableDisplayer.plan
             case 'camp':
                 return TableDisplayer.camp
+            case 'volunteer':
+                return TableDisplayer.volunteer
+            case 'refugee':
+                return TableDisplayer.refugee
 
     @staticmethod
     def plan(planIDs):
+        if not planIDs:
+            warn('No reasult!')
+            return
         planIDs = TableDisplayer.unifiy_type(planIDs)
         df = pd_read_by_IDs('plan', planIDs)
         numberOfVolunteers = []
@@ -32,6 +39,9 @@ class TableDisplayer():
 
     @staticmethod
     def camp(campIDs):
+        if not campIDs:
+            warn('No reasult!')
+            return
         campIDs = TableDisplayer.unifiy_type(campIDs)
         df = pd_read_by_IDs('camp', campIDs)
         numberOfVolunteers = []
@@ -46,7 +56,10 @@ class TableDisplayer():
         print_table(df.columns, df.to_numpy().tolist(), (30, 30, 30, 70, 70))
 
     @staticmethod
-    def volunteers(volunteerIDs):
+    def volunteer(volunteerIDs):
+        if not volunteerIDs:
+            warn('No reasult!')
+            return
         volunteerIDs = TableDisplayer.unifiy_type(volunteerIDs)
         df = pd_read_by_IDs('volunteer', volunteerIDs)
         df['accountStatus'] = df['accountStatus'].map(
@@ -69,7 +82,10 @@ class TableDisplayer():
               " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
 
     @staticmethod
-    def refugees(refugeeIDs):
+    def refugee(refugeeIDs):
+        if not refugeeIDs:
+            warn('No reasult!')
+            return
         refugeeIDs = TableDisplayer.unifiy_type(refugeeIDs)
         df = pd_read_by_IDs('refugee', refugeeIDs)
         print_table(df.columns, df.to_numpy().tolist(), (18, 16, 25, 25, 30, 25, 32, 70,

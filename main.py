@@ -37,7 +37,8 @@ if __name__ == "__main__":
 
                                                    """)
             print('\t\tto the Emergency System Designed By Team K:)\n')
-            print("--------------------------------------------------------------------------\n")
+            print(
+                "--------------------------------------------------------------------------\n")
             prYellow(u"\U0001F539"+"Please select the account type to login :\n")
             print(menu('Login'))
             match menu_choice_get(menu('Login').count('\n') + 1, "\n-->"):
@@ -46,10 +47,11 @@ if __name__ == "__main__":
                     admin = Admin()
                     admin.sub_main()
                 case 2:
-                    v_ID = utilities.volunteer_login()
-                    if v_ID < 0:
+                    volunteerInfo = utilities.volunteer_login()
+                    if volunteerInfo[0] < 0:
                         continue
-                    volunteer = Volunteer(volunteer_id=v_ID)
+                    volunteer = Volunteer(
+                        volunteer_id=volunteerInfo[0], campID=volunteerInfo[2], planID=volunteerInfo[3])
                     volunteer.sub_main()
                 case 0:
                     break

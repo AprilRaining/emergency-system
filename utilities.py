@@ -28,7 +28,7 @@ def volunteer_login():
             password = input(
                 u"\U0001F539" + "Input the password of volunteer:")
 
-            result = c.execute(f"select volunteerID, accountStatus from volunteer where username = '{name}' "
+            result = c.execute(f"select volunteerID, accountStatus, campID from volunteer where username = '{name}' "
                                f"and password = '{password}'").fetchall()
             if len(result) > 0:
                 if result[0][1] == 0:
@@ -36,9 +36,12 @@ def volunteer_login():
                         "Your account has been deactivated, contact the administrator.\n")
                     return -1
                 else:
+                    result = list(result[0])
+                    result.append(
+                        c.execute(f'select planID from camp where campID = {result[0]}').fetchall()[0][0])
                     print("\n", u'\u2705', 'Welcome to the system, Volunteer!.')
                     prYellow("\nPlease select your options below: \n")
-                    return result[0][0]
+                    return result
             else:
                 vol_res = c.execute(f"select * from deleted_vol_account where username = '{name}' "
                                     f"and password = '{password}'").fetchall()
@@ -195,14 +198,14 @@ def select_info_from_camp(campIDs):
                         if volunteerIDs:
                             print("\n" + u"\U0001F538" +
                                   f"Volunteers in the camp ID {option}:")
-                            TableDisplayer.volunteers(volunteerIDs)
+                            TableDisplayer.volunteer(volunteerIDs)
                         else:
                             print("\n" + 'No volunteer in this camp ' +
                                   u"\u203C" + "\n")
                         if refugeeIDs:
                             print("\n" + u"\U0001F538" +
                                   f"Refugees in the camp ID {option}:")
-                            TableDisplayer.refugees(refugeeIDs)
+                            TableDisplayer.refugee(refugeeIDs)
                         else:
                             print('No refugee in this camp ' + u"\u203C")
                         back()
