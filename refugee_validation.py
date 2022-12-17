@@ -130,12 +130,12 @@ def refugee_validity_check_by_ID(cond,refugee_df, conn):
         while True:
             try:
                 print("Search for the refugee information by")
-                col_opt = ['fName','lName','campID','familyMemberName']
-                options = Options(col_opt, limited=True)
+                opt_dict = {'First Name':'fName','Last Name':'lName','Camp ID':'campID','Family Member Name':'familyMemberName'}
+                options = Options(list(opt_dict.keys()), limited=True)
                 print(options)
-                opt = col_opt[int(input(u"\U0001F539"+'Please select how you want to search: '))]
+                opt = list(opt_dict.keys())[int(input(u"\U0001F539"+'Please select how you want to search: '))]
                 keyword = input("\n"+u"\U0001F539"+f"Please enter the {opt} keyword: ")
-                refugee_list = search_refugee(opt,keyword,conn)
+                refugee_list = search_refugee(opt_dict[opt],keyword,conn)
                 if refugee_list.empty:
                     raise exc.refugee_id_out_of_range
                 else:
@@ -190,7 +190,6 @@ def single_input_check(options):
     while True:
         try:
             selected_opts = input(options + "\n-->")
-            array_opts = []
             if "," in selected_opts:
                 raise ValueError
             else:
@@ -203,19 +202,21 @@ def single_input_check(options):
         except Exception as e:
             print_log(str(e))
         else:
-            # array of numerical input (no duplication)
-            array_opts.append(selected_opts)
-            return array_opts
+            return selected_opts
    
 
-def volunteer_ID_req_check(volunteer_df):
+def volunteer_ID_req_check(volunteer_df,select_today):
     while True:
         try:
             vol_ID = int(input("\n"+u"\U0001F539"+
                         "Enter the volunteer ID of whom you want to assign this request to: "))
-            if vol_ID > (volunteer_df["volunteerID"]).max() or vol_ID < 1:
-                raise exc.volunteer_id_out_of_range
-            if vol_ID not in volunteer_df["volunteerID"].values:
+            volunteer_list = list(volunteer_df.loc[:, "volunteerID"].values)
+            vol_shift = volunteer_df.loc[volunteer_df["volunteerID"]==vol_ID, "workShift"].values[0]
+            if select_today == True:
+                has_conflict = check_today_shift_conflict(get_current_shift_time(),vol_shift)
+                if has_conflict == True:
+                    return 0
+            if vol_ID not in volunteer_list:
                 raise exc.volunteer_id_out_of_range
         except exc.volunteer_id_out_of_range:
             print_log("Your input volunteer ID is invalid regarding the available options.")

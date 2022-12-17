@@ -86,15 +86,14 @@ class ManageEmergencyPlan:
                     'numberOfCamps',
                 ], limited=True)
                 print(
-                    "\n" + 'This plan has not been opened yet. You could edit the properties below:\n')
+                    "\n"+u"\u2757"+'This plan has not been opened yet. You could edit the properties below:\n')
             case 1:
                 options = Options([
                     'description',
                     'endDate',
                 ], limited=True)
                 print(
-                    "\n",'This plan has already been opened. You can only edit the properties below: \n')
-                print("\n")
+                    "\n"+u"\u2757"+'This plan has already been opened. You can only edit the properties below:\n')
             case 2:
                 warn('This plan has been closed. You are not allowed edit it!')
                 return
@@ -295,7 +294,6 @@ class ManageEmergencyPlan:
                                       f"Volunteers in the camp ID {option}:")
                                 TableDisplayer.volunteers(volunteerIDs)
                                 print('')
-                                print(u"\u2757"+"Note: From Monday to Sunday Columns, 0 = Available, -1 = Unavailable\n")
                             else:
                                 print("\n"+'No volunteer in this camp ' +
                                       u"\u203C"+"\n")

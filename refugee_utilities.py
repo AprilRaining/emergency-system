@@ -18,6 +18,32 @@ def get_date_list():
     dates = [str(d) for d in dates]
     return dates
 
+def get_current_shift_time():
+    shift = ''
+    now = datetime.datetime.now()
+    morning_shift_1 = now.replace(hour=6, minute=0, second=0, microsecond=0)
+    morning_shift_2 = now.replace(hour=14, minute=0, second=0, microsecond=0)
+    afternoon_shift_1 = now.replace(hour=14, minute=0, second=0, microsecond=0)
+    afternoon_shift_2 =now.replace(hour=22, minute=0, second=0, microsecond=0)
+    night_shift_1 = now.replace(hour=22, minute=0, second=0, microsecond=0)
+    night_shift_2 = now.replace(hour=6, minute=0, second=0, microsecond=0)
+    if now >= morning_shift_1 and now < morning_shift_2:
+        shift = "Morning"
+    elif now >= afternoon_shift_1 and now < afternoon_shift_2:
+        shift = "Afternoon"
+    elif now >= night_shift_1 and now < night_shift_2:
+        shift = "Night"
+    return shift
+
+def check_today_shift_conflict(current_shift,volunteer_shift):
+    has_conflict = False
+    if volunteer_shift == "Morning":
+        if current_shift == "Afternoon" or current_shift == "Night":
+            has_conflict = True
+    elif volunteer_shift == "Afternoon":
+        if current_shift == "Night":
+            has_conflict = True
+    return has_conflict
 
 def get_week_number(date):
     # split date

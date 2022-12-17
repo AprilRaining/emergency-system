@@ -80,7 +80,7 @@ def refugee_info_edit(choice, refugeeID, refugee_df, conn):
                                 ref.ref_row.append(0)
                                 break
             case 13:
-                sys.exit()
+                return 0
           
     # return refugee information list (array) based on selected field
     return ref.ref_row
