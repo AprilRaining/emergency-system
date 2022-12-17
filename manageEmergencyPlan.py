@@ -196,12 +196,12 @@ class ManageEmergencyPlan:
         df = pd_read_by_IDs('plan', planID)
         match df.loc[0, 'status']:
             case 0:
-                campIDs = get_linked_IDs('camp', 'plan', planID)
                 print('This plan have not opened yet.')
                 if confirm('Once you delete this plan you can not find it anymore.'):
+                    campIDs = get_linked_IDs('camp', 'plan', planID)
                     delete_by_IDs('camp', campIDs)
                     delete_by_IDs('plan', planID)
-                print('Succeed!')
+                    print('Succeed!')
             case 1:
                 print('This plan is opened. You can not delete it.')
                 print("You can only delete a closed plan.")
@@ -210,7 +210,7 @@ class ManageEmergencyPlan:
                 print('This plan have not closed. You can delete it.')
                 if confirm('Once you delete this plan you can not find it anymore.'):
                     delete_by_IDs('plan', planID)
-                print('Succeed!')
+                    print('Succeed!')
 
     def insert_one_plan(self, plan):
         with sqlite3.connect('emergency_system.db') as conn:
