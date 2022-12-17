@@ -1,5 +1,4 @@
 import smtplib
-from syslog import *
 
 
 def email_noti(receiver_name='',receiver_email='',request_list='',ref_ID=0,purpose=''):

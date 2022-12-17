@@ -117,7 +117,7 @@ class AccountCreation:
                 ])
                 print(opt_second)
                 input_str = input(
-                    u"\U0001F539" + "Please input the day(s) this volunteer is available in a week(from 1 to 7).\n"
+                    u"\U0001F539" + "Please input the day(s) this volunteer is available in a week(from 1 to 7) and divided by comma.\n"
                                     "For example, 6,7 means Saturday and Sunday are available. \n"
                                     "If there is no available day, just press 8: \n--> ")
                 if input_str == '8':
