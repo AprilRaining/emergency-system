@@ -32,9 +32,9 @@ class Get:
                 date = datetime.datetime.strptime(
                     input(hint), '%Y-%m-%d').date()
             except InvalidInput as e:
-                print(e)
+                warn(e)
             except ValueError as e:
-                print(e)
+                warn(e)
             else:
                 return date
 
