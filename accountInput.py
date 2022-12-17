@@ -16,7 +16,7 @@ class AccountCreation:
                     TableDisplayer.plan(get_all_IDs('plan'))
                     planID = Get.option_in_list(get_all_IDs(
                         'plan'), u"\U0001F539" + "\n" + u"\U0001F531" +
-                        "INSTRUCTION: Please choose which plan this volunteer will be first.")
+                        "INSTRUCTION: Please choose which plan this volunteer will be: ")
                     print("\n" + u"\U0001F538" +
                           f"Camps in the plan ID {planID}:")
                     TableDisplayer.camp(get_linked_IDs('camp', 'plan', planID))
