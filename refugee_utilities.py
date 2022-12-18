@@ -21,18 +21,19 @@ def get_date_list():
 def get_current_shift_time():
     shift = ''
     now = datetime.datetime.now()
-    morning_shift_1 = now.replace(hour=6, minute=0, second=0, microsecond=0)
-    morning_shift_2 = now.replace(hour=14, minute=0, second=0, microsecond=0)
-    afternoon_shift_1 = now.replace(hour=14, minute=0, second=0, microsecond=0)
-    afternoon_shift_2 =now.replace(hour=22, minute=0, second=0, microsecond=0)
-    night_shift_1 = now.replace(hour=22, minute=0, second=0, microsecond=0)
-    night_shift_2 = now.replace(hour=6, minute=0, second=0, microsecond=0)
+    morning_shift_1 = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    morning_shift_2 = now.replace(hour=10, minute=0, second=0, microsecond=0)
+    afternoon_shift_1 = now.replace(hour=10, minute=0, second=0, microsecond=0)
+    afternoon_shift_2 =now.replace(hour=18, minute=0, second=0, microsecond=0)
+    night_shift_1 = now.replace(hour=18, minute=0, second=0, microsecond=0)
+    night_shift_2 = now.replace(hour=23, minute=59, second=59, microsecond=0)
     if now >= morning_shift_1 and now < morning_shift_2:
         shift = "Morning"
     elif now >= afternoon_shift_1 and now < afternoon_shift_2:
         shift = "Afternoon"
-    elif now >= night_shift_1 and now < night_shift_2:
+    elif now >= night_shift_1 and now <= night_shift_2:
         shift = "Night"
+    # print(shift)
     return shift
 
 def check_today_shift_conflict(current_shift,volunteer_shift):
@@ -52,7 +53,7 @@ def get_week_number(date):
     week_num = datetime.date(int(y), int(m), int(d)).isocalendar()[1]
     return week_num
 
-def search_refugee(column, keyword, conn):
+def search_refugee(column, keyword, conn, purpose = ''):
     with open("user_session.json") as f:
             vol_login = json.load(f)
     vol_plan_ID = vol_login["planID"]
@@ -60,6 +61,9 @@ def search_refugee(column, keyword, conn):
         keyword = "'%{}%'".format(keyword)
     search_query = f'''SELECT * FROM refugee WHERE {column} LIKE {keyword} AND campID IN
     (SELECT campID FROM camp JOIN plan ON camp.planID = plan.planID WHERE plan.planID = {vol_plan_ID})'''
+    if purpose == "activate":
+        search_query = f'''SELECT * FROM refugee WHERE {column} LIKE {keyword}'''
+
     # print(search_query)
     pd_search = pd.read_sql_query(search_query,conn)
     df_search = pd.DataFrame(pd_search, columns=["refugeeID","campID","fName","lName","birthdate","gender","ethnicGroup","email",
