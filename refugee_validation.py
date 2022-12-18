@@ -239,7 +239,7 @@ def task_ID_input_check(task_ID_list):
             print_log(
                 "Your input number is invalid in our options. Please try again.")
         except ValueError:
-            print_log("Please enter a numerical value for your selected options.")
+            print_log("Please enter a single numerical value for your selected option.")
         except Exception as e:
             print_log(str(e))
         else:
@@ -279,7 +279,7 @@ def volunteer_ID_req_check(volunteer_df, select_today):
                 has_conflict = check_today_shift_conflict(
                     get_current_shift_time(), vol_shift)
                 if has_conflict == True:
-                    return 0
+                    return -1
             if vol_ID not in volunteer_list:
                 raise exc.volunteer_id_out_of_range
         except exc.volunteer_id_out_of_range:
