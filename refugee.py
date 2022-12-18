@@ -83,9 +83,9 @@ class Refugee:
         self.ref_row.extend([self.assigned_camp])
         print(
             u'\u2705'+f"Refugee is successfully assigned to the camp number {self.assigned_camp}.\n")
-        print(u"\U0001F538"+"Please see the camp detail below:\n")
-        print_table(selc_camp_df.columns,
-                    selc_camp_df.to_numpy().tolist(), (25, 25, 70, 70, 70, 40))
+        # print(u"\U0001F538"+"Please see the camp detail below:\n")
+        # print_table(selc_camp_df.columns,
+        #             selc_camp_df.to_numpy().tolist(), (25, 25, 70, 70, 70, 40))
         return self.assigned_camp
 
     def refugee_illnesses(self):
