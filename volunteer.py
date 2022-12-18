@@ -441,9 +441,9 @@ class Volunteer:
 
         print("\n" + u"\u2757" + "Note: ")
         print(u"\U0001F538", u"\u2716" + " = No request")
-        print(u"\U0001F538", "Morning Shift " + "= 06:00 - 14:00")
-        print(u"\U0001F538", "Afternoon Shift " + "= 14:00 - 22:00")
-        print(u"\U0001F538", "Night Shift " + "= 22:00 - 06:00\n")
+        print(u"\U0001F538", "Morning Shift " + "= 24:00 - 10:00")
+        print(u"\U0001F538", "Afternoon Shift " + "= 10:00 - 18:00")
+        print(u"\U0001F538", "Night Shift " + "= 18:00 - 24:00\n")
 
     def close_emergency_refugee_file(self):
         conn = connect_db()
@@ -628,8 +628,8 @@ class Volunteer:
         d.append(display_schedule(ID, 'Saturday', date_saturday))
         d.append(display_schedule(ID, 'Sunday', date_sunday))
 
-        print("{:<15} {:<15} {:<15} {:<15}".format('Day', 'Morning(06:00 - 14:00)',
-                                                   'Afternoon(14:00 - 22:00)', 'Night(22:00 - 06:00)'))
+        print("{:<15} {:<15} {:<15} {:<15}".format('Day', 'Morning(24:00 - 10:00)',
+                                                   'Afternoon(10:00 - 18:00)', 'Night(18:00 - 24:00)'))
         for v in d:
             day, morning, afternoon, night = v
             print("{:<15} {:<22} {:<24} {:<15}".format(

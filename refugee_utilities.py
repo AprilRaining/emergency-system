@@ -21,18 +21,19 @@ def get_date_list():
 def get_current_shift_time():
     shift = ''
     now = datetime.datetime.now()
-    morning_shift_1 = now.replace(hour=6, minute=0, second=0, microsecond=0)
-    morning_shift_2 = now.replace(hour=14, minute=0, second=0, microsecond=0)
-    afternoon_shift_1 = now.replace(hour=14, minute=0, second=0, microsecond=0)
-    afternoon_shift_2 =now.replace(hour=22, minute=0, second=0, microsecond=0)
-    night_shift_1 = now.replace(hour=22, minute=0, second=0, microsecond=0)
-    night_shift_2 = now.replace(hour=6, minute=0, second=0, microsecond=0)
+    morning_shift_1 = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    morning_shift_2 = now.replace(hour=10, minute=0, second=0, microsecond=0)
+    afternoon_shift_1 = now.replace(hour=10, minute=0, second=0, microsecond=0)
+    afternoon_shift_2 =now.replace(hour=18, minute=0, second=0, microsecond=0)
+    night_shift_1 = now.replace(hour=18, minute=0, second=0, microsecond=0)
+    night_shift_2 = now.replace(hour=23, minute=59, second=59, microsecond=0)
     if now >= morning_shift_1 and now < morning_shift_2:
         shift = "Morning"
     elif now >= afternoon_shift_1 and now < afternoon_shift_2:
         shift = "Afternoon"
-    elif now >= night_shift_1 and now < night_shift_2:
+    elif now >= night_shift_1 and now <= night_shift_2:
         shift = "Night"
+    # print(shift)
     return shift
 
 def check_today_shift_conflict(current_shift,volunteer_shift):

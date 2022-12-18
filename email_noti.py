@@ -17,7 +17,7 @@ def email_noti(receiver_name='',receiver_email='',request_list='',ref_ID=0,purpo
         req_coll = []
         for ind,val in enumerate(request_list):
             req_coll.append(f"{ind+1}. "+f"{val['task']} with volunteer ID {val['volunteer']} on {val['date']} during {val['workshift']} period")
-        req_statement = "\n".join(req_coll)
+        req_statement = "\n  ".join(req_coll)
 
         body = f"""
         Dear {receiver_name},

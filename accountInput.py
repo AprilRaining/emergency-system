@@ -52,9 +52,9 @@ class AccountCreation:
               f"Camps in the plan ID {planID}:")
         TableDisplayer.camp(get_linked_IDs('camp', 'plan', planID))
         newCampID = Get.option_in_list(get_linked_IDs('camp', 'plan', planID),
-                                       u"\U0001F539" + "Pleas choose a camp by campID:")
-        print(
-            f"\033[91m Camp {newCampID} is now full.")
+                                       u"\U0001F539" + "Pleas select a camp for the the volunteer by campID:")
+        # print(
+        #     f"\033[91m Camp {newCampID} is now full.\033[00m")
         with db.connect('emergency_system.db') as conn:
             c = conn.cursor()
             capacity = c.execute(
@@ -70,7 +70,7 @@ class AccountCreation:
             try:
                 username = input(u"\U0001F539" + 'Enter the username:')
                 if username == "":
-                    print("The username can not be empty, Please input again:")
+                    warn("The username can not be empty, Please input again:")
                     continue
                 user_name = (username,)
                 with db.connect('emergency_system.db') as conn:
@@ -189,8 +189,8 @@ class AccountCreation:
             try:
                 work_shift = input(
                     "\n" + u"\U0001F539" +
-                    "What will be a work shift for the volunteer? \n 1. Morning (06:00-14:00) \n "
-                    "2. Afternoon (14:00-22:00) \n 3. Night (22:00-06:00) \n--> ")
+                    "What will be a work shift for the volunteer? \n 1. Morning (24:00-10:00) \n "
+                    "2. Afternoon (10:00-18:00) \n 3. Night (18:00-24:00) \n--> ")
                 if work_shift == '1':
                     shift = 'Morning'
                 elif work_shift == '2':

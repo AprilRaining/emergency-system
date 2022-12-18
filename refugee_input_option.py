@@ -62,9 +62,9 @@ def refugee_input_option(name):
             )
         case 'Shift Time':
             return (
-                '[ 1.] Morning (06:00 - 14:00)\n'
-                '[ 2.] Afternoon (14:00 - 22:00)\n'
-                '[ 3.] Night (22:00 - 06:00)'
+                '[ 1.] Morning (24:00 - 10:00)\n'
+                '[ 2.] Afternoon (10:00 - 18:00)\n'
+                '[ 3.] Night (18:00 - 24:00)'
             )
         case 'Edit':
             return (
