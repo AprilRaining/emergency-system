@@ -9,7 +9,7 @@ def admin_login():
     while True:
         print("--------------------------------------------------------------------------")
         prYellow("\t\t\t\tADMIN LOGIN\n")
-        password = Get.text(u"\U0001F539" + "Input the password of admin:")
+        password = Get.number(u"\U0001F539" + "Input the password of admin:")
         if str(password) == "12345":
             print("\n", u'\u2705', 'Welcome to the system, Admin!.')
             prYellow("\nPlease select your options below: \n")

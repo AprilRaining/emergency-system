@@ -15,12 +15,11 @@ from TableDisplayer import *
 import re
 
 
-
 def refugee_existence_check(conn):
     while True:
         try:
-            firstname = input(u"\U0001F539"+"Enter refugee's firstname: ")
-            lastname = input(u"\U0001F539"+"Enter refugee's lastname: ")
+            firstname = Get.string(u"\U0001F539"+"Enter refugee's firstname: ")
+            lastname = Get.string(u"\U0001F539"+"Enter refugee's lastname: ")
             get_ref = f'''SELECT fName,lName FROM refugee WHERE fName = "{firstname}" AND lName = "{lastname}"'''
             pd_query = pd.read_sql_query(get_ref, conn)
             df_row = pd.DataFrame(pd_query, columns=["firstname", "lastname"])
@@ -49,40 +48,46 @@ def refugee_existence_check(conn):
 
 def date_format_check(purpose, limit_start='', limit_end=''):
     while True:
-        try:
-            input_date = Get.data(f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
-            bd_val = input_date.split("-")
-            if len(bd_val) != 3:
-                raise exc.wrong_birthdate_format
-            if (bd_val[2]) not in [format(x, '02d') for x in range(1, 32)]:
-                raise exc.day_out_of_range
-            if (bd_val[1]) not in [format(x, '02d') for x in range(1, 13)]:
-                raise exc.month_out_of_range
-            if limit_end != '' and limit_end != '':
-                di, mi, yi = [int(x) for x in input_date.split('-')]
-                date_inpt = datetime.date(di, mi, yi)
-                ds, ms, ys = [int(x) for x in limit_start.split('-')]
-                date_start = datetime.date(ds, ms, ys)
-                de, me, ye = [int(x) for x in limit_end.split('-')]
-                date_end = datetime.date(de, me, ye)
-                if (date_inpt < date_start or date_inpt > date_end):
-                    raise exc.date_not_available
-        except ValueError:
-            print_log("Incorrect date format, should be YYYY-MM-DD")
-        except exc.wrong_birthdate_format:
-            print_log(
-                "Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20")
-        except exc.day_out_of_range:
-            print_log("Please input the day between 1 and 31")
-        except exc.month_out_of_range:
-            print_log("Please input the month between 1 and 12")
-        except exc.date_not_available:
-            print_log(
-                "You can only select the date from today till the last date of this week!")
-        except Exception as e:
-            print_log(str(e))
-        else:
-            return input_date
+        # try:
+        while True:
+            input_date = Get.data(
+                f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
+            if input_date >= datetime.date.today():
+                warn('Invaild Birthday Date!')
+            else:
+                return input_date
+        #     bd_val = input_date.split("-")
+        #     if len(bd_val) != 3:
+        #         raise exc.wrong_birthdate_format
+        #     if (bd_val[2]) not in [format(x, '02d') for x in range(1, 32)]:
+        #         raise exc.day_out_of_range
+        #     if (bd_val[1]) not in [format(x, '02d') for x in range(1, 13)]:
+        #         raise exc.month_out_of_range
+        #     if limit_end != '' and limit_end != '':
+        #         di, mi, yi = [int(x) for x in input_date.split('-')]
+        #         date_inpt = datetime.date(di, mi, yi)
+        #         ds, ms, ys = [int(x) for x in limit_start.split('-')]
+        #         date_start = datetime.date(ds, ms, ys)
+        #         de, me, ye = [int(x) for x in limit_end.split('-')]
+        #         date_end = datetime.date(de, me, ye)
+        #         if (date_inpt < date_start or date_inpt > date_end):
+        #             raise exc.date_not_available
+        # except ValueError:
+        #     print_log("Incorrect date format, should be YYYY-MM-DD")
+        # except exc.wrong_birthdate_format:
+        #     print_log(
+        #         "Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20")
+        # except exc.day_out_of_range:
+        #     print_log("Please input the day between 1 and 31")
+        # except exc.month_out_of_range:
+        #     print_log("Please input the month between 1 and 12")
+        # except exc.date_not_available:
+        #     print_log(
+        #         "You can only select the date from today till the last date of this week!")
+        # except Exception as e:
+        #     print_log(str(e))
+        # else:
+        # return input_date
 
 
 def email_format_check():

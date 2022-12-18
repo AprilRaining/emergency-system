@@ -26,7 +26,7 @@ class PlanInput:
     @staticmethod
     def description():
         prCyan('\nPlan Description:')
-        return Get.string(u"\U0001F539" + 'Please input the description of the emergency plan: ')
+        return Get.text(u"\U0001F539" + 'Please input the description of the emergency plan: ')
 
     @staticmethod
     def area():

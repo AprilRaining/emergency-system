@@ -26,6 +26,17 @@ class Get:
             else:
                 return n
 
+    def number(hint: str):
+        while True:
+            n = input(hint)
+            if n:
+                return n
+            else:
+                if not re.match(r'[0-9]+$', n):
+                    warn('Numbers ONLY!!!')
+                else:
+                    return n
+
     def string(hint: str, isAllowEmpty=False):
         while True:
             n = input(hint)
@@ -46,10 +57,13 @@ class Get:
     def text(hint: str):
         while True:
             n = input(hint)
-            if re.match(r'\'\"', n):
-                warn('No Special Characters Allowed!!!')
-            else:
+            if n:
                 return n
+            else:
+                if re.match(r'\'\"', n):
+                    warn('No Special Characters Allowed!!!')
+                else:
+                    return n
 
     @staticmethod
     def data(hint: str):
@@ -58,9 +72,9 @@ class Get:
                 date = datetime.datetime.strptime(
                     input(hint), '%Y-%m-%d').date()
             except InvalidInput as e:
-                warn(e)
+                warn(str(e))
             except ValueError as e:
-                warn(e)
+                warn(str(e))
             else:
                 return date
 
