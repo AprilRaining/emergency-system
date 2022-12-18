@@ -10,13 +10,14 @@ def admin_login():
     while True:
         print("--------------------------------------------------------------------------")
         prYellow("\t\t\t\tADMIN LOGIN\n")
+        username = Get.string(u"\U0001F539" + "Input the username of admin:")
         password = Get.string(u"\U0001F539" + "Input the password of admin:")
-        if str(password) == "111":
+        if str(username) == "admin" and str(password) == "111":
             print("\n", u'\u2705', 'Welcome to the system, Admin!.')
             prYellow("\nPlease select your options below: \n")
             return
         else:
-            print("Wrong password! Check your input please.")
+            warn("Wrong username or password! Check your input please.")
 
 
 def volunteer_login():
