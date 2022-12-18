@@ -29,7 +29,7 @@ class Get:
     def number(hint: str):
         while True:
             n = input(hint)
-            if n:
+            if not n:
                 return n
             else:
                 if not re.match(r'[0-9]+$', n):
@@ -57,7 +57,7 @@ class Get:
     def text(hint: str):
         while True:
             n = input(hint)
-            if n:
+            if not n:
                 return n
             else:
                 if re.match(r'\'\"', n):

@@ -92,7 +92,7 @@ def date_format_check(purpose, limit_start='', limit_end=''):
 def email_format_check():
     while True:
         try:
-            email = input(u"\U0001F539"+"Enter refugee's email (if any): ")
+            email = Get.text(u"\U0001F539"+"Enter refugee's email (if any): ")
             if email == "":
                 return email
             elif "@" not in email or "." not in email:
@@ -160,8 +160,8 @@ def refugee_validity_check_by_ID(cond, refugee_df, conn):
             print(options)
             opt = list(opt_dict.keys())[
                 int(input(u"\U0001F539"+'Please select how you want to search: '))]
-            keyword = input("\n"+u"\U0001F539" +
-                            f"Please enter the {opt} keyword: ")
+            keyword = Get.string("\n"+u"\U0001F539" +
+                                 f"Please enter the {opt} keyword: ")
             refugee_list = search_refugee(opt_dict[opt], keyword, conn)
             if refugee_list.empty:
                 raise exc.refugee_id_out_of_range

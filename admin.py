@@ -201,15 +201,15 @@ class Admin:
                     input_second = opt_second.values[opt - 1]
                     if input_second in show_dict.keys():
                         if input_second == "First Name":
-                            show_dict["First Name"] = input(
+                            show_dict["First Name"] = Get.string(
                                 u"\U0001F539" + 'Enter the first name:')
                         elif input_second == "Last Name":
-                            show_dict["Last Name"] = input(
+                            show_dict["Last Name"] = Get.string(
                                 u"\U0001F539" + 'Enter the last name:')
                         elif input_second == "Username":
                             show_dict["Username"] = AccountCreation.get_username()
                         elif input_second == "Password":
-                            show_dict["Password"] = input(
+                            show_dict["Password"] = Get.string(
                                 u"\U0001F539" + 'Enter the password:')
                         elif input_second == "CampID":
                             show_dict["CampID"] = AccountCreation.get_camp_id()
