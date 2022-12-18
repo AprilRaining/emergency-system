@@ -27,7 +27,7 @@ class Refugee:
     def refugee_birthdate(self):
         print("-----------------------BIRTHDAY-------------------------\n")
         # enter birthdate + validation
-        self.birthdate = date_format_check("birthdate")
+        self.birthdate = date_format_check("birth")
         self.ref_row.extend([self.birthdate])
         print("\n")
 
@@ -83,9 +83,9 @@ class Refugee:
         self.ref_row.extend([self.assigned_camp])
         print(
             u'\u2705'+f"Refugee is successfully assigned to the camp number {self.assigned_camp}.\n")
-        print(u"\U0001F538"+"Please see the camp detail below:\n")
-        print_table(selc_camp_df.columns,
-                    selc_camp_df.to_numpy().tolist(), (25, 25, 70, 70, 70, 40))
+        # print(u"\U0001F538"+"Please see the camp detail below:\n")
+        # print_table(selc_camp_df.columns,
+        #             selc_camp_df.to_numpy().tolist(), (25, 25, 70, 70, 70, 40))
         return self.assigned_camp
 
     def refugee_illnesses(self):
@@ -267,8 +267,9 @@ class Refugee:
                         # print("\n"+u"\u2757"+ "Note: During this request addition, if you have added new requests prior to this\nand haven't gotten an email confirmation, they will be lost.\nPlease go to 'Edit Refugee Information.' menu and select 'Request' to add a request again!")
                     print(
                         u"\U0001F539"+"Select your request's day for this week from options above")
+         
                     self.req_date = date_format_check(
-                        "request", today_date, dates[-1])
+                        "request", str(today_date), str(dates[-1]))
                     select_today = True if self.req_date == today_date else False
                     d = pd.Timestamp(self.req_date)
                     self.day_name = d.day_name()
@@ -319,7 +320,7 @@ class Refugee:
                                 # list : vol ID to help with multiple request case
                                 self.vol_ID = volunteer_ID_req_check(
                                     vol_df, select_today)
-                                if self.vol_ID == 0:
+                                if self.vol_ID == -1:
                                     warn(
                                         "You cannot make this request because the work shift of this volunteer has already passed for today.")
                                     warn("Request process must be ended.")
@@ -381,16 +382,15 @@ class Refugee:
             df_task = pd.DataFrame(pd_task, columns=[
                                    "taskID", "refugeeID", "volunteerID", "taskInfo", "week", "requestDate", "workShift", "status"])
             print(
-                "\nPlease see details below for the existing tasks assoiated with refugee's request:\n")
+               u"\U0001F531"+"Please see details below for the existing tasks assoiated with refugee's request:\n")
             print_table(df_task.columns, df_task.to_numpy().tolist(),
                         (20, 20, 20, 40, 40, 40, 40, 40))
             #  allow only 1 edition
             task_edit = task_ID_input_check(df_task.loc[:, "taskID"].values)
             task_edit_arr = []
             task_edit_arr.append(task_edit)
-            print("edit_task", task_edit_arr)
-            # loop through selected task ID to edit
-            task_count = 1
+            # print("edit_task", task_edit_arr)
+            # only 1 task now
             for t in task_edit_arr:
                 vol_id = df_task.loc[df_task["taskID"]
                                      == int(t), "volunteerID"].values[0]
@@ -398,19 +398,29 @@ class Refugee:
                     t), "requestDate"].values[0]
                 old_start_day = pd.Timestamp(old_start_date).day_name()
                 print("\n" +
-                      u"\U0001F531"+f"\nINSTRUCTION: You are allowed to change only request's date and work shift related to volunteer ID: {vol_id}.\n")
+                      u"\U0001F531"+f"INSTRUCTION: You are allowed to change only the request's date and shift time. The new volunteer will be assigned accordingly.")
                 print(f"\n-----EDITING TASK ID: [{t}]-----\n")
                 while True:
                     # show  volunteer schedule
                     print(
                         u"\U0001F531"+"[Hint]Please see the volunteer schedule below for your information.\n")
-                    if task_count == 1:
-                        df_vol_sch = get_volunteer_schedule_df(
-                            conn=self.conn, volunteer_ID=vol_id)
-                    print_table(df_vol_sch.columns, df_vol_sch.to_numpy(
-                    ).tolist(), (18, 25, 25, 16, 20, 30, 30, 30, 30, 30, 30, 30))
-                    print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
-                          " = Unavailable,"+u"\U0001F4D1"+" = Booked \n")
+                    self.assigned_camp = int(
+                                refugee_df.loc[refugee_df["refugeeID"] == req_edit_id, "campID"].values[0])
+                    df_vol_sch = get_volunteer_schedule_df(
+                            self.conn, self.assigned_camp)
+                    if df_vol_sch.empty:
+                        # for testing
+                        warn(
+                            "No volunteer in the camp! Database might be altered manually.")
+                        return
+                    else:
+                        print_table(df_vol_sch.columns, df_vol_sch.to_numpy(
+                        ).tolist(), (18, 25, 25, 16, 20, 30, 30, 30, 30, 30, 30, 30))
+                        print("\nNote:"+u"\U00002705"+" = Free, "+u"\U0000274C" +
+                              " = Unavailable, "+u"\U0001F4D1"+" = Booked \n")
+                    print(
+                        "---------------------------------------------------------------------------\n")
+                    
                     # select new date
                     dates = get_date_list()
                     c = 1
@@ -429,23 +439,15 @@ class Refugee:
                         if u'\u2705' in vol_row_info[len(vol_row_info)-(c-1):len(vol_row_info)]:
                             has_free_vol = True
                     if has_free_vol == False:
-                        warn("You cannot change your request date because the volunteers are fully booked from today to the end of this week.\nPlease try again next week!")
-                        print("\n"+u"\u2757" + "Note: If you have just edited any requests prior to this, the change will be lost.\nPlease go to 'Edit Refugee Information.' menu and select 'Request' to edit again!")
+                        warn("You cannot change your request date because all volunteers are fully booked from today to the end of this week.\nPlease book new request(S) next week!")
                         return
                     print(
                         "\n"+u"\U0001F539"+"Please select the new request's date from options above: ")
+            
                     self.req_date = date_format_check(
-                        "request", today_date, dates[-1])
+                        "request", str(today_date), str(dates[-1]))
                     select_today = True if self.req_date == today_date else False
-                    current_time = get_current_shift_time()
-                    vol_workshift = df_vol_sch.loc[:, "workShift"].values[0]
-                    has_conf = check_today_shift_conflict(
-                        current_time, vol_workshift)
-                    if select_today and has_conf:
-                        warn(
-                            "You cannot change your request date today because the work shift of your volunteer has already passed.")
-                        print("\n"+u"\u2757" + "Note: If you have just edited any requests prior to this, the change will be lost.\nPlease go to 'Edit Refugee Information.' menu and select 'Request' to edit again!")
-                        return
+
                     d = pd.Timestamp(self.req_date)
                     self.day_name = d.day_name()
                     print(
@@ -457,10 +459,9 @@ class Refugee:
                     shift_inpt = single_input_check(shift_opt)
                     shift_dict = input_matching("Shift Time")
                     self.req_shift = shift_dict[int(shift_inpt)]
-                    print(
-                        "--------------------------------------------------------------------------")
+                    print("\n")
                     # check if volunteer is available
-                    vol_query = f'''SELECT volunteerID,fName,lName,workShift FROM volunteer WHERE volunteerID = {vol_id} AND workShift = "{self.req_shift}" AND {self.day_name} = 0'''
+                    vol_query = f'''SELECT volunteerID,campID,fName,lName,workShift FROM volunteer WHERE campID = {self.assigned_camp} AND workShift = "{self.req_shift}" AND {self.day_name} = 0'''
                     pd_vol = pd.read_sql_query(vol_query, self.conn)
                     vol_df = pd.DataFrame(
                         pd_vol, columns=['volunteerID', 'fName', 'lName', 'workShift'])
@@ -468,29 +469,38 @@ class Refugee:
                         warn(
                             "The volunteer is not available on the new selected date and shift!")
                     else:
+                        print(u"\U0001F538"+"Please see the list of volunteers that match with your new selected date and time below:\n")
+                        print_table(vol_df.columns, vol_df.to_numpy(
+                        ).tolist(), (25,40,40,40))
+                        # select new volunteer
+                        new_vol_ID = volunteer_ID_req_check(
+                                    vol_df, select_today)
+                        if new_vol_ID == -1:
+                            warn("You cannot make this request because the work shift of this volunteer has already passed for today.")
+                            warn("Request process must be ended.")
+                            return
                         # volunteer is available: update data in task table and volunteer table
                         cur = self.conn.cursor()
                         week_num = get_week_number(self.req_date)
-                        task_upd = f'''UPDATE task SET week={week_num}, requestDate = "{self.req_date}", workShift = "{self.req_shift}" WHERE taskID = {int(t)}'''
+                        prGreen("...........Updating Refugee's Request Schedule.............")
+                        task_upd = f'''UPDATE task SET volunteerID = {new_vol_ID},week={week_num},requestDate = "{self.req_date}",workShift = "{self.req_shift}" WHERE taskID = {int(t)}'''
                         cur.execute(task_upd)
                         self.conn.commit()
-                        time.sleep(1.0)
+                        time.sleep(1)
                         # update old day to 0 and new day to task ID
-                        vol_upd = f'''UPDATE volunteer SET {old_start_day} = 0, {self.day_name} = {int(t)} WHERE volunteerID = {vol_id}'''
+                        vol_upd = f'''UPDATE volunteer SET {old_start_day} = 0 WHERE volunteerID = {vol_id}'''
                         cur.execute(vol_upd)
                         self.conn.commit()
                         time.sleep(0.6)
-                        print(
-                            u'\u2705'+f"You have made change to refugee's request date and work shift of task ID: {int(t)}.")
-                        print(
-                            "--------------------------------------------------------------------------\n")
-                        # alter dataframe display
-                        df_vol_sch.loc[df_vol_sch["volunteerID"] ==
-                                       vol_id, self.day_name] = u"\U0001F4D1"
-                        df_vol_sch.loc[df_vol_sch["volunteerID"] ==
-                                       vol_id, old_start_day] = u'\u2705'
+                        # assign new vol
+                        vol_upd = f'''UPDATE volunteer SET {self.day_name} = {int(t)} WHERE volunteerID = {new_vol_ID}'''
+                        cur.execute(vol_upd)
+                        self.conn.commit()
+                        time.sleep(0.4)
+       
+                        print("\n"+
+                            u'\u2705'+f"You have successfully made change to the task ID: {int(t)}.")
                         break
-                task_count += 1
 
     def add_refugee_to_db(self):
         # add status

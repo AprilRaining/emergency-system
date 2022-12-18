@@ -48,7 +48,7 @@ def check_today_shift_conflict(current_shift,volunteer_shift):
 
 def get_week_number(date):
     # split date
-    y, m, d = tuple(date.split("-"))
+    y, m, d = tuple(str(date).split("-"))
     # get day of week as an integer
     week_num = datetime.date(int(y), int(m), int(d)).isocalendar()[1]
     return week_num
@@ -91,10 +91,11 @@ def task_ref_vol_db(conn, req_list, refugeeID, refugee_df, purpose):
             week_num = get_week_number(req["date"])
             task_insert = (refugeeID, req["volunteer"], req["task"], week_num,
                            req["date"], req["workshift"],"active")
+
             ins_task_query = f'''INSERT INTO task(refugeeID,volunteerID,taskInfo,week,requestDate,workShift,status) VALUES {task_insert}'''
             cur.execute(ins_task_query)
             conn.commit()
-            time.sleep(2.8)
+            time.sleep(2.3)
             task_id.append(cur.lastrowid)
             # update volunteer available day by task_ID
             upd_vol_query = f'''UPDATE volunteer SET "{req["day"]}" = {cur.lastrowid} WHERE volunteerID = {req["volunteer"]}'''
