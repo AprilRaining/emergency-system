@@ -387,16 +387,16 @@ class Volunteer:
         refugee_df = get_refugee_dataframe(conn)
         ref_df_by_id = refugee_validity_check_by_ID("edit", refugee_df, conn)
         print("--------------------------------------------------------------------------")
-        print(u"\U0001F539"+"Select a database field that you would like to edit: ")
-        edit_opt = refugee_input_option("Edit")      
+        print(u"\U0001F539" + "Select a database field that you would like to edit: ")
+        edit_opt = refugee_input_option("Edit")
         edit_selected = single_input_check(edit_opt)
         # if edit_selected != '13':
         prCyan(
-                "\n-------------------------------INFO EDITION-------------------------------\n")
+            "\n-------------------------------INFO EDITION-------------------------------\n")
         edited_dict = input_matching("Edit")
         # allow single selection
         edited_fields = refugee_info_edit(
-                int(edit_selected), ref_df_by_id, refugee_df, conn)
+            int(edit_selected), ref_df_by_id, refugee_df, conn)
         if edited_fields == 0:
             print("--------------------------------------------------------------------------")
             print("The refugee's information edition is ended.\n")
@@ -406,7 +406,7 @@ class Volunteer:
             for i in range(len(col_name)):
                 # update info in database
                 update_refdb_attr(conn, ref_df_by_id,
-                                      col_name[i], edited_fields[i])
+                                  col_name[i], edited_fields[i])
             print("--------------------------------------------------------------------------")
             print(u'\u2705' + "The refugee's information edition has ended.\n")
 
@@ -463,9 +463,10 @@ class Volunteer:
         if ref_status == "inactive":
             warn("Refugee's status is currently inactive. There's no need to deactivate an account again!")
         else:
-            prLightGray("\n"+u"\u2757"+"Note: Once you deactivate, all requests with volunteers will be cleared out from the schedule.")
+            prLightGray(
+                "\n" + u"\u2757" + "Note: Once you deactivate, all requests with volunteers will be cleared out from the schedule.")
             confirm_del = yn_valid(
-                u"\U0001F539"+"Are you sure you want to deactivate this refugee account?(Yes/No): ")
+                u"\U0001F539" + "Are you sure you want to deactivate this refugee account?(Yes/No): ")
             if confirm_del == "Yes":
                 if ref_req != "0":
                     # task
@@ -480,8 +481,8 @@ class Volunteer:
                 update_refdb_attr(conn, ref_df_by_id, "campID", "0")
                 print(
                     "--------------------------------------------------------------------------")
-                print(u'\u2705'+"The refugee's account is successfully deactivated.")
-                print("\n"+u"\u2757"+"Note: You can activate this account anytime.")
+                print(u'\u2705' + "The refugee's account is successfully deactivated.")
+                print("\n" + u"\u2757" + "Note: You can activate this account anytime.")
             else:
                 print(
                     "--------------------------------------------------------------------------")
@@ -508,7 +509,7 @@ class Volunteer:
             update_refdb_attr(conn, ref_df_by_id, "campID", new_camp_ID)
             print(
                 "--------------------------------------------------------------------------")
-            print(u'\u2705'+"The refugee's information is successfully activated.\n")
+            print(u'\u2705' + "The refugee's information is successfully activated.\n")
 
         # if self.system_exit_check():
         #     return
@@ -525,9 +526,9 @@ class Volunteer:
         ref_req = refugee_df.loc[refugee_df["refugeeID"]
                                  == ref_df_by_id, "request"].values[0]
         prLightGray(
-            "\n"+u"\u2757"+"Note: Once you deactivate, all requests with volunteers will be cleared out from the schedule.")
+            "\n" + u"\u2757" + "Note: Once you deactivate, all requests with volunteers will be cleared out from the schedule.")
         confirm_del = yn_valid(
-            u"\U0001F539"+"Are you sure you want to delete this refugee from the system?(Yes/No): ")
+            u"\U0001F539" + "Are you sure you want to delete this refugee from the system?(Yes/No): ")
         if confirm_del == "Yes":
             if ref_req != "0":
                 # task
@@ -547,7 +548,7 @@ class Volunteer:
             print(
                 "--------------------------------------------------------------------------")
             print(
-                u'\u2705'+f"The refugee with ID {ref_df_by_id}'s information is successfully deleted.\n")
+                u'\u2705' + f"The refugee with ID {ref_df_by_id}'s information is successfully deleted.\n")
         else:
             print(
                 "--------------------------------------------------------------------------")
@@ -573,23 +574,18 @@ class Volunteer:
             sunday = saturday + one_day
 
             return datetime.datetime.strftime(monday, "%Y-%m-%d"), datetime.datetime.strftime(tuesday, "%Y-%m-%d"), \
-                datetime.datetime.strftime(wednesday, "%Y-%m-%d"), datetime.datetime.strftime(thursday, "%Y-%m-%d"), \
-                datetime.datetime.strftime(friday, "%Y-%m-%d"), datetime.datetime.strftime(saturday, "%Y-%m-%d"), \
-                datetime.datetime.strftime(sunday, "%Y-%m-%d")
-
-        day_schedule = []
-        # valid_vol = False
+                   datetime.datetime.strftime(wednesday, "%Y-%m-%d"), datetime.datetime.strftime(thursday, "%Y-%m-%d"), \
+                   datetime.datetime.strftime(friday, "%Y-%m-%d"), datetime.datetime.strftime(saturday, "%Y-%m-%d"), \
+                   datetime.datetime.strftime(sunday, "%Y-%m-%d")
 
         def display_schedule(volunteer, day, date):
             try:
                 with db.connect('emergency_system.db') as conn:
                     c = conn.cursor()
-                    c.execute(f'''SELECT * FROM task WHERE volunteerID = (?) and requestDate = (?)''',
-                              (volunteer, date))
-                    # nonlocal valid_vol
+                    query = f"SELECT * FROM task WHERE volunteerID = {volunteer} and requestDate = '{date}' and status = 'active'"
+                    c.execute(query)
+
                     task = c.fetchall()
-                    # if task != []:
-                    #     valid_vol = True
 
                     task_sch = []
                     display_info = []
@@ -635,13 +631,7 @@ class Volunteer:
             print("{:<15} {:<22} {:<24} {:<15}".format(
                 day, morning, afternoon, night))
 
-        print("\n"+u"\u2757"+"Note: "+u"\u2716"+" = No task")
+        print("\n" + u"\u2757" + "Note: " + u"\u2716" + " = No task")
         print("\tThe number in [] is the refugeeID\n")
 
 
-# v1 = Volunteer()
-# v1.create_emergency_refugee_file()
-# v1.edit_emergency_refugee_file()
-# v1.delete_emergency_refugee_file()
-# v1.close_emergency_refugee_file()
-# v1.reopen_emergency_refugee_file()
