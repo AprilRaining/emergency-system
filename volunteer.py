@@ -102,7 +102,8 @@ class Volunteer:
                 break
         first_name = Get.string(
             u"\U0001F539" + "Please input your new first name: ")
-        last_name = Get.string(u"\U0001F539" + "Please input your new last name: ")
+        last_name = Get.string(
+            u"\U0001F539" + "Please input your new last name: ")
         self.last_name = last_name
         self.first_name = first_name
         query = f'''UPDATE volunteer SET fName='{first_name}',lName='{last_name}' WHERE volunteerID = {volunteer_input_id}'''
@@ -299,8 +300,10 @@ class Volunteer:
                     schedule[weekday[day]] = f"taskID:{flag}"
             schedule["work_period"] = info[-2]
             info_df = pd.DataFrame(schedule, index=[0])
-            print("\n", u"\U0001F538", f"Your current availability for this week is:  \n")
-            print_table(info_df.columns, info_df.to_numpy().tolist(), (30, 30, 30, 30, 30, 30, 30, 30))
+            print("\n", u"\U0001F538",
+                  f"Your current availability for this week is:  \n")
+            print_table(info_df.columns, info_df.to_numpy().tolist(),
+                        (30, 30, 30, 30, 30, 30, 30, 30))
 
             preference = {}
             for day, flag in json.loads(info[-1]).items():
@@ -313,8 +316,10 @@ class Volunteer:
                 else:
                     preference[weekday[day]] = f"taskID:{flag}"
             pre_df = pd.DataFrame(preference, index=[0])
-            print("\n" + u"\U0001F539" + f"Your default availability when first registered is: \n")
-            print_table(pre_df.columns, pre_df.to_numpy().tolist(), (30, 30, 30, 30, 30, 30, 30, 30))
+            print("\n" + u"\U0001F539" +
+                  f"Your default availability when first registered is: \n")
+            print_table(pre_df.columns, pre_df.to_numpy().tolist(),
+                        (30, 30, 30, 30, 30, 30, 30, 30))
         except:
             print_log("Wrong connection to the database.")
         pass
@@ -390,7 +395,6 @@ class Volunteer:
         print(u"\U0001F539" + "Select a database field that you would like to edit: ")
         edit_opt = refugee_input_option("Edit")
         edit_selected = single_input_check(edit_opt)
-        # if edit_selected != '13':
         prCyan(
             "\n-------------------------------INFO EDITION-------------------------------\n")
         edited_dict = input_matching("Edit")
@@ -398,7 +402,8 @@ class Volunteer:
         edited_fields = refugee_info_edit(
             int(edit_selected), ref_df_by_id, refugee_df, conn)
         if edited_fields == 0:
-            print("--------------------------------------------------------------------------")
+            print(
+                "--------------------------------------------------------------------------")
             print("The refugee's information edition is ended.\n")
         else:
             col_name = edited_dict[int(edit_selected)]
@@ -407,7 +412,8 @@ class Volunteer:
                 # update info in database
                 update_refdb_attr(conn, ref_df_by_id,
                                   col_name[i], edited_fields[i])
-            print("--------------------------------------------------------------------------")
+            print(
+                "--------------------------------------------------------------------------")
             print(u'\u2705' + "The refugee's information edition has ended.\n")
 
     def view_refugee_req_schedule(self):
@@ -482,7 +488,8 @@ class Volunteer:
                 print(
                     "--------------------------------------------------------------------------")
                 print(u'\u2705' + "The refugee's account is successfully deactivated.")
-                print("\n" + u"\u2757" + "Note: You can activate this account anytime.")
+                print("\n" + u"\u2757" +
+                      "Note: You can activate this account anytime.")
             else:
                 print(
                     "--------------------------------------------------------------------------")
@@ -574,9 +581,9 @@ class Volunteer:
             sunday = saturday + one_day
 
             return datetime.datetime.strftime(monday, "%Y-%m-%d"), datetime.datetime.strftime(tuesday, "%Y-%m-%d"), \
-                   datetime.datetime.strftime(wednesday, "%Y-%m-%d"), datetime.datetime.strftime(thursday, "%Y-%m-%d"), \
-                   datetime.datetime.strftime(friday, "%Y-%m-%d"), datetime.datetime.strftime(saturday, "%Y-%m-%d"), \
-                   datetime.datetime.strftime(sunday, "%Y-%m-%d")
+                datetime.datetime.strftime(wednesday, "%Y-%m-%d"), datetime.datetime.strftime(thursday, "%Y-%m-%d"), \
+                datetime.datetime.strftime(friday, "%Y-%m-%d"), datetime.datetime.strftime(saturday, "%Y-%m-%d"), \
+                datetime.datetime.strftime(sunday, "%Y-%m-%d")
 
         def display_schedule(volunteer, day, date):
             try:
@@ -633,5 +640,3 @@ class Volunteer:
 
         print("\n" + u"\u2757" + "Note: " + u"\u2716" + " = No task")
         print("\tThe number in [] is the refugeeID\n")
-
-

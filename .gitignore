@@ -4,3 +4,4 @@ __pycache__/
 temp/
 .vscode/
 emergency_sys.log
+user_session.json
