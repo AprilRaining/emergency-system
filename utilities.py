@@ -29,13 +29,17 @@ def volunteer_login():
             name = Get.string(u"\U0001F539" + "Input your username:")
             password = Get.string(
                 u"\U0001F539" + "Input the password of volunteer:")
+            name_res = c.execute(f"select * from volunteer where username = '{name}'").fetchall()
+            if not name_res:
+                warn("Account do not exist!")
+                continue
 
             result = c.execute(f"select volunteerID, accountStatus, volunteer.campID, camp.planID from volunteer join camp on volunteer.campID = camp.campID where username = '{name}' "
                                f"and password = '{password}'").fetchall()
             if len(result) > 0:
                 if result[0][1] == 0:
                     warn(
-                        "Your account has been deactivated, contact the administrator.")
+                        "Your account has been deactivated, please contact the administrator.")
                     input('Input any key to continue.')
                     return [-1]
                 else:
@@ -52,14 +56,9 @@ def volunteer_login():
                     prYellow("\nPlease select your options below: \n")
                     return result
             else:
-                vol_res = c.execute(f"select * from deleted_vol_account where username = '{name}' "
-                                    f"and password = '{password}'").fetchall()
-                if len(vol_res) > 0:
-                    warn("Account doesn't exist.")
-                    input('Input any key to continue.')
-                    return [-1]
-                else:
-                    warn("Wrong username or password! Check your input please.")
+                warn("Wrong password! Check your input please.")
+
+
 
 
 def check_week():
