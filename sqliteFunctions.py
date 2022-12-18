@@ -31,15 +31,16 @@ def get_all_IDs(table):
             IDs.append(i[0])
         return IDs
 
+
 def get_all_open_plan():
     with sqlite3.connect('emergency_system.db') as conn:
         c = conn.cursor()
-        result = c.execute(f'select planID from plan where status = 1').fetchall()
+        result = c.execute(
+            f'select planID from plan where status = 1').fetchall()
         IDs = []
         for i in result:
             IDs.append(i[0])
         return IDs
-
 
 
 def delete_by_IDs(table, IDs):
@@ -98,7 +99,19 @@ def search_sqlite(table):
         print(options)
         option = options.get_option(
             u"\U0001F539" + 'Please choose which one you want to search by: ')
-        keyword = Get.string("\n"+u"\U0001F531"+'Please input the search keyword: ')
-        print("\n")
+        if table == 'plan' and option == 6:
+            statusOptions = Options(
+                ['Unopened',
+                 'Opened',
+                 'Closed'],
+                limited=True
+            )
+            print(statusOptions)
+            statusOption = statusOptions.get_option(
+                u"\U0001F539" + 'Please choose which kind of plan you want to view: ')
+            keyword = statusOption
+        else:
+            keyword = Get.string("\n"+u"\U0001F531" +
+                                 'Please input the search keyword: ')
         IDs = search(table, options.values[option], keyword)
         return IDs
