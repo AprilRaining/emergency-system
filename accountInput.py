@@ -23,22 +23,10 @@ class AccountCreation:
                     campID = Get.option_in_list(get_linked_IDs('camp', 'plan', planID),
                                                "\n" + u"\U0001F539" + "Pleas select a camp for the the volunteer by campID:")
                     c = conn.cursor()
-                    c.execute(
-                        f'''SELECT * FROM camp WHERE campID = {campID}''')
+                    c.execute(f'''SELECT * FROM camp WHERE campID = {campID}''')
                     camp_existence = c.fetchall()
-                    camp_capacity = camp_existence[0][1]
                 if len(camp_existence) == 0:
                     raise IndexError
-                else:
-                    with db.connect('emergency_system.db') as conn:
-                        c = conn.cursor()
-                        c.execute(
-                            f'''SELECT * FROM volunteer WHERE campID = {campID}''')
-                        camp_current = c.fetchall()
-                    if len(camp_current) < camp_capacity:
-                        pass
-                    else:
-                        raise CampCapacityError(campID)
                 break
             except IndexError:
                 print_log("Camp not existed")
@@ -51,18 +39,8 @@ class AccountCreation:
         print("\n" + u"\U0001F538" +
               f"Camps in the plan ID {planID}:")
         TableDisplayer.camp(get_linked_IDs('camp', 'plan', planID))
-        newCampID = Get.option_in_list(get_linked_IDs('camp', 'plan', planID),
-                                       u"\U0001F539" + "Pleas choose a camp by campID:")
-        print(
-            f"\033[91m Camp {newCampID} is now full.")
-        with db.connect('emergency_system.db') as conn:
-            c = conn.cursor()
-            capacity = c.execute(
-                f'''SELECT capacity FROM camp WHERE campID = {newCampID}''').fetchall()[0][0]
-        if len(get_linked_IDs('volunteer', 'camp', newCampID)) >= capacity:
-            return False
-        else:
-            return newCampID
+        return Get.option_in_list(get_linked_IDs('camp', 'plan', planID), u"\U0001F539"
+                                  + "Pleas choose a camp by campID:")
 
     @staticmethod
     def get_username():
