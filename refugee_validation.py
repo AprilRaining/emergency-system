@@ -169,7 +169,7 @@ def refugee_validity_check_by_ID(cond, refugee_df, conn):
                 print(
                     "\nPlease see details below for the list of refugees that match your search:\n")
                 print_table(refugee_list.columns, refugee_list.to_numpy().tolist(
-                ), (18, 16, 25, 25, 30, 25, 32, 70, 60, 70, 70, 60, 30, 30, 30, 25))
+                ), (18, 16, 25, 25, 30, 25, 30, 70, 60, 70, 70, 60, 30, 30, 25, 25))
                 print("\n")
             ref_id = int(input(
                 u"\U0001F539"+f"Please input refugee ID of whom you wish to {cond} the information: "))

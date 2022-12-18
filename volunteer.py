@@ -11,7 +11,6 @@ def connection_database(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-        print("access system successfully!\n")
     except Exception as e:
         print("could not connect to the database")
         print(e)
@@ -168,7 +167,7 @@ class Volunteer:
         day_name = now.strftime("%A")
         print("Today is a weekday: " + day_name)
 
-        for the_day in range(the_day, 6):
+        for the_day in range(the_day, 7):
             judge = weekday[0][the_day]
             if judge > 0:
                 warn(
@@ -247,7 +246,7 @@ class Volunteer:
         the_day = now.weekday()
         day_name = now.strftime("%A")
 
-        for the_day in range(the_day, 6):
+        for the_day in range(the_day, 7):
             flag = weekday[0][the_day]
             if flag > 0:
                 warn(
@@ -296,7 +295,7 @@ class Volunteer:
                 elif flag == 0:
                     schedule[weekday[day]] = u"\U00002705"
                 else:
-                    schedule[weekday[day]] = f"taskID:{flag}"
+                    schedule[weekday[day]] = f"task{flag}"
             schedule["work_period"] = info[-2]
             info_df = pd.DataFrame(schedule, index=[0])
             print("\n", u"\U0001F538", f"Your current availability for this week is:  \n")
@@ -311,7 +310,7 @@ class Volunteer:
                 elif day == "workShift":
                     preference["work_period"] = flag
                 else:
-                    preference[weekday[day]] = f"taskID:{flag}"
+                    preference[weekday[day]] = f"task{flag}"
             pre_df = pd.DataFrame(preference, index=[0])
             print("\n" + u"\U0001F539" + f"Your default availability when first registered is: \n")
             print_table(pre_df.columns, pre_df.to_numpy().tolist(), (30, 30, 30, 30, 30, 30, 30, 30))
