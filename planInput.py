@@ -113,5 +113,8 @@ class PlanInput:
                 u"\U0001F539" + 'Please input the start date of the emergency plan in the format of yyyy-mm-dd: ')
             if date > datetime.date.today():
                 return date
+            elif date == datetime.date.today():
+                prYellow(
+                    'The date your input is today.\n If you want to open it now, please use the open plan function.')
             else:
                 warn('Please input a data later than today.')
