@@ -185,7 +185,7 @@ class Refugee:
         # case 1: create/add new req
         if purpose == "create" or purpose == "add":
             print(u"\U0001F531"+'''INSTRUCTION: Refugee can make request(s) for available volunteers 
-            to provide a special care that matches with his/her needs. 
+            to provide a special care that matches with his/her needs on a weekly basis. 
             However, we recommend adding no more than 3 requests per week.\n''')
             self.has_req = "Yes" if purpose == "add" else yn_valid(
                 u"\U0001F539"+f"Would the refugee like to {purpose} any requests? (Yes/No): ")
@@ -267,15 +267,25 @@ class Refugee:
                         # print("\n"+u"\u2757"+ "Note: During this request addition, if you have added new requests prior to this\nand haven't gotten an email confirmation, they will be lost.\nPlease go to 'Edit Refugee Information.' menu and select 'Request' to add a request again!")
                     print(
                         u"\U0001F539"+"Select your request's day for this week from options above")
-         
                     self.req_date = date_format_check(
                         "request", str(today_date), str(dates[-1]))
                     select_today = True if self.req_date == today_date else False
                     d = pd.Timestamp(self.req_date)
                     self.day_name = d.day_name()
-
+                    # ask to quit: only on Sunday
+                    if offer_way_to_quit(c):
+                        print(
+                                "Note: Any request made prior to this will be saved in our system. Please wait for an email confirmation!\n")
+                        if purpose == "add":
+                                self.req_form_coll, req_id = ask_to_leave_req_system(
+                                                self.conn, purpose, self.req_form_coll, req_edit_id, refugee_df)
+                                self.ref_row.append(str(req_id))
+                                return
+                        else:
+                                self.ref_row.append(exist_req)
+                                return self.req_form_coll
                     print(
-                        "--------------------------------------------------------------------------\n")
+                        "\n--------------------------------------------------------------------------\n")
                     # show recommended volunteer
                     df_match_vol = df_vol_sch.loc[df_vol_sch[self.day_name]
                                                   == u'\u2705', :]
@@ -296,10 +306,24 @@ class Refugee:
                         if df_match_shift.empty:
                             warn(
                                 "There is no volunteer available on your selected date and work shift period. Please try again!")
-
                         else:
                             print(
                                 "--------------------------------------------------------------------------")
+                            # check for duplicate request date and time
+                            for req in self.req_form_coll:
+                                if self.req_date == req["date"] and self.req_shift == req["workshift"]:
+                                    warn("You can only make 1 request per date and work shift period. Please select another date or work shift for this request.")
+                                    warn("Request process must be ended.")
+                                    print(
+                                            "\nNote: Any request made prior to this will be saved in our system. Please wait for email confirmation!")
+                                    if purpose == "add":
+                                        self.req_form_coll, req_id = ask_to_leave_req_system(
+                                                self.conn, purpose, self.req_form_coll, req_edit_id, refugee_df)
+                                        self.ref_row.append(str(req_id))
+                                        return
+                                    else:
+                                        self.ref_row.append(exist_req)
+                                        return self.req_form_coll
                             # select volunteer
                             # query data from volunteer db which meet condition above
                             vol_query = f'''SELECT volunteerID,fName,lName,workShift FROM volunteer WHERE workShift = "{self.req_shift}" AND accountStatus = 1 AND campID = {self.assigned_camp} AND {self.day_name} = 0'''
@@ -320,6 +344,7 @@ class Refugee:
                                 # list : vol ID to help with multiple request case
                                 self.vol_ID = volunteer_ID_req_check(
                                     vol_df, select_today)
+                          
                                 if self.vol_ID == -1:
                                     warn(
                                         "You cannot make this request because the work shift of this volunteer has already passed for today.")
@@ -450,8 +475,18 @@ class Refugee:
 
                     d = pd.Timestamp(self.req_date)
                     self.day_name = d.day_name()
+                    # ask to quit: only on Sunday
+                    if offer_way_to_quit(c):
+                        if purpose == "add":
+                            self.req_form_coll, req_id = ask_to_leave_req_system(
+                                                self.conn, purpose, self.req_form_coll, req_edit_id, refugee_df)
+                            self.ref_row.append(str(req_id))
+                            return
+                        else:
+                            self.ref_row.append(exist_req)
+                            return self.req_form_coll
                     print(
-                        "--------------------------------------------------------------------------")
+                        "\n--------------------------------------------------------------------------")
                     # select new work shift
                     print(
                         u"\U0001F539"+"Please select new shift time from the options below: ")
@@ -459,9 +494,8 @@ class Refugee:
                     shift_inpt = single_input_check(shift_opt)
                     shift_dict = input_matching("Shift Time")
                     self.req_shift = shift_dict[int(shift_inpt)]
-                    print("\n")
                     # check if volunteer is available
-                    vol_query = f'''SELECT volunteerID,campID,fName,lName,workShift FROM volunteer WHERE campID = {self.assigned_camp} AND workShift = "{self.req_shift}" AND {self.day_name} = 0'''
+                    vol_query = f'''SELECT volunteerID,fName,lName,workShift FROM volunteer WHERE campID = {self.assigned_camp} AND workShift = "{self.req_shift}" AND {self.day_name} = 0'''
                     pd_vol = pd.read_sql_query(vol_query, self.conn)
                     vol_df = pd.DataFrame(
                         pd_vol, columns=['volunteerID', 'fName', 'lName', 'workShift'])
