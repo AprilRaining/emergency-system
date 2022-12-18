@@ -260,7 +260,7 @@ class Admin:
             time.sleep(0.8)
             vol_df = get_volunteer_schedule_df(conn, purpose="Display")
             vol_id = vol_df['volunteerID'].iloc[-1]
-            print(f"\nNew volunteer ID created: [{vol_id}]\n")
+            print("\n"+u"\U0001F538"+f"New volunteer ID : [{vol_id}]\n")
             print(u'\u2705', "New volunteer account is successfully created!")
 
     def display_volunteer_account(self):
