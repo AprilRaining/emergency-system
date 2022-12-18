@@ -33,9 +33,10 @@ def volunteer_login():
                                f"and password = '{password}'").fetchall()
             if len(result) > 0:
                 if result[0][1] == 0:
-                    print(
-                        "Your account has been deactivated, contact the administrator.\n")
-                    return -1
+                    warn(
+                        "Your account has been deactivated, contact the administrator.")
+                    input('Input any key to continue.')
+                    return [-1]
                 else:
                     # keep user session
                     volunteer_current = {"volunteerID": result[0][0], "campID": result[0][2],
@@ -53,10 +54,11 @@ def volunteer_login():
                 vol_res = c.execute(f"select * from deleted_vol_account where username = '{name}' "
                                     f"and password = '{password}'").fetchall()
                 if len(vol_res) > 0:
-                    print("Account doesn't exist.")
-                    return -1
+                    warn("Account doesn't exist.")
+                    input('Input any key to continue.')
+                    return [-1]
                 else:
-                    print("Wrong username or password! Check your input please.")
+                    warn("Wrong username or password! Check your input please.")
 
 
 def check_week():
