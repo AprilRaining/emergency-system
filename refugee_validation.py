@@ -51,8 +51,9 @@ def date_format_check(purpose, limit_start='', limit_end=''):
         # while True:
             input_date = Get.data(
                 f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
-            if input_date >= datetime.date.today():
-                raise ValueError
+            if purpose == "birth":
+                if input_date > datetime.date.today():
+                    raise ValueError
         #     bd_val = input_date.split("-")
         #     if len(bd_val) != 3:
         #         raise exc.wrong_birthdate_format
@@ -61,7 +62,7 @@ def date_format_check(purpose, limit_start='', limit_end=''):
         #     if (bd_val[1]) not in [format(x, '02d') for x in range(1, 13)]:
         #         raise exc.month_out_of_range
             if limit_end != '' and limit_end != '':
-                di, mi, yi = [int(x) for x in input_date.split('-')]
+                di, mi, yi = [int(x) for x in str(input_date).split('-')]
                 date_inpt = datetime.date(di, mi, yi)
                 ds, ms, ys = [int(x) for x in limit_start.split('-')]
                 date_start = datetime.date(ds, ms, ys)
@@ -70,7 +71,17 @@ def date_format_check(purpose, limit_start='', limit_end=''):
                 if (date_inpt < date_start or date_inpt > date_end):
                     raise exc.date_not_available
         except ValueError:
-            print_log("The birth date cannot be ahead of today's date.")
+            if purpose == "birth":
+                print_log("The birth date cannot be ahead of today's date.")
+            else:
+                print_log("Please enter a valid date from your options above.")
+        except exc.date_not_available:
+            print_log(
+                "You can only select the date from today to the last date of this week!")
+        except Exception as e:
+            print_log(str(e))
+        else:
+            return str(input_date)
         # except exc.wrong_birthdate_format:
         #     print_log(
         #         "Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20")
@@ -78,14 +89,6 @@ def date_format_check(purpose, limit_start='', limit_end=''):
         #     print_log("Please input the day between 1 and 31")
         # except exc.month_out_of_range:
         #     print_log("Please input the month between 1 and 12")
-        except exc.date_not_available:
-            print_log(
-                "You can only select the date from today till the last date of this week!")
-        except Exception as e:
-            print_log(str(e))
-        else:
-            return input_date
-
 
 def email_format_check():
     while True:

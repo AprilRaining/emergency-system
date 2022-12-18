@@ -27,7 +27,7 @@ class Refugee:
     def refugee_birthdate(self):
         print("-----------------------BIRTHDAY-------------------------\n")
         # enter birthdate + validation
-        self.birthdate = date_format_check("birthdate")
+        self.birthdate = date_format_check("birth")
         self.ref_row.extend([self.birthdate])
         print("\n")
 
@@ -268,7 +268,7 @@ class Refugee:
                     print(
                         u"\U0001F539"+"Select your request's day for this week from options above")
                     self.req_date = date_format_check(
-                        "request", today_date, dates[-1])
+                        "request", today_date, str(dates[-1]))
                     select_today = True if self.req_date == today_date else False
                     d = pd.Timestamp(self.req_date)
                     self.day_name = d.day_name()
@@ -429,13 +429,12 @@ class Refugee:
                         if u'\u2705' in vol_row_info[len(vol_row_info)-(c-1):len(vol_row_info)]:
                             has_free_vol = True
                     if has_free_vol == False:
-                        warn("You cannot change your request date because the volunteers are fully booked from today to the end of this week.\nPlease try again next week!")
-                        print("\n"+u"\u2757" + "Note: If you have just edited any requests prior to this, the change will be lost.\nPlease go to 'Edit Refugee Information.' menu and select 'Request' to edit again!")
+                        warn("You cannot change your request date because your volunteer is fully booked from today to the end of this week.\nPlease try again next week!")
                         return
                     print(
                         "\n"+u"\U0001F539"+"Please select the new request's date from options above: ")
                     self.req_date = date_format_check(
-                        "request", today_date, dates[-1])
+                        "request", today_date, str(dates[-1]))
                     select_today = True if self.req_date == today_date else False
                     current_time = get_current_shift_time()
                     vol_workshift = df_vol_sch.loc[:, "workShift"].values[0]
@@ -443,8 +442,7 @@ class Refugee:
                         current_time, vol_workshift)
                     if select_today and has_conf:
                         warn(
-                            "You cannot change your request date today because the work shift of your volunteer has already passed.")
-                        print("\n"+u"\u2757" + "Note: If you have just edited any requests prior to this, the change will be lost.\nPlease go to 'Edit Refugee Information.' menu and select 'Request' to edit again!")
+                            "You cannot change your request date to today because the work shift of your volunteer has already passed.")
                         return
                     d = pd.Timestamp(self.req_date)
                     self.day_name = d.day_name()

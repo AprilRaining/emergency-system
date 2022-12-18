@@ -1,5 +1,5 @@
 import json
-
+from system_log import *
 import TableDisplayer
 import datetime
 import refugee_exception as exc

@@ -1,5 +1,5 @@
 import sys
-
+from system_log import *
 from emergency_plan_sql import emergency_plan
 from planInput import *
 from utilities import *
