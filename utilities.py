@@ -11,7 +11,7 @@ def admin_login():
         print("--------------------------------------------------------------------------")
         prYellow("\t\t\t\tADMIN LOGIN\n")
         password = Get.string(u"\U0001F539" + "Input the password of admin:")
-        if str(password) == "12345":
+        if str(password) == "111":
             print("\n", u'\u2705', 'Welcome to the system, Admin!.')
             prYellow("\nPlease select your options below: \n")
             return
