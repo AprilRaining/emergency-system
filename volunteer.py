@@ -1,7 +1,7 @@
 import copy
 import json
 from datetime import datetime
-
+from system_log import *
 from accountInput import *
 from refugee_info_edit import *
 from refugee_input_option import *
@@ -474,7 +474,9 @@ class Volunteer:
                     prGreen(
                         "\n..............Deactivating refugee account................")
                     clear_request_schedule(conn, df_task_ref_id)
-
+                else:
+                    prGreen(
+                        "\n..............Deactivating refugee account................")
                 update_refdb_attr(conn, ref_df_by_id, "status", "inactive")
                 update_refdb_attr(conn, ref_df_by_id, "request", "0")
                 update_refdb_attr(conn, ref_df_by_id, "campID", "0")
