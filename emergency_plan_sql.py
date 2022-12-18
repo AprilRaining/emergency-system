@@ -105,7 +105,7 @@ class emergency_plan:
                 try:
                     prCyan('\nNumber of Camps:')
                     camp = input(
-                u"\U0001F539" + 'Please input the number of camps in this plan: ')
+                        u"\U0001F539" + 'Please input the number of camps in this plan: ')
                     if camp.isdigit() and int(camp) > 0:
                         self.camp = camp
                         print("\n")
@@ -150,8 +150,8 @@ class emergency_plan:
             #         & (self.area in dataframe['area'].values)
             #         & (str(self.date) in dataframe['startDate'].values)
             #         & (self.camp in list(dataframe['numberOfCamps'].values))):
-                # print(dataframe.to_string(index=False))
-                # print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18))
+            # print(dataframe.to_string(index=False))
+            # print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18))
             # else:
             newdataframe.to_sql('plan', conn, index=False, if_exists="append")
             updatedframe = pd.read_sql_query('SELECT * FROM plan', conn)
@@ -165,10 +165,11 @@ class emergency_plan:
                 conn.commit()
             # print(updatedframe.to_string(index=False))
             print(u"\U0001F538" + 'These are current emergency plans: \n')
-            print_table(updatedframe.columns,updatedframe.to_numpy().tolist(),(18,20,60,25,25,25,18,18))
+            TableDisplayer.plan(self.planID)
             conn.close()
             print("\n"+u"\U0001F538"+f"New Plan ID: [{self.planID}]")
-            print(u"\U0001F538"+ f"New Camp ID associated with new plan ID: {campID_coll}\n")
+            print(u"\U0001F538" +
+                  f"New Camp ID associated with new plan ID: {campID_coll}\n")
 
     class Display_Emergency_Plan:
         def __init__(self):
@@ -195,7 +196,8 @@ class emergency_plan:
                         loop = False
                         typeframe = pd.read_sql_query(
                             'SELECT * FROM plan', conn)
-                        tt_df = pd.read_sql_query('SELECT * FROM plan where status = 2', conn)
+                        tt_df = pd.read_sql_query(
+                            'SELECT * FROM plan where status = 2', conn)
                         typeset = set(tt_df.type.values)
                         print(
                             f'The choices of type are: {typeset}.')
@@ -206,7 +208,8 @@ class emergency_plan:
                             try:
                                 if self.type in tt_df.type.values:
                                     loop1 = False
-                                    finalframe = tt_df[tt_df['type'] == self.type]
+                                    finalframe = tt_df[tt_df['type']
+                                                       == self.type]
                                     finalframe = finalframe.reset_index(
                                         drop=True)
                                     print(finalframe)
@@ -265,7 +268,7 @@ class emergency_plan:
                                                                 "SELECT name FROM sqlite_master WHERE type='table' AND name='delete'")
                                                             if len(c.fetchall()) == 0:
                                                                 newdataframe = pd.DataFrame(
-                                                                    { 'type': [type],
+                                                                    {'type': [type],
                                                                      'description': [desc],
                                                                      'area': [area], 'startDate': [start_date],
                                                                      'numberOfCamps': [camp]})
@@ -274,7 +277,7 @@ class emergency_plan:
 
                                                             else:
                                                                 newdataframe = pd.DataFrame(
-                                                                    { 'type': [type],
+                                                                    {'type': [type],
                                                                      'description': [desc],
                                                                      'area': [area], 'startDate': [start_date],
                                                                      'numberOfCamps': [camp]})
@@ -333,8 +336,10 @@ class emergency_plan:
                         loop = False
                         typeframe = pd.read_sql_query(
                             'SELECT * FROM plan', conn)
-                        tt_df = pd.read_sql_query('SELECT * FROM plan where status = 2', conn)
-                        print("Choose from these start dates: ", set(tt_df['startDate']))
+                        tt_df = pd.read_sql_query(
+                            'SELECT * FROM plan where status = 2', conn)
+                        print("Choose from these start dates: ",
+                              set(tt_df['startDate']))
                         while True:
                             self.date = input('Please enter the start date of the emergency plan you want to '
                                               'view and then delete in the format of yyyy-mm-dd: ')
@@ -355,7 +360,7 @@ class emergency_plan:
                                         tt_df['startDate']):
                                     loop1 = False
                                     finalframe = tt_df[tt_df['startDate']
-                                                           == self.date]
+                                                       == self.date]
 
                                     finalframe = finalframe.reset_index(
                                         drop=True)
@@ -476,7 +481,8 @@ class emergency_plan:
                         loop = False
                         typeframe = pd.read_sql_query(
                             'SELECT * FROM plan', conn)
-                        tt_df = pd.read_sql_query('SELECT * FROM plan where status = 2', conn)
+                        tt_df = pd.read_sql_query(
+                            'SELECT * FROM plan where status = 2', conn)
                         typeset = set(tt_df.area.values)
                         print(
                             f'The choices of type are: {typeset}.')
@@ -488,7 +494,7 @@ class emergency_plan:
                                 if self.area in tt_df.area.values:
                                     loop1 = False
                                     finalframe = tt_df[tt_df['area']
-                                                           == self.area]
+                                                       == self.area]
                                     finalframe = finalframe.reset_index(
                                         drop=True)
                                     print(finalframe)
