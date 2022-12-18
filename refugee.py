@@ -47,21 +47,22 @@ class Refugee:
         print(u"\U0001F539"+"Select refugee's ethnic group")
         self.race = race_dict[int(numerical_input_check(race_opt)[0])]
         if ("Others" in self.race):
-            self.race = input(u"\U0001F539"+"Specify refugee's ethnic group: ")
+            self.race = Get.string(
+                u"\U0001F539"+"Specify refugee's ethnic group: ")
         self.ref_row.extend([self.race])
         print("\n")
 
     def refugee_contact(self):
         print("------------------------CONTACT-------------------------\n")
         self.email = email_format_check()
-        self.phone = input(
+        self.phone = Get.number(
             u"\U0001F539"+"Enter refugee's phone number (if any): ")
         self.ref_row.extend([self.email, self.phone])
         print("\n")
 
     def refugee_family(self):
         print("---------------------FAMILY MEMBERS---------------------\n")
-        self.members = input(
+        self.members = Get.text(
             u"\U0001F539"+"Enter all members' first name (e.g. Dan, John, Emily) or put '-' if no member: ")
         # add member's name
         self.ref_row.extend([self.members])
@@ -136,7 +137,7 @@ class Refugee:
             if ("Others" in il):
                 #  other disease please specify
                 print("---------------OTHERS---------------\n")
-                self.other_disc = input(
+                self.other_disc = Get.text(
                     u"\U0001F539"+"Please specify other refugee's disease: ")
                 self.ref_illness[ind] = self.ref_illness[ind] + \
                     "(" + self.other_disc + ")"
@@ -150,7 +151,7 @@ class Refugee:
         self.has_surgery = yn_valid(u"\U0001F539" +
                                     "Does refugee has the history of surgery? (Yes/No): ")
         if (self.has_surgery == "Yes"):
-            self.surgery = input(
+            self.surgery = Get.string(
                 u"\U0001F539"+"Enter refugee's surgery record: ")
         else:
             self.surgery = "None"
