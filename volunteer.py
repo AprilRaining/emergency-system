@@ -100,9 +100,9 @@ class Volunteer:
                 continue
             else:
                 break
-        first_name = input(
+        first_name = Get.string(
             u"\U0001F539" + "Please input your new first name: ")
-        last_name = input(u"\U0001F539" + "Please input your new last name: ")
+        last_name = Get.string(u"\U0001F539" + "Please input your new last name: ")
         self.last_name = last_name
         self.first_name = first_name
         query = f'''UPDATE volunteer SET fName='{first_name}',lName='{last_name}' WHERE volunteerID = {volunteer_input_id}'''
@@ -127,7 +127,7 @@ class Volunteer:
                 continue
             else:
                 break
-        new_password = input("please input your new password\n")
+        new_password = Get.string("please input your new password\n")
         self.password = new_password
         query = f'''UPDATE volunteer SET password ='{new_password}' WHERE volunteerID = {volunteer_input_id}'''
         cur.execute(query)

@@ -1,6 +1,7 @@
 import datetime
 from system_log import *
 from myError import *
+import re
 
 
 class Get:
@@ -25,6 +26,45 @@ class Get:
             else:
                 return n
 
+    def number(hint: str):
+        while True:
+            n = input(hint)
+            if not n:
+                return n
+            else:
+                if not re.match(r'[0-9]+$', n):
+                    warn('Numbers ONLY!!!')
+                else:
+                    return n
+
+    def string(hint: str, isAllowEmpty=False):
+        while True:
+            n = input(hint)
+            if not isAllowEmpty:
+                if not n:
+                    warn('Empty input is not allowed!Please try again.')
+                else:
+                    if not re.match(r'^\w+$', n):
+                        warn('Number, characters and underline ONLY!!!')
+                    else:
+                        return n
+            else:
+                if not re.match(r'^\w+$', n):
+                    warn('Number, characters and underline ONLY!!!')
+                else:
+                    return n
+
+    def text(hint: str):
+        while True:
+            n = input(hint)
+            if not n:
+                return n
+            else:
+                if re.search(r'[\'\"\\\`]', n):
+                    warn('No Special Characters Allowed!!!')
+                else:
+                    return n
+
     @staticmethod
     def data(hint: str):
         while True:
@@ -32,9 +72,9 @@ class Get:
                 date = datetime.datetime.strptime(
                     input(hint), '%Y-%m-%d').date()
             except InvalidInput as e:
-                print(e)
+                warn(str(e))
             except ValueError as e:
-                print(e)
+                warn(str(e))
             else:
                 return date
 

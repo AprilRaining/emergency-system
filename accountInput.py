@@ -12,33 +12,22 @@ class AccountCreation:
         while True:
             try:
                 print(u"\U0001F538" +
-                      "The detail below shows the information of every plans\n")
+                      "The detail below shows the information of opened plans\n")
                 with db.connect('emergency_system.db') as conn:
-                    TableDisplayer.plan(get_all_IDs('plan'))
+                    TableDisplayer.plan(get_all_open_plan())
                     planID = Get.option_in_list(get_all_IDs(
                         'plan'), u"\U0001F539" + "INSTRUCTION: Please select which emergency plan the volunteer will be registered to: ")
                     print("\n" + u"\U0001F538" +
                           f"Camps in the plan ID {planID}:\n")
                     TableDisplayer.camp(get_linked_IDs('camp', 'plan', planID))
                     campID = Get.option_in_list(get_linked_IDs('camp', 'plan', planID),
-                                               "\n" + u"\U0001F539" + "Pleas select a camp for the the volunteer by campID:")
+                                                "\n" + u"\U0001F539" + "Pleas select a camp for the the volunteer by campID:")
                     c = conn.cursor()
                     c.execute(
                         f'''SELECT * FROM camp WHERE campID = {campID}''')
                     camp_existence = c.fetchall()
-                    camp_capacity = camp_existence[0][1]
                 if len(camp_existence) == 0:
                     raise IndexError
-                else:
-                    with db.connect('emergency_system.db') as conn:
-                        c = conn.cursor()
-                        c.execute(
-                            f'''SELECT * FROM volunteer WHERE campID = {campID}''')
-                        camp_current = c.fetchall()
-                    if len(camp_current) < camp_capacity:
-                        pass
-                    else:
-                        raise CampCapacityError(campID)
                 break
             except IndexError:
                 print_log("Camp not existed")
@@ -51,24 +40,14 @@ class AccountCreation:
         print("\n" + u"\U0001F538" +
               f"Camps in the plan ID {planID}:")
         TableDisplayer.camp(get_linked_IDs('camp', 'plan', planID))
-        newCampID = Get.option_in_list(get_linked_IDs('camp', 'plan', planID),
-                                       u"\U0001F539" + "Pleas select a camp for the the volunteer by campID:")
-        # print(
-        #     f"\033[91m Camp {newCampID} is now full.\033[00m")
-        with db.connect('emergency_system.db') as conn:
-            c = conn.cursor()
-            capacity = c.execute(
-                f'''SELECT capacity FROM camp WHERE campID = {newCampID}''').fetchall()[0][0]
-        if len(get_linked_IDs('volunteer', 'camp', newCampID)) >= capacity:
-            return False
-        else:
-            return newCampID
+        return Get.option_in_list(get_linked_IDs('camp', 'plan', planID), u"\U0001F539"
+                                  + "Pleas choose a camp by campID:")
 
     @staticmethod
     def get_username():
         while True:
             try:
-                username = input(u"\U0001F539" + 'Enter the username:')
+                username = Get.string(u"\U0001F539" + 'Enter the username:')
                 if username == "":
                     warn("The username can not be empty, Please input again:")
                     continue
@@ -146,7 +125,7 @@ class AccountCreation:
                     "Please input the day(s) this volunteer is available in a week(from 1 to 7) and divided by comma.\n"
                     "For example, 6,7 means Saturday and Sunday are available. \n"
                     "If there is no available day, just press 8: \n--> ")
-                if not re.match(re.compile("^([1-7])+(,[1-7])*$"), input_str):
+                if (not re.match(re.compile("^([1-7])+(,[1-7])*$"), input_str)) and input_str != '8':
                     warn("Invaid input!, check your input.")
                     continue
                 if input_str == '8':

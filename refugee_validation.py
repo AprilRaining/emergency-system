@@ -17,8 +17,8 @@ from TableDisplayer import *
 def refugee_existence_check(conn):
     while True:
         try:
-            firstname = input(u"\U0001F539"+"Enter refugee's firstname: ")
-            lastname = input(u"\U0001F539"+"Enter refugee's lastname: ")
+            firstname = Get.string(u"\U0001F539"+"Enter refugee's firstname: ")
+            lastname = Get.string(u"\U0001F539"+"Enter refugee's lastname: ")
             get_ref = f'''SELECT fName,lName FROM refugee WHERE fName = "{firstname}" AND lName = "{lastname}"'''
             pd_query = pd.read_sql_query(get_ref, conn)
             df_row = pd.DataFrame(pd_query, columns=["firstname", "lastname"])
@@ -48,15 +48,18 @@ def refugee_existence_check(conn):
 def date_format_check(purpose, limit_start='', limit_end=''):
     while True:
         try:
-            input_date = input(
+        # while True:
+            input_date = Get.data(
                 f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
-            bd_val = (input_date).split("-")
-            if len(bd_val) != 3:
-                raise exc.wrong_birthdate_format
-            if (bd_val[2]) not in [format(x, '02d') for x in range(1, 32)]:
-                raise exc.day_out_of_range
-            if (bd_val[1]) not in [format(x, '02d') for x in range(1, 13)]:
-                raise exc.month_out_of_range
+            if input_date >= datetime.date.today():
+                raise ValueError
+        #     bd_val = input_date.split("-")
+        #     if len(bd_val) != 3:
+        #         raise exc.wrong_birthdate_format
+        #     if (bd_val[2]) not in [format(x, '02d') for x in range(1, 32)]:
+        #         raise exc.day_out_of_range
+        #     if (bd_val[1]) not in [format(x, '02d') for x in range(1, 13)]:
+        #         raise exc.month_out_of_range
             if limit_end != '' and limit_end != '':
                 di, mi, yi = [int(x) for x in input_date.split('-')]
                 date_inpt = datetime.date(di, mi, yi)
@@ -68,13 +71,13 @@ def date_format_check(purpose, limit_start='', limit_end=''):
                     raise exc.date_not_available
         except ValueError:
             print_log("Incorrect date format, should be YYYY-MM-DD")
-        except exc.wrong_birthdate_format:
-            print_log(
-                "Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20")
-        except exc.day_out_of_range:
-            print_log("Please input the day between 1 and 31")
-        except exc.month_out_of_range:
-            print_log("Please input the month between 1 and 12")
+        # except exc.wrong_birthdate_format:
+        #     print_log(
+        #         "Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20")
+        # except exc.day_out_of_range:
+        #     print_log("Please input the day between 1 and 31")
+        # except exc.month_out_of_range:
+        #     print_log("Please input the month between 1 and 12")
         except exc.date_not_available:
             print_log(
                 "You can only select the date from today till the last date of this week!")
@@ -87,7 +90,7 @@ def date_format_check(purpose, limit_start='', limit_end=''):
 def email_format_check():
     while True:
         try:
-            email = input(u"\U0001F539"+"Enter refugee's email (if any): ")
+            email = Get.text(u"\U0001F539"+"Enter refugee's email (if any): ")
             if email == "":
                 return email
             elif "@" not in email or "." not in email:
@@ -105,11 +108,14 @@ def camp_capacity_check(conn, purpose, old_camp_id):
     # check if the camp is full or can accept more refugee
     while True:
         try:
-            camp_df = display_open_camp_option(conn,"refugee")
+            camp_df = display_open_camp_option(conn, "refugee")
             camp_df_cop = camp_df.copy()
-            print_table(camp_df_cop.columns,camp_df_cop.to_numpy().tolist(),(25,25,70,70,70,40))
-            print("--------------------------------------------------------------------\n")
-            camp = int(input(u"\U0001F539"+f"Assign the camp ID to the refugee: "))
+            print_table(camp_df_cop.columns, camp_df_cop.to_numpy(
+            ).tolist(), (25, 25, 70, 70, 70, 40))
+            print(
+                "--------------------------------------------------------------------\n")
+            camp = int(
+                input(u"\U0001F539"+f"Assign the camp ID to the refugee: "))
             campID_list = list(camp_df.loc[:, "campID"].values)
             if camp not in campID_list:
                 raise exc.camp_id_out_of_range
@@ -178,7 +184,8 @@ def refugee_validity_check_by_ID(cond, refugee_df, conn):
                     raise exc.inactive_refugee_edit
         except exc.refugee_id_out_of_range:
             print_log("There is no search result, please change your keyword.")
-            print("Note: You are only allowed to search for refugee who is in the same emergency plan as you.")
+            print(
+                "Note: You are only allowed to search for refugee who is in the same emergency plan as you.")
         except ValueError:
             print_log("Please enter a numerical value for your input.")
         except exc.inactive_refugee_edit:
@@ -217,14 +224,17 @@ def numerical_input_check(options):
             # array of numerical input (no duplication)
             return array_opts
 
+
 def task_ID_input_check(task_ID_list):
     while True:
         try:
-            selected_task = int(input(u"\U0001F539"+"Enter a task ID which refugee would like to make change to: "))
+            selected_task = int(input(
+                u"\U0001F539"+"Enter a task ID which refugee would like to make change to: "))
             if selected_task not in task_ID_list:
                 raise InvalidChoiceError(selected_task)
         except InvalidChoiceError:
-            print_log("Your input number is invalid in our options. Please try again.")
+            print_log(
+                "Your input number is invalid in our options. Please try again.")
         except ValueError:
             print_log("Please enter a numerical value for your selected options.")
         except Exception as e:
