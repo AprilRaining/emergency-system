@@ -98,7 +98,7 @@ def search_sqlite(table):
         print(options)
         option = options.get_option(
             u"\U0001F539" + 'Please choose which one you want to search by: ')
-        keyword = input("\n"+u"\U0001F531"+'Please input the search keyword: ')
+        keyword = Get.string("\n"+u"\U0001F531"+'Please input the search keyword: ')
         print("\n")
         IDs = search(table, options.values[option], keyword)
         return IDs
