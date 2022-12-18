@@ -156,7 +156,7 @@ def refugee_validity_check_by_ID(cond, refugee_df, conn):
                             f"Please enter the {opt} keyword: ")
             if "'" in keyword:
                 raise exc.unpermitted_input
-            refugee_list = search_refugee(opt_dict[opt], keyword, conn)
+            refugee_list = search_refugee(opt_dict[opt], keyword, conn,cond)
             if refugee_list.empty:
                 raise exc.refugee_id_out_of_range
             else:

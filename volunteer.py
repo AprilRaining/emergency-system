@@ -36,7 +36,7 @@ class Volunteer:
     def sub_main(self):
         while True:
             print(self.menu)
-            match menu_choice_get(self.menu.count('\n') + 1):
+            match menu_choice_get(self.menu.count('\n') + 1, "\n-->"):
                 case 1:
                     self.manage_personal_information()
                 case 2:

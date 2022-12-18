@@ -53,7 +53,7 @@ def get_week_number(date):
     week_num = datetime.date(int(y), int(m), int(d)).isocalendar()[1]
     return week_num
 
-def search_refugee(column, keyword, conn):
+def search_refugee(column, keyword, conn, purpose = ''):
     with open("user_session.json") as f:
             vol_login = json.load(f)
     vol_plan_ID = vol_login["planID"]
@@ -61,6 +61,9 @@ def search_refugee(column, keyword, conn):
         keyword = "'%{}%'".format(keyword)
     search_query = f'''SELECT * FROM refugee WHERE {column} LIKE {keyword} AND campID IN
     (SELECT campID FROM camp JOIN plan ON camp.planID = plan.planID WHERE plan.planID = {vol_plan_ID})'''
+    if purpose == "activate":
+        search_query = f'''SELECT * FROM refugee WHERE {column} LIKE {keyword}'''
+
     # print(search_query)
     pd_search = pd.read_sql_query(search_query,conn)
     df_search = pd.DataFrame(pd_search, columns=["refugeeID","campID","fName","lName","birthdate","gender","ethnicGroup","email",
