@@ -22,4 +22,4 @@ class CampCapacityError(Exception):
         self.value = value
 
     def __str__(self):
-        return f"\033[91m Camp {self.value} is now full.\nPlease try to choose another one."
+        return f"\033[91m Camp {self.value} is now full.\nPlease try to choose another one.\033[00m"

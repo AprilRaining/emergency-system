@@ -34,3 +34,5 @@ class wrong_yn_input(Exception):
     """Raised when user input is invalid for yes-no question."""
 class move_to_others_plan(Exception):
     """Refugee cannot move to different plan"""
+class unpermitted_input(Exception):
+    """Some input words causes database error."""

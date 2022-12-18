@@ -49,7 +49,7 @@ class AccountCreation:
             try:
                 username = Get.string(u"\U0001F539" + 'Enter the username:')
                 if username == "":
-                    print("The username can not be empty, Please input again:")
+                    warn("The username can not be empty, Please input again:")
                     continue
                 user_name = (username,)
                 with db.connect('emergency_system.db') as conn:
@@ -168,8 +168,8 @@ class AccountCreation:
             try:
                 work_shift = input(
                     "\n" + u"\U0001F539" +
-                    "What will be a work shift for the volunteer? \n 1. Morning (06:00-14:00) \n "
-                    "2. Afternoon (14:00-22:00) \n 3. Night (22:00-06:00) \n--> ")
+                    "What will be a work shift for the volunteer? \n 1. Morning (24:00-10:00) \n "
+                    "2. Afternoon (10:00-18:00) \n 3. Night (18:00-24:00) \n--> ")
                 if work_shift == '1':
                     shift = 'Morning'
                 elif work_shift == '2':

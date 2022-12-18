@@ -47,14 +47,12 @@ def refugee_existence_check(conn):
 
 def date_format_check(purpose, limit_start='', limit_end=''):
     while True:
-        # try:
-        while True:
+        try:
+        # while True:
             input_date = Get.data(
                 f"Enter refugee's {purpose} date (yyyy-mm-dd): ")
             if input_date >= datetime.date.today():
-                warn('Invaild Birthday Date!')
-            else:
-                return input_date
+                raise ValueError
         #     bd_val = input_date.split("-")
         #     if len(bd_val) != 3:
         #         raise exc.wrong_birthdate_format
@@ -62,17 +60,17 @@ def date_format_check(purpose, limit_start='', limit_end=''):
         #         raise exc.day_out_of_range
         #     if (bd_val[1]) not in [format(x, '02d') for x in range(1, 13)]:
         #         raise exc.month_out_of_range
-        #     if limit_end != '' and limit_end != '':
-        #         di, mi, yi = [int(x) for x in input_date.split('-')]
-        #         date_inpt = datetime.date(di, mi, yi)
-        #         ds, ms, ys = [int(x) for x in limit_start.split('-')]
-        #         date_start = datetime.date(ds, ms, ys)
-        #         de, me, ye = [int(x) for x in limit_end.split('-')]
-        #         date_end = datetime.date(de, me, ye)
-        #         if (date_inpt < date_start or date_inpt > date_end):
-        #             raise exc.date_not_available
-        # except ValueError:
-        #     print_log("Incorrect date format, should be YYYY-MM-DD")
+            if limit_end != '' and limit_end != '':
+                di, mi, yi = [int(x) for x in input_date.split('-')]
+                date_inpt = datetime.date(di, mi, yi)
+                ds, ms, ys = [int(x) for x in limit_start.split('-')]
+                date_start = datetime.date(ds, ms, ys)
+                de, me, ye = [int(x) for x in limit_end.split('-')]
+                date_end = datetime.date(de, me, ye)
+                if (date_inpt < date_start or date_inpt > date_end):
+                    raise exc.date_not_available
+        except ValueError:
+            print_log("The birth date cannot be ahead of today's date.")
         # except exc.wrong_birthdate_format:
         #     print_log(
         #         "Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20")
@@ -80,13 +78,13 @@ def date_format_check(purpose, limit_start='', limit_end=''):
         #     print_log("Please input the day between 1 and 31")
         # except exc.month_out_of_range:
         #     print_log("Please input the month between 1 and 12")
-        # except exc.date_not_available:
-        #     print_log(
-        #         "You can only select the date from today till the last date of this week!")
-        # except Exception as e:
-        #     print_log(str(e))
-        # else:
-        # return input_date
+        except exc.date_not_available:
+            print_log(
+                "You can only select the date from today till the last date of this week!")
+        except Exception as e:
+            print_log(str(e))
+        else:
+            return input_date
 
 
 def email_format_check():
@@ -160,9 +158,11 @@ def refugee_validity_check_by_ID(cond, refugee_df, conn):
             print(options)
             opt = list(opt_dict.keys())[
                 int(input(u"\U0001F539"+'Please select how you want to search: '))]
-            keyword = Get.string("\n"+u"\U0001F539" +
-                                 f"Please enter the {opt} keyword: ")
-            refugee_list = search_refugee(opt_dict[opt], keyword, conn)
+            keyword = input("\n"+u"\U0001F539" +
+                            f"Please enter the {opt} keyword: ")
+            if "'" in keyword:
+                raise exc.unpermitted_input
+            refugee_list = search_refugee(opt_dict[opt], keyword, conn,cond)
             if refugee_list.empty:
                 raise exc.refugee_id_out_of_range
             else:
@@ -190,6 +190,8 @@ def refugee_validity_check_by_ID(cond, refugee_df, conn):
             print_log("Please enter a numerical value for your input.")
         except exc.inactive_refugee_edit:
             print_log("You cannot edit inactive refugee's information.")
+        except exc.unpermitted_input:
+            print_log("Your input contains some special characters. Please try again with albhabets!")
         except Exception as e:
             print_log(str(e))
         else:
