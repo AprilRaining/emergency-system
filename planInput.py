@@ -21,12 +21,12 @@ class PlanInput:
         if option != 0:
             return options.values[option - 1]
         else:
-            return input(u"\U0001F539" + 'Please input the type of the emergency plan: ')
+            return Get.string(u"\U0001F539" + 'Please input the type of the emergency plan: ')
 
     @staticmethod
     def description():
         prCyan('\nPlan Description:')
-        return input(u"\U0001F539" + 'Please input the description of the emergency plan: ')
+        return Get.string(u"\U0001F539" + 'Please input the description of the emergency plan: ')
 
     @staticmethod
     def area():
@@ -44,7 +44,7 @@ class PlanInput:
         if option != 0:
             return options.values[option - 1]
         else:
-            return input(u"\U0001F539"+'Please input the geographical area affected by the natural disaster: ')
+            return Get.string(u"\U0001F539"+'Please input the geographical area affected by the natural disaster: ')
 
     @staticmethod
     def start_date():
