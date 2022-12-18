@@ -467,7 +467,7 @@ class Refugee:
                         pd_vol, columns=['volunteerID', 'fName', 'lName', 'workShift'])
                     if vol_df.empty:
                         warn(
-                            "The volunteer is not available on the new selected date!")
+                            "The volunteer is not available on the new selected date and shift!")
                     else:
                         print(u"\U0001F538"+"Please see the list of volunteers that match with your new selected date and time below:\n")
                         print_table(vol_df.columns, vol_df.to_numpy(
