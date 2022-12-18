@@ -148,10 +148,10 @@ class Admin:
         prLightPurple("\t\t\tCREATE VOLUNTEER ACCOUNT\n")
         new_volunteer = []
 
-        fname = input(u"\U0001F539" + 'Enter the first name:')
-        lname = input(u"\U0001F539" + 'Enter the last name:')
+        fname = Get.string(u"\U0001F539" + 'Enter the first name:')
+        lname = Get.string(u"\U0001F539" + 'Enter the last name:')
         username = AccountCreation.get_username()
-        password = input(u"\U0001F539" + 'Enter the password:')
+        password = Get.string(u"\U0001F539" + 'Enter the password:')
         campID = AccountCreation.get_camp_id()
         planID = get_planID(campID)
         preference = AccountCreation.get_week_preference()

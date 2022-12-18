@@ -48,8 +48,14 @@ if __name__ == "__main__":
                     break
     except KeyboardInterrupt:
         print_log('\nForce Quit!')
+<<<<<<< HEAD
     except Exception as e:
         warn('\nExit with unknown errors')
         print_log(str(e))
+=======
+    # except Exception as e:
+    #     warn('\nExit with unknown errors')
+    #     print(e)
+>>>>>>> junfeng
     finally:
         pass

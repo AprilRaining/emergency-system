@@ -53,13 +53,12 @@ class AccountCreation:
         TableDisplayer.camp(get_linked_IDs('camp', 'plan', planID))
         newCampID = Get.option_in_list(get_linked_IDs('camp', 'plan', planID),
                                        u"\U0001F539" + "Pleas choose a camp by campID:")
-        print(
-            f"\033[91m Camp {newCampID} is now full.")
         with db.connect('emergency_system.db') as conn:
             c = conn.cursor()
             capacity = c.execute(
                 f'''SELECT capacity FROM camp WHERE campID = {newCampID}''').fetchall()[0][0]
         if len(get_linked_IDs('volunteer', 'camp', newCampID)) >= capacity:
+            print(f"\033[91m Camp {newCampID} is now full.")
             return False
         else:
             return newCampID

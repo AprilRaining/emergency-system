@@ -26,11 +26,28 @@ class Get:
             else:
                 return n
 
-    def string(hint: str, sign=1):
+    def string(hint: str, isAllowEmpty=False):
         while True:
             n = input(hint)
-            if not re.match(r'^\w+$', n):
-                warn('Number, characters and underline ONLY!!!')
+            if not isAllowEmpty:
+                if not n:
+                    warn('Empty input is not allowed!Please try again.')
+                else:
+                    if not re.match(r'^\w+$', n):
+                        warn('Number, characters and underline ONLY!!!')
+                    else:
+                        return n
+            else:
+                if not re.match(r'^\w+$', n):
+                    warn('Number, characters and underline ONLY!!!')
+                else:
+                    return n
+
+    def text(hint: str):
+        while True:
+            n = input(hint)
+            if re.match(r'\'\"', n):
+                warn('No Special Characters Allowed!!!')
             else:
                 return n
 
