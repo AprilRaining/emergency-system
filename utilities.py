@@ -138,6 +138,7 @@ def select_sqlite(table, IDs):
     while True:
         if not IDs:
             prYellow('No result!')
+            input('Input any key to continue!')
             IDs = IDsBackUp.copy()
         TableDisplayer.match(table)(IDs)
         print("\n", u"\U0001F531" +
