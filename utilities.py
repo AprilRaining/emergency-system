@@ -134,12 +134,12 @@ def yn_valid(question):
 
 
 def select_sqlite(table, IDs):
-    IDsBackUp = IDs
+    IDsBackUp = IDs.copy()
     while True:
-        TableDisplayer.match(table)(IDs)
         if not IDs:
-            IDs = IDsBackUp
-            TableDisplayer.match(table)(IDs)
+            prYellow('No result!')
+            IDs = IDsBackUp.copy()
+        TableDisplayer.match(table)(IDs)
         print("\n", u"\U0001F531" +
               '[Hint]Input 0 to search by other keys e.g area, status')
         IDs.append(0)
@@ -147,6 +147,7 @@ def select_sqlite(table, IDs):
             IDs, u"\U0001F539" + f'Please input the {table}ID to choose a {table}: ')
         if ID == 0:
             IDs = search_sqlite(table)
+            continue
         else:
             return ID
 
@@ -155,8 +156,12 @@ def select_camps_from_plan(planIDs):
     if not planIDs:
         return
     else:
-        TableDisplayer.plan(planIDs)
         while True:
+            if not planIDs:
+                planIDs = get_all_IDs('plan')
+            TableDisplayer.plan(planIDs)
+            print("\n", u"\U0001F531" +
+                  '[Hint]Input 0 to search by other keys e.g area, status')
             option = input("\n" +
                            u"\U0001F539" + f"Input a plan ID to view more details or 'Q/q' to quit:")
             print("\n")
@@ -166,7 +171,10 @@ def select_camps_from_plan(planIDs):
                 except ValueError:
                     print_log("Please reenter a valid value.")
                 else:
-                    if option not in planIDs:
+                    if option == 0:
+                        planIDs = search_sqlite('plan')
+                        continue
+                    elif option not in planIDs:
                         print_log(
                             f'{option} is not a valid input. Please try again.')
                     else:

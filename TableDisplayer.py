@@ -18,7 +18,7 @@ class TableDisplayer():
     @staticmethod
     def plan(planIDs):
         if not planIDs:
-            warn('No reasult!')
+            warn('No result!')
             return
         planIDs = TableDisplayer.unifiy_type(planIDs)
         df = pd_read_by_IDs('plan', planIDs)

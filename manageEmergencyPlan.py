@@ -52,7 +52,8 @@ class ManageEmergencyPlan:
                     print(
                         "--------------------------------------------------------------------------")
                     prLightPurple("\t\t\tDELETE EMERGENCY PLAN\n")
-                    self.delete_emergency_plan(select_sqlite('plan', get_all_IDs('plan')))
+                    self.delete_emergency_plan(
+                        select_sqlite('plan', get_all_IDs('plan')))
                     # delete = emergency_plan.Delete_Emergency_Plan()
                     # delete.delete_now()
                     back()
@@ -189,7 +190,7 @@ class ManageEmergencyPlan:
                         u'\u2705', f"This plan ID: {planID} is successfully closed.")
                     return
             case 2:
-                warn('This plan has been closed. You are not allowed to change it.')
+                warn('This plan has been closed. You can not make any change to it.')
                 return
 
     @staticmethod
@@ -203,7 +204,8 @@ class ManageEmergencyPlan:
                     delete_by_IDs('camp', campIDs)
                     delete_by_IDs('plan', planID)
                     print('Succeed!')
-                    print(u'\u2705'+f"The emergency plan ID: {planID} is successfully deleted.")
+                    print(
+                        u'\u2705'+f"The emergency plan ID: {planID} is successfully deleted.")
             case 1:
                 warn('This plan is currently opened. You can not delete it!')
                 print("You can only delete a closed plan.")
@@ -213,7 +215,8 @@ class ManageEmergencyPlan:
                 if confirm('Once you delete this plan, you will not be able to find it anymore.'):
                     delete_by_IDs('plan', planID)
                     print('Succeed!')
-                    print(u'\u2705'+f"The emergency plan ID: {planID} is successfully deleted.")
+                    print(
+                        u'\u2705'+f"The emergency plan ID: {planID} is successfully deleted.")
 
     def insert_one_plan(self, plan):
         with sqlite3.connect('emergency_system.db') as conn:
@@ -260,4 +263,5 @@ class ManageEmergencyPlan:
                 c.execute(
                     f'insert into camp (capacity, planID) values (20, {planID})')
                 conn.commit()
-        print("\n" + u"\U0001F538" + f"New Camp ID associated with new plan ID: {new_campID}")
+        print("\n" + u"\U0001F538" +
+              f"New Camp ID associated with new plan ID: {new_campID}")
