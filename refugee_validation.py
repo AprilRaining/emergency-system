@@ -165,13 +165,13 @@ def refugee_validity_check_by_ID(cond, refugee_df, conn):
                             f"Please enter the {opt} keyword: ")
             if "'" in keyword:
                 raise exc.unpermitted_input
-            refugee_list = search_refugee(opt_dict[opt], keyword, conn,cond)
-            if refugee_list.empty:
+            refugee_ls = search_refugee(opt_dict[opt], keyword, conn,cond)
+            if refugee_ls.empty:
                 raise exc.refugee_id_out_of_range
             else:
                 print(
                     "\nPlease see details below for the list of refugees that match your search:\n")
-                print_table(refugee_list.columns, refugee_list.to_numpy().tolist(
+                print_table(refugee_ls.columns, refugee_ls.to_numpy().tolist(
                 ), (18, 16, 25, 25, 30, 25, 30, 70, 60, 70, 70, 60, 30, 30, 25, 25))
                 print("\n")
             ref_id = int(input(
@@ -273,15 +273,15 @@ def volunteer_ID_req_check(volunteer_df, select_today):
             vol_ID = int(input("\n"+u"\U0001F539" +
                                "Enter the volunteer ID of whom you want to assign this request to: "))
             volunteer_list = list(volunteer_df.loc[:, "volunteerID"].values)
-            vol_shift = volunteer_df.loc[volunteer_df["volunteerID"]
-                                         == vol_ID, "workShift"].values[0]
+            if vol_ID not in volunteer_list:
+                raise exc.volunteer_id_out_of_range
             if select_today == True:
+                vol_shift = volunteer_df.loc[volunteer_df["volunteerID"]
+                            == vol_ID, "workShift"].values[0]
                 has_conflict = check_today_shift_conflict(
                     get_current_shift_time(), vol_shift)
                 if has_conflict == True:
                     return -1
-            if vol_ID not in volunteer_list:
-                raise exc.volunteer_id_out_of_range
         except exc.volunteer_id_out_of_range:
             print_log(
                 "Your input volunteer ID is invalid regarding the available options.")
@@ -305,3 +305,12 @@ def yn_valid(question):
             print(e)
         else:
             return user_input
+
+def offer_way_to_quit(c):
+    if c==2:
+        # c=2 mean Sunday
+        ques = yn_valid("\n"+u"\u2757"+"Since today is Sunday, it would not have much availability.\nWould you like to continue? (Yes/No): ")
+        if ques == "No":
+            return True
+    return False
+

@@ -121,20 +121,6 @@ def check_plan():
         print(e)
 
 
-def yn_valid(question):
-    while True:
-        try:
-            user_input = input(f"{question}")
-            if user_input != 'Yes' and user_input != 'No':
-                raise exc.wrong_yn_input
-        except exc.wrong_yn_input:
-            print_log("Your input is invalid. Please enter either 'Yes' or 'No'")
-        except Exception as e:
-            print(e)
-        else:
-            return user_input
-
-
 def select_sqlite(table, IDs):
     IDsBackUp = IDs.copy()
     while True:
