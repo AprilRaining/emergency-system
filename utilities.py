@@ -10,7 +10,7 @@ def admin_login():
     while True:
         print("--------------------------------------------------------------------------")
         prYellow("\t\t\t\tADMIN LOGIN\n")
-        password = Get.number(u"\U0001F539" + "Input the password of admin:")
+        password = Get.string(u"\U0001F539" + "Input the password of admin:")
         if str(password) == "12345":
             print("\n", u'\u2705', 'Welcome to the system, Admin!.')
             prYellow("\nPlease select your options below: \n")
@@ -36,12 +36,13 @@ def volunteer_login():
                     print(
                         "Your account has been deactivated, contact the administrator.\n")
                     return -1
-                else:                        
+                else:
                     # keep user session
-                    volunteer_current = {"volunteerID":result[0][0],"campID":result[0][2], "planID":result[0][3], "login_time":str(datetime.datetime.today())}
+                    volunteer_current = {"volunteerID": result[0][0], "campID": result[0][2],
+                                         "planID": result[0][3], "login_time": str(datetime.datetime.today())}
                     with open("user_session.json", "w") as f:
                         json.dump(volunteer_current, f)
-                        
+
                     result = list(result[0])
                     result.append(
                         c.execute(f'select planID from camp where campID = {result[2]}').fetchall()[0][0])

@@ -12,7 +12,7 @@ class AccountCreation:
         while True:
             try:
                 print(u"\U0001F538" +
-                      "The detail below shows the information of every plans\n")
+                      "The detail below shows the information of opened plans\n")
                 with db.connect('emergency_system.db') as conn:
                     TableDisplayer.plan(get_all_open_plan())
                     planID = Get.option_in_list(get_all_IDs(

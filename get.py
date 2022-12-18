@@ -60,7 +60,7 @@ class Get:
             if not n:
                 return n
             else:
-                if re.match(r'\'\"', n):
+                if re.search(r'[\'\"\\\`]', n):
                     warn('No Special Characters Allowed!!!')
                 else:
                     return n
