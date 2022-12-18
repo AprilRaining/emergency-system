@@ -70,7 +70,7 @@ def date_format_check(purpose, limit_start='', limit_end=''):
                 if (date_inpt < date_start or date_inpt > date_end):
                     raise exc.date_not_available
         except ValueError:
-            print_log("Incorrect date format, should be YYYY-MM-DD")
+            print_log("The birth date cannot be ahead of today's date.")
         # except exc.wrong_birthdate_format:
         #     print_log(
         #         "Please input the birthdate in YYYY-MM-DD format e.g. 2022-11-20")
