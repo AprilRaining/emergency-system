@@ -40,7 +40,7 @@ def volunteer_login():
                 if result[0][1] == 0:
                     warn(
                         "Your account has been deactivated, please contact the administrator.")
-                    input('Input any key to continue.')
+                    input('Input any key to continue: ')
                     return [-1]
                 else:
                     # keep user session

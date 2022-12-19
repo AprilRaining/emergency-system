@@ -158,7 +158,7 @@ class ManageEmergencyPlan:
                         planID, 'startDate', datetime.date.today())
                     print('\nSucceed!')
                     print(u'\u2705' +
-                          'This emergency plan is successfully openned.')
+                          'This emergency plan is successfully opened.')
                     return
             case 1:
                 campIDs = get_linked_IDs('camp', 'plan', planID)

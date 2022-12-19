@@ -133,7 +133,7 @@ class Admin:
                             f'''UPDATE volunteer SET campID = 0 WHERE volunteerID = (?)''', (ID,))
                         conn.commit()
                         print("\n" +
-                              u'\u2705', "Volunteer with ID {}'s account is now deactive".format(ID))
+                              u'\u2705', "Volunteer with ID {}'s account is now inactive.".format(ID))
                     else:
                         print("\n")
                         print_table(vol_df_byID.columns, vol_df_byID.to_numpy().tolist(
