@@ -128,7 +128,7 @@ class Volunteer:
                 continue
             else:
                 break
-        new_password = Get.string("please input your new password\n")
+        new_password = Get.string(u"\U0001F539"+"Please input your new password:")
         self.password = new_password
         query = f'''UPDATE volunteer SET password ='{new_password}' WHERE volunteerID = {volunteer_input_id}'''
         cur.execute(query)
@@ -280,7 +280,7 @@ class Volunteer:
                 info = list(c.fetchall()[0])
                 person_info = copy.deepcopy(info[:6])
                 status = person_info.pop()
-                person_info.append("active" if status == 1 else "deactive")
+                person_info.append("active" if status == 1 else "inactive")
             fd = pd.DataFrame([person_info],
                               columns=["VolunteerID", "First Name", "Last Name", "Username", "Camp ID",
                                        "Account status"])
@@ -300,7 +300,7 @@ class Volunteer:
                     schedule[weekday[day]] = f"task{flag}"
             schedule["work_period"] = info[-2]
             info_df = pd.DataFrame(schedule, index=[0])
-            print("\n", u"\U0001F538",
+            print("\n" + u"\U0001F538" + 
                   f"Your current availability for this week is:  \n")
             print_table(info_df.columns, info_df.to_numpy().tolist(),
                         (30, 30, 30, 30, 30, 30, 30, 30))
@@ -316,8 +316,8 @@ class Volunteer:
                 else:
                     preference[weekday[day]] = f"task{flag}"
             pre_df = pd.DataFrame(preference, index=[0])
-            print("\n" + u"\U0001F539" +
-                  f"Your default availability when first registered is: \n")
+            print("\n" + u"\U0001F538" +
+                  f"Your availability for next week is: \n")
             print_table(pre_df.columns, pre_df.to_numpy().tolist(),
                         (30, 30, 30, 30, 30, 30, 30, 30))
         except:
