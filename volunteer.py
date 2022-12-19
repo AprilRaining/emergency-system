@@ -128,7 +128,7 @@ class Volunteer:
                 continue
             else:
                 break
-        new_password = Get.string(u"\U0001F539"+"Please input your new password:")
+        new_password = Get.string(u"\U0001F539"+"Please input your new password: ")
         self.password = new_password
         query = f'''UPDATE volunteer SET password ='{new_password}' WHERE volunteerID = {volunteer_input_id}'''
         cur.execute(query)
